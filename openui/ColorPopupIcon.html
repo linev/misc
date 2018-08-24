@@ -3,15 +3,15 @@
    <head>
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   <title>Color Palette - sap.m</title>
+   <title>Use Color Palette in jsroot.ColorButton</title>
    
-	<script id="sap-ui-bootstrap"
-			data-sap-ui-theme="sap_belize"
-			data-sap-ui-libs="sap.m, sap.ui.layout"
-			src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js">
-	</script>
+    <script id="sap-ui-bootstrap"
+            data-sap-ui-theme="sap_belize"
+            data-sap-ui-libs="sap.m, sap.ui.layout"
+            src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js">
+    </script>
 
-	<script>
+    <script>
 
 jQuery.sap.require("sap.m.ColorPalette");
 jQuery.sap.require("sap.m.ColorPalettePopover");
@@ -42,55 +42,40 @@ var ColorPalette = sap.m.ColorPalette,
 
 sap.ui.getCore().attachInit(function () {
 
-
    var ColorButton = Button.extend("sap.ui.jsroot.ColorButton", {
       metadata: {
          properties: {
-            attrcolor : {type : "string", group : "Misc", defaultValue : null}
+            attrcolor : { type : "string", group : "Misc", defaultValue : null }
          }
       },
       renderer: ButtonRenderer.render,
-      onmouseover : function(evt) {	 
-	 $("#testIcon").each(function( index ) {
-            $("span").children().css('color', currentColor );
-	 });
-      },
-
-      onmouseout : function(evt) {
-	 $("#testIcon" ).each(function( index ) {
-            $("span").children().css('color', currentColor );
-	 });
-      },
-      onmouseenter : function(evt) {	 
-	 $( "#testIcon").each(function( index ) {	    
-            $("span").children().css('color', currentColor );
-	 });
-      },
-
-      onAfterRendering: function() {	  
-	 $("#testIcon").each(function( index ) {	    
-            $("span").children().css('color', currentColor );
-	 });
-	 console.log("after rendering 2");
-      },
       init: function() {
          // svg images are always loaded without @2
          this.addEventDelegate({
-            onAfterRendering: function() {
-               // this._setColor();
-	       console.log("after rendering 1");
-               $("span").children().css('color', this.getProperty("attrcolor"));
-            }
+            onAfterRendering: function() { this._setColor(); }
          }, this);
       }
-
    });
 
    ColorButton.prototype._setColor = function() {
       this.$().children().css('background-color', this.getProperty("attrcolor"));
    }
 
+   ColorButton.prototype.selectColor = function(oEvent) {
+      var colorName = oEvent.getParameter("value");
+      this.setProperty("attrcolor", colorName);
+   }
+   
+   ColorButton.prototype.firePress = function(args) {
+      if (!this.oCPPop) 
+         this.oCPPop = new ColorPalettePopover({
+            defaultColor: this.getProperty("attrcolor"),
+            colorSelect: this.selectColor.bind(this)
+         });
 
+      this.oCPPop.openBy(this);
+   }
+   
    
    //As Popover
    new Panel({
@@ -108,61 +93,60 @@ sap.ui.getCore().attachInit(function () {
       var oCPPop;
 
       oCPPop = new ColorPalettePopover("oCPPop", {
-	 defaultColor: "cyan",
-	 colorSelect: handleColorSelect
+         defaultColor: "cyan",
+         colorSelect: handleColorSelect
       });
 
-
-      return [
-	 new HBox({
-	    items: [
-	       new CheckBox({
-		  text: "Default Color ",
-		  selected: true,
-		  select: function (oEvent) {
-		     oCPPop.setShowDefaultColorButton(oEvent.getParameter("selected"))
-		  }
-	       }),
-	       new CheckBox({
-		  text: "More Colors ",
-		  selected: true,
-		  select: function (oEvent) {
-		     oCPPop.setShowMoreColorsButton(oEvent.getParameter("selected"))
-		  }
-	       }),
-	       new ColorButton("testIcon", {
-		  icon: "sap-icon://color-fill",
-		 // text:"xxx",
-		  attrcolor: currentColor,
-		  press: function () {
-		     oCPPop.openBy(this);
-		  }
-	       })
-	    ]
-	 })
+     return [
+     new HBox({
+        items: [
+           new CheckBox({
+              text: "Default Color ",
+              selected: true,
+              select: function (oEvent) {
+                 oCPPop.setShowDefaultColorButton(oEvent.getParameter("selected"))
+              }
+           }),
+           new CheckBox({
+             text: "More Colors ",
+             selected: true,
+             select: function (oEvent) {
+                oCPPop.setShowMoreColorsButton(oEvent.getParameter("selected"))
+             }
+           }),
+           new ColorButton("testIcon", {
+               //icon: "sap-icon://color-fill",
+               text:"xxx",
+               attrcolor: currentColor,
+               tooltip: "test color"
+//               press: function () {
+//                 oCPPop.openBy(this);
+//              }
+           })
+        ]
+     })
       ];
    }
 
    function handleColorSelect(oEvent) {
       sap.m.MessageToast.show("value: " + oEvent.getParameter("value") +
-			      ", \n defaultAction: " + oEvent.getParameter("defaultAction"));
+                  ", \n defaultAction: " + oEvent.getParameter("defaultAction"));
       var colorName= oEvent.getParameter("value");
- d = document.createElement("div");
-d.style.color = colorName;
+      d = document.createElement("div");
+      d.style.color = colorName;
       document.body.appendChild(d);
 //Color in RGB 
       currentColor = window.getComputedStyle(d).color;
       console.log("Current ", currentColor);
       sap.ui.getCore().byId("testIcon").onAfterRendering();
-
    }
-});
+ });
 </script>
-   </head>
+</head>
 
-   <body class="sapUiBody" style="width: 100vw; height: 100vh">
+ <body class="sapUiBody" style="width: 100vw; height: 100vh">
    <div id="beforecontent"></div>
    <div id="content"></div>
    <div id="aftercontent"></div>
-   </body>
-   </html>
+ </body>
+</html>
