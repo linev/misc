@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <!-- as prototype used: https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometries.html -->
+      <title>Performance of SVGRenderer</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+      <style>
+         body {
+            font-family: Monospace;
+            margin: 0px;
+            overflow: hidden;
+         }
+         #info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+         }
+         #render_btn {
+            position: absolute;
+            bottom: 30px;
+            right: 10px;
+         }
+         #clear_btn {
+            position: absolute;
+            bottom: 55px;
+            right: 10px;
+         }
+         #save_btn {
+            position: absolute;
+            bottom: 80px;
+            right: 10px;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="info">Initialization</div>
+      <button id="render_btn">Render</button>
+      <button id="clear_btn">Clear SVG</button>
+      <button id="save_btn">Save SVG</button>
+
+      <script src="https://threejs.org/build/three.js" type="text/javascript"></script>
+      <script src="https://threejs.org/examples/js/renderers/Projector.js" type="text/javascript"></script>
+      
+      <!--script src="https://threejs.org/examples/js/renderers/SVGRenderer.js" type="text/javascript"></script-->
+      <script src="./SVGRenderer.js" type="text/javascript"></script>
+
+      <script>
+
+var geom_size = 100;
+
+var container = document.createElement( 'div' );
+document.body.appendChild( container );
+
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, geom_size*100 );
+camera.position.x = 7*geom_size;
+camera.position.y = 7*geom_size;
+camera.up = new THREE.Vector3(0,0,1);
+
+var scene = new THREE.Scene();
+scene.add( new THREE.AmbientLight( 0x404040 ) );
+
+var light = new THREE.DirectionalLight( 0xffffff );
+light.position.set( 0, 1, 0 );
+scene.add( light );
+   
+var geom = new THREE.TorusKnotGeometry(geom_size*2, geom_size/2, 200, 200, 2, 3);
+var material = new THREE.MeshLambertMaterial( { color: 'blue', side: THREE.DoubleSide } );
+var mesh = new THREE.Mesh( geom, material );
+   
+console.log('nfaces', geom.faces.length);
+   
+scene.add(mesh);
+   
+camera.lookAt( scene.position );
+   
+var renderer = new THREE.SVGRenderer( { precision: 1 } );
+
+   // renderer.setPixelRatio( window.devicePixelRatio );
+
+renderer.setSize( window.innerWidth, window.innerHeight );
+
+container.appendChild( renderer.domElement );
+
+renderSVG();
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function renderSVG() {
+
+   // clear directly, otherwise takes too much time       
+   renderer.domElement.innerHTML = "";
+
+   var tm1 = new Date().getTime();
+
+   renderer.render( scene, camera );
+
+   var tm2 = new Date().getTime();
+   
+   console.log('Rendering time', tm2-tm1);
+   
+   document.getElementById('info').innerHTML = "Render time: " + (tm2-tm1) + "ms"; 
+}
+
+function onWindowResize() {
+
+   console.log('Resize', window.innerWidth, window.innerHeight);
+
+   camera.aspect = window.innerWidth / window.innerHeight;
+   camera.updateProjectionMatrix();
+
+   renderer.setSize( window.innerWidth, window.innerHeight );
+
+   renderSVG();
+}
+
+function clearSVG() {
+   var tm1 = new Date().getTime();
+   renderer.clear();
+   var tm2 = new Date().getTime();
+    
+   console.log('Clear SVG time', tm2-tm1);
+   document.getElementById('info').innerHTML = "Clear SVG time: " + (tm2-tm1) + "ms"; 
+}
+
+function saveSVG() {
+   
+   var svgData = renderer.domElement.outerHTML;
+   
+   console.log('SVG file size', svgData.length);
+   document.getElementById('info').innerHTML = "Create SVG size: " + svgData.length; 
+   
+   var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+   var svgUrl = URL.createObjectURL(svgBlob);
+   var downloadLink = document.createElement("a");
+   downloadLink.href = svgUrl;
+   downloadLink.download = "file.svg";
+   document.body.appendChild(downloadLink);
+   downloadLink.click();
+   document.body.removeChild(downloadLink);
+}
+
+document.getElementById('render_btn').onclick = renderSVG;
+document.getElementById('clear_btn').onclick = clearSVG;
+document.getElementById('save_btn').onclick = saveSVG;
+
+
+      </script>
+
+   </body>
+</html>

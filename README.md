@@ -1,2 +1,2 @@
-# misc
-Different tests and examples
+# Collection of macros and examples 
+
