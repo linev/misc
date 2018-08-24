@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <title>Color Palette - sap.m</title>
+   
+	<script id="sap-ui-bootstrap"
+			data-sap-ui-theme="sap_belize"
+			data-sap-ui-libs="sap.m, sap.ui.layout"
+			src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js">
+	</script>
+
+	<script>
+
+jQuery.sap.require("sap.m.ColorPalette");
+jQuery.sap.require("sap.m.ColorPalettePopover");
+jQuery.sap.require("sap.m.MessageBox");
+jQuery.sap.require("sap.m.Button");
+jQuery.sap.require("sap.m.ButtonRenderer");
+
+var currentColor = "rgb(200, 180, 150)";
+var ColorPalette = sap.m.ColorPalette,
+    ColorPalettePopover = sap.m.ColorPalettePopover,
+    Panel = sap.m.Panel,
+    Label = sap.m.Label,
+    Title = sap.m.Title,
+    Button = sap.m.Button,
+    ToggleButton = sap.m.ToggleButton,
+    VBox = sap.m.VBox,
+    HBox = sap.m.HBox,
+    FlexBox = sap.m.FlexBox,
+    Toolbar = sap.m.Toolbar,
+    Select = sap.m.Select,
+    Item = sap.ui.core.Item,
+    ToolbarSpacer = sap.m.ToolbarSpacer,
+    Button = sap.m.Button,
+    ButtonRenderer = sap.m.ButtonRenderer,
+    CheckBox = sap.m.CheckBox;
+
+
+
+sap.ui.getCore().attachInit(function () {
+
+
+   var ColorButton = Button.extend("sap.ui.jsroot.ColorButton", {
+      metadata: {
+         properties: {
+            attrcolor : {type : "string", group : "Misc", defaultValue : null}
+         }
+      },
+      renderer: ButtonRenderer.render,
+      onmouseover : function(evt) {	 
+	 $("#testIcon").each(function( index ) {
+            $("span").children().css('color', currentColor );
+	 });
+      },
+
+      onmouseout : function(evt) {
+	 $("#testIcon" ).each(function( index ) {
+            $("span").children().css('color', currentColor );
+	 });
+      },
+      onmouseenter : function(evt) {	 
+	 $( "#testIcon").each(function( index ) {	    
+            $("span").children().css('color', currentColor );
+	 });
+      },
+
+      onAfterRendering: function() {	  
+	 $("#testIcon").each(function( index ) {	    
+            $("span").children().css('color', currentColor );
+	 });
+	 console.log("after rendering 2");
+      },
+      init: function() {
+         // svg images are always loaded without @2
+         this.addEventDelegate({
+            onAfterRendering: function() {
+               // this._setColor();
+	       console.log("after rendering 1");
+               $("span").children().css('color', this.getProperty("attrcolor"));
+            }
+         }, this);
+      }
+
+   });
+
+   ColorButton.prototype._setColor = function() {
+      this.$().children().css('background-color', this.getProperty("attrcolor"));
+   }
+
+
+   
+   //As Popover
+   new Panel({
+      headerText: "ColorPalettePopup",
+      expandable: true,
+      expanded: true,
+      content: generateColorPalettePopoverElements()
+   }).placeAt("content");
+
+
+
+   function generateColorPalettePopoverElements() {
+
+      
+      var oCPPop;
+
+      oCPPop = new ColorPalettePopover("oCPPop", {
+	 defaultColor: "cyan",
+	 colorSelect: handleColorSelect
+      });
+
+
+      return [
+	 new HBox({
+	    items: [
+	       new CheckBox({
+		  text: "Default Color ",
+		  selected: true,
+		  select: function (oEvent) {
+		     oCPPop.setShowDefaultColorButton(oEvent.getParameter("selected"))
+		  }
+	       }),
+	       new CheckBox({
+		  text: "More Colors ",
+		  selected: true,
+		  select: function (oEvent) {
+		     oCPPop.setShowMoreColorsButton(oEvent.getParameter("selected"))
+		  }
+	       }),
+	       new ColorButton("testIcon", {
+		  icon: "sap-icon://color-fill",
+		 // text:"xxx",
+		  attrcolor: currentColor,
+		  press: function () {
+		     oCPPop.openBy(this);
+		  }
+	       })
+	    ]
+	 })
+      ];
+   }
+
+   function handleColorSelect(oEvent) {
+      sap.m.MessageToast.show("value: " + oEvent.getParameter("value") +
+			      ", \n defaultAction: " + oEvent.getParameter("defaultAction"));
+      var colorName= oEvent.getParameter("value");
+ d = document.createElement("div");
+d.style.color = colorName;
+      document.body.appendChild(d);
+//Color in RGB 
+      currentColor = window.getComputedStyle(d).color;
+      console.log("Current ", currentColor);
+      sap.ui.getCore().byId("testIcon").onAfterRendering();
+
+   }
+});
+</script>
+   </head>
+
+   <body class="sapUiBody" style="width: 100vw; height: 100vh">
+   <div id="beforecontent"></div>
+   <div id="content"></div>
+   <div id="aftercontent"></div>
+   </body>
+   </html>
