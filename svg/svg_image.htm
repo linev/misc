@@ -17,5 +17,61 @@
          </svg>
       </div>
 
+   <script>
+       var elem = document.getElementById("info");
+       
+       var svg = elem.innerHTML;
+
+       function reEncode(data) {
+          data = encodeURIComponent(data);
+          data = data.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            var c = String.fromCharCode('0x'+p1);
+            return c === '%' ? '%25' : c;
+          });
+          return decodeURIComponent(data);
+       }
+       
+       var image = new Image();
+       image.onload = function() {
+          // if (options.result==="image") return JSROOT.CallBack(call_back, image);
+
+          console.log('IMAGE', image.width, image.height);
+
+          var canvas = document.createElement('canvas');
+          canvas.width = image.width;
+          canvas.height = image.height;
+          var context = canvas.getContext('2d');
+          //if(options && options.backgroundColor){
+          //   context.fillStyle = options.backgroundColor;
+          //   context.fillRect(0, 0, canvas.width, canvas.height);
+          //}
+          context.drawImage(image, 0, 0);
+
+          // if (options.result==="canvas") return JSROOT.CallBack(call_back, canvas);
+
+          var a = document.createElement('a');
+          a.download = "file.png";
+          a.href = canvas.toDataURL('image/png');
+          document.body.appendChild(a);
+          a.addEventListener("click", function(e) {
+             a.parentNode.removeChild(a);
+             // JSROOT.CallBack(call_back, true);
+          });
+          a.click();
+       }
+
+       image.onerror = function(arg) {
+          console.log('IMAGE ERROR', arg);
+          JSROOT.CallBack(call_back, null);
+       }
+
+       var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+
+       console.log('produced svg is ', svg.length, svg);
+
+       image.src = 'data:image/svg+xml;base64,' + window.btoa(reEncode(doctype + svg));
+   
+   </script>
+
    </body>
 </html>
