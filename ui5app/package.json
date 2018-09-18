@@ -1,0 +1,18 @@
+{
+  "name": "ui5app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "ui5 serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openui5/sap.ui.core": "^1.56.0",
+    "@openui5/sap.m": "^1.56.0",
+    "@openui5/themelib_sap_belize": "^1.56.0"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^0.2.1"
+  }
+}

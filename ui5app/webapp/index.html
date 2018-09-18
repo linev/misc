@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sample UI5 Application</title>
+        <script src="resources/sap-ui-core.js"
+                id="sap-ui-bootstrap"
+                data-sap-ui-theme="sap_belize"
+                data-sap-ui-libs="sap.m"
+                data-sap-ui-oninit="init"
+        ></script>
+        <script>
+            function init() {
+                sap.ui.require(["sap/m/Text"], function(Text) {
+                    new Text({
+                        text: "Hello World"
+                    }).placeAt("content");
+                });
+            }
+        </script>
+    </head>
+    <body class="sapUiBody">
+        <div id="content"></div>
+    </body>
+</html>
