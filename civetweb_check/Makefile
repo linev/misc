@@ -1,4 +1,6 @@
-all:
+all: build clean
+
+build:
 	cp ~/git/civetweb/src/civetweb.c .
 	cp ~/git/civetweb/src/*.inl .
 	cp ~/git/civetweb/include/civetweb.h .
