@@ -2,12 +2,15 @@
 
 rm -rf resources *.txt
 
-src=../openui5_full
-bndl0=messagebundle_en_US_saptrc.properties
+src=${1}
+if [[ "$src" == "" ]]; then 
+   src=/d/openui5/
+fi
+
+bndl0=messagebundle_en.properties
 bndl=messagebundle_en_US.properties
 tdir=themes/sap_belize
 themes=${tdir}/library.css
-
 
 cp ${src}/*.txt .
 mkdir resources
@@ -33,16 +36,17 @@ cp ${src}/resources/sap/ui/layout/${themes} resources/sap/ui/layout/${tdir}
 
 mkdir -p resources/sap/ui/unified/
 mkdir -p resources/sap/ui/unified/${tdir}
+mkdir -p resources/sap/ui/unified/img/ColorPicker
 cp ${src}/resources/sap/ui/unified/library-preload.js resources/sap/ui/unified/
 cp ${src}/resources/sap/ui/unified/${bndl0} resources/sap/ui/unified/${bndl}
 cp ${src}/resources/sap/ui/unified/${themes} resources/sap/ui/unified/${tdir}
+cp ${src}/resources/sap/ui/unified/img/ColorPicker/Alphaslider_BG.png resources/sap/ui/unified/img/ColorPicker
 
 mkdir -p resources/sap/ui/commons/
 mkdir -p resources/sap/ui/commons/${tdir}
 cp ${src}/resources/sap/ui/commons/library-preload.js resources/sap/ui/commons/
 cp ${src}/resources/sap/ui/commons/${bndl0} resources/sap/ui/commons/${bndl}
 cp ${src}/resources/sap/ui/commons/${themes} resources/sap/ui/commons/${tdir}
-
 
 
 mkdir -p resources/sap/ui/core/themes
@@ -54,3 +58,10 @@ cp -r ${src}/resources/sap/ui/unified/themes/base resources/sap/ui/unified/theme
 
 mkdir -p resources/sap/ui/commons/themes
 cp -r ${src}/resources/sap/ui/commons/themes/base resources/sap/ui/commons/themes
+
+rm -f openui5.tar.gz
+
+tar chf openui5.tar *.txt resources
+gzip openui5.tar
+
+rm -rf *.txt resources
