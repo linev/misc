@@ -11,6 +11,7 @@ bndl0=messagebundle_en.properties
 bndl=messagebundle_en_US.properties
 tdir=themes/sap_belize
 themes=${tdir}/library.css
+params=${tdir}/library-parameters.json
 
 cp ${src}/*.txt .
 mkdir resources
@@ -27,12 +28,14 @@ mkdir -p resources/sap/m/${tdir}
 cp ${src}/resources/sap/m/library-preload.js resources/sap/m/
 cp ${src}/resources/sap/m/${bndl0} resources/sap/m/${bndl}
 cp ${src}/resources/sap/m/${themes} resources/sap/m/${tdir}
+cp ${src}/resources/sap/m/${params} resources/sap/m/${tdir}
 
 mkdir -p resources/sap/ui/layout/
 mkdir -p resources/sap/ui/layout/${tdir}
 cp ${src}/resources/sap/ui/layout/library-preload.js resources/sap/ui/layout/
 cp ${src}/resources/sap/ui/layout/${bndl0} resources/sap/ui/layout/${bndl}
 cp ${src}/resources/sap/ui/layout/${themes} resources/sap/ui/layout/${tdir}
+cp ${src}/resources/sap/ui/layout/${params} resources/sap/ui/layout/${tdir}
 
 mkdir -p resources/sap/ui/unified/
 mkdir -p resources/sap/ui/unified/${tdir}
@@ -40,6 +43,7 @@ mkdir -p resources/sap/ui/unified/img/ColorPicker
 cp ${src}/resources/sap/ui/unified/library-preload.js resources/sap/ui/unified/
 cp ${src}/resources/sap/ui/unified/${bndl0} resources/sap/ui/unified/${bndl}
 cp ${src}/resources/sap/ui/unified/${themes} resources/sap/ui/unified/${tdir}
+cp ${src}/resources/sap/ui/unified/${params} resources/sap/ui/unified/${tdir}
 cp ${src}/resources/sap/ui/unified/img/ColorPicker/Alphaslider_BG.png resources/sap/ui/unified/img/ColorPicker
 
 mkdir -p resources/sap/ui/commons/
@@ -47,7 +51,7 @@ mkdir -p resources/sap/ui/commons/${tdir}
 cp ${src}/resources/sap/ui/commons/library-preload.js resources/sap/ui/commons/
 cp ${src}/resources/sap/ui/commons/${bndl0} resources/sap/ui/commons/${bndl}
 cp ${src}/resources/sap/ui/commons/${themes} resources/sap/ui/commons/${tdir}
-
+cp ${src}/resources/sap/ui/commons/${params} resources/sap/ui/commons/${tdir}
 
 mkdir -p resources/sap/ui/core/themes
 cp -r ${src}/resources/sap/ui/core/themes/base resources/sap/ui/core/themes
