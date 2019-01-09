@@ -34,6 +34,12 @@ cp ${src}/resources/sap/ui/layout/library-preload.js resources/sap/ui/layout/
 cp ${src}/resources/sap/ui/layout/${bndl0} resources/sap/ui/layout/${bndl}
 cp ${src}/resources/sap/ui/layout/${themes} resources/sap/ui/layout/${tdir}
 
+mkdir -p resources/sap/ui/table/
+mkdir -p resources/sap/ui/table/${tdir}
+cp ${src}/resources/sap/ui/table/library-preload.js resources/sap/ui/table/
+cp ${src}/resources/sap/ui/table/${bndl0} resources/sap/ui/table/${bndl}
+cp ${src}/resources/sap/ui/table/${themes} resources/sap/ui/table/${tdir}
+
 mkdir -p resources/sap/ui/unified/
 mkdir -p resources/sap/ui/unified/${tdir}
 mkdir -p resources/sap/ui/unified/img/ColorPicker
