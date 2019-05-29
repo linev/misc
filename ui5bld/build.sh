@@ -3,7 +3,7 @@
 rm -rf resources *.txt
 
 src=${1}
-if [[ "$src" == "" ]]; then 
+if [[ "$src" == "" ]]; then
    src=/d/openui5/
 fi
 
@@ -24,6 +24,26 @@ cp ${src}/resources/sap/ui/core/library-preload.js resources/sap/ui/core/
 cp ${src}/resources/sap/ui/core/library-preload.js.map resources/sap/ui/core/
 cp ${src}/resources/sap/ui/core/${bndl0} resources/sap/ui/core/${bndl}
 # cp ${src}/resources/sap/ui/core/${themes} resources/sap/ui/core/${tdir}
+
+mkdir -p resources/sap/ui/codeeditor/
+mkdir -p resources/sap/ui/codeeditor/${tdir}
+mkdir -p resources/sap/ui/codeeditor/js/ace/
+mkdir -p resources/sap/ui/codeeditor/js/ace/snippets/
+cp ${src}/resources/sap/ui/codeeditor/library-preload.js resources/sap/ui/codeeditor/
+cp ${src}/resources/sap/ui/codeeditor/library-preload.js.map resources/sap/ui/codeeditor/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/ace.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/ext-language_tools.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/ext-beautify.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/mode-javascript.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/mode-json.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/mode-c_cpp.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/theme-tomorrow.js resources/sap/ui/codeeditor/js/ace/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/snippets/javascript.js resources/sap/ui/codeeditor/js/ace/snippets/
+cp ${src}/resources/sap/ui/codeeditor/js/ace/snippets/c_cpp.js resources/sap/ui/codeeditor/js/ace/snippets/
+
+# cp ${src}/resources/sap/ui/codeeditor/${bndl0} resources/sap/ui/codeeditor/${bndl}
+cp ${src}/resources/sap/ui/codeeditor/${themes} resources/sap/ui/codeeditor/${tdir}
+cp ${src}/resources/sap/ui/codeeditor/${params} resources/sap/ui/codeeditor/${tdir}
 
 mkdir -p resources/sap/m/
 mkdir -p resources/sap/m/${tdir}
@@ -55,6 +75,7 @@ cp ${src}/resources/sap/ui/table/library-preload.js resources/sap/ui/table/
 cp ${src}/resources/sap/ui/table/library-preload.js.map resources/sap/ui/table/
 cp ${src}/resources/sap/ui/table/${bndl0} resources/sap/ui/table/${bndl}
 cp ${src}/resources/sap/ui/table/${themes} resources/sap/ui/table/${tdir}
+cp ${src}/resources/sap/ui/table/${params} resources/sap/ui/table/${tdir}
 
 mkdir -p resources/sap/ui/unified/
 mkdir -p resources/sap/ui/unified/${tdir}
