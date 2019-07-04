@@ -168,8 +168,7 @@ JavaScript~\cite{jsroot}. The displayed objects can be manipulated directly in
 the web browser. It can read binary data (including \href{https://root.cern.ch/doc/master/classTTree.html}{TTree})
 and uses the ROOT JSON format. JSROOT is also used by the ROOT jupyter interface.
 
-
-\subsection{{\it THttpServer}}
+\subsection{THttpServer}
 
 \href{https://github.com/root-project/jsroot/blob/master/docs/HttpServer.md}{{\it THttpServer}} is
 one of the most important components~\cite{http}. It gives HTTP access to run ROOT application
@@ -224,17 +223,16 @@ There are three main concepts in ROOT7:
 % \end{figure}
 
 \section{Batch Output}
+
 In the current state of ROOT, there are two main kinds of batch output images:
 \begin{itemize}
   \item \textbf{Vector graphics output} (like PDF and SVG) which is implemented by native ROOT classes
   \item \textbf{Bitmap output} (like PNG and JPEG) which is implemented natively on top of libAfterImage
 \end{itemize}
 
-\noindent
 In the new ROOT7,  the batch output doesn't rely on any dedicated ROOT graphics
 libraries, but it is based on the \textit{}{Headless mode} provided by the web
-browsers . In this mode graphics is generated in background without showing
-the browser interface.
+browsers. In this mode graphics is generated in background by browser, re-using exactly the same code again and storing result in output files. 
 
 \section{Example: Fit Panel}
 
@@ -256,91 +254,86 @@ example of the use of all the above, in particular the \textit{OpenUI5} environm
 The Fit Panel is a user interface based on a client/server model and it runs directly
 in the browser. The layout is based on \textit{OpenUI5} framework. It uses all the
 power of ROOT fitting tools to interactively fit histograms, using predefined
-functions (such as Gaus, Exponential, Polynomial)  or a function defined by
+functions (such as Gaus, Exponential, Polynomial) or a function defined by
 the user. The user is able to choose between several options. There are options
 for different ROOT libraries and minimization methods along with a lot of fit
 and draw options as well as specific range selector to define the range of the
 histogram to be fit.
 
-In Fit Panel there are a lot of different UI controls, some of them with static
-values and some other with dynamic values provided by ROOT. A small but indicative
-example of how the Fit Panel works, is the creation of a dynamic \textit{ComboBox}.
-The first step is the creation of C++, which can represent data for single item
-in \textit{OpenUI5} \textit{ComboBox}.
-\\
-\begin{lstlisting}[language=C++]
-/// Generic item for ui5 ComboBox
-struct RComboBoxItem {
-  std::string key;
-  std::string value;
-  RComboBoxItem() = default;
-  RComboBoxItem(const std::string &_key, const std::string &_value) : key(_key), value(_value) {}
-};
-\end{lstlisting}
-\noindent
-Then there is a model object which should contains all necessary elements to configure \textit{OpenUI5} \textit{ComboBox} .
+Fit Panel includes lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}. 
+A small but indicative example shows how \textit{ComboBox} control can be dynamically filled and selection results can be used in the C++.
 
-\begin{lstlisting}[language=C++]
-struct RFitPanelModel {
-  std::vector<RComboBoxItem> fItems;
-  std::string fSelected;
-}
-\end{lstlisting}
-\noindent
-It includes vector of items \textit{fItems} and selected element \textit{fSelected}.
-The next step is to fill this structure with available values and send it to the
-client as JSON, using TBufferJSON class for transformation:
+The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox}:
 
-\begin{lstlisting}[language=C++]
-  RFitPanelModel model;
-  model.fItems = {{"id0", "value0"}, {"id1", "value1"}, {"id2", "value2"}};
-  model.fSelected = "id1";
-
-  auto json = TBufferJSON::ToJSON(&model);
-
-  fWindow->Send(fConnId, "MODEL:"s + json.Data());
+\begin{lstlisting}[language=C++,numbers=none]
+     // single item
+     struct RComboBoxItem {
+        std::string key;
+        std::string value;
+        RComboBoxItem() = default;
+        RComboBoxItem(const std::string &k, const std::string &v) : key(k), value(v) {}
+     };
+     // complete structure 
+     struct RFitPanelModel {
+        std::vector<RComboBoxItem> fItems;
+        std::string fSelected;
+     };
 \end{lstlisting}
 
-\noindent Produced JSON code:
+Model structure includes vector of items \textit{fItems} and selected element \textit{fSelected}.
+This structure should be filled with actual values and send to the client as JSON, using \textit{TBufferJSON} class for transformation:
 
-\begin{lstlisting}[language=XML]
-  {
-     "_typename" : "RFitPanelModel",
-     "fItems" : [{
-       "_typename" : "RComboBoxItem",
-       "key" : "id0",
-       "value" : "value0"
-     }, {
-       "_typename" : "RComboBoxItem",
-       "key" : "id1",
-       "value" : "value1"
-     }, {
-       "_typename" : "RComboBoxItem",
-       "key" : "id2",
-       "value" : "value2"
-     }],
-     "fSelected" : "id1"
-  }
+\begin{lstlisting}[language=C++,numbers=none]
+     RFitPanelModel model;
+     model.fItems = {{"id0", "value0"}, {"id1", "value1"}, {"id2", "value2"}};
+     model.fSelected = "id1";
+     auto json = TBufferJSON::ToJSON(&model);
+     fWindow->Send(fConnId, "MODEL:"s + json.Data());
 \end{lstlisting}
-\noindent
-When JSON data received by the JavaScript client, it should be parsed and model object assigned to the view:
 
-\begin{lstlisting}[language=JavaScript]
-  obj = JSROOT.parse(str);
-  this.getView().setModel(new JSONModel(obj));
+Produced JSON code:
+
+\begin{lstlisting}[language=JavaScript,numbers=none]
+      {
+        "_typename" : "RFitPanelModel",
+        "fItems" : [{
+          "_typename" : "RComboBoxItem",
+          "key" : "id0",
+          "value" : "value0"
+        }, {
+          "_typename" : "RComboBoxItem",
+          "key" : "id1",
+          "value" : "value1"
+        }, {
+          "_typename" : "RComboBoxItem",
+          "key" : "id2",
+          "value" : "value2"
+        }],
+        "fSelected" : "id1"
+      }
 \end{lstlisting}
-\noindent
+
+When such data received by the JavaScript client, it should be parsed and model object assigned to the view:
+
+\begin{lstlisting}[language=JavaScript,numbers=none]
+    if (msg.find("MODEL:") == 0) {
+       obj = JSROOT.parse(msg.substr(6));
+       this.getView().setModel(new JSONModel(obj));
+    }
+\end{lstlisting}
+
 For displaying of the \textit{ComboBox} with provided data, it should be defined in the XML view files as follow:
 
-\begin{lstlisting}[language=XML]
-  <ComboBox selectedKey="{/fSelected}"
-            items="{ path: '/fItems' }">
-               <core:Item key="{id}" text="{text}" />
-  </ComboBox>
+\begin{lstlisting}[language=XML,numbers=none]
+      <ComboBox 
+         selectedKey="{/fSelected}"
+         items="{ path: '/fItems' }">
+            <core:Item key="{id}" text="{text}"/>
+      </ComboBox>
 \end{lstlisting}
 
-\noindent
 And the produced \textit{ComboBox} element can be seen in Figure 5.
+
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=10pc]{testCombo.eps}\hspace{2pc}%
@@ -349,32 +342,38 @@ And the produced \textit{ComboBox} element can be seen in Figure 5.
 \begin{minipage}[b]{20pc}\caption{\label{label}The produced \textit{ComboBox}}
 \end{minipage}
 \end{figure}
-\\
-\noindent
-Once option is selected, it should be send back to the server side in JSON format.
-\begin{lstlisting}[language=JavaScript]
-  var json = this.getView().getModel().getJSON();
 
-  this.websocket.Send("MODEL:" + json);
+Once option is selected, it should be send back to the server side in JSON format.
+
+\begin{lstlisting}[language=JavaScript,numbers=none]
+     var json = this.getView().getModel().getJSON();
+
+     this.websocket.Send("MODEL:" + json);
 \end{lstlisting}
-\noindent
+
 The final step is decoding such JSON data on C++ and processing corresponding ROOT functions:
 
-\begin{lstlisting}[language=C++]
-  auto model = TBufferJSON::FromJSON<RFitPanelModel>(json);
+\begin{lstlisting}[language=C++,numbers=none]
+    if (str.find("MODEL:") == 0) {
+       std::string json = str.substr(6);
 
-  if (model.fSelected == "id0"){
-    // do first branch
-  }
-  if (model.fSelected == "id1"){
-    // do second branch
-  }
-  if (model.fSelected == "id2"){
-    // do third branch
-  }
+       auto model = TBufferJSON::FromJSON<RFitPanelModel>(json);
+
+       if (!model) {
+          // failure in JSON decoding, handle
+       } else if (model->fSelected == "id0") {
+          // do first branch
+       } else if (model->fSelected == "id1") {
+          // do second branch
+       } else if (model->fSelected == "id2") {
+          // do third branch
+       }
+    }
 \end{lstlisting}
-\noindent
-The operation can be repeated many times.
+
+This simple example shows how \textit{ComboBox} control of \textit{OpenUI5} can be used for item selection from provided list.
+The correspondent structure for Fit Panel is much more complex, but follows exactly the same logic. 
+Main advantage of such approach - exactly the same data structures used for communication in both directions.
 
 
 \section{Conclusion}
