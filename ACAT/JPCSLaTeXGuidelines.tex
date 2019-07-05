@@ -217,6 +217,15 @@ browsers. In this mode graphics is generated in background by browser, re-using 
 The new version of \href{https://root.cern.ch/fit-panel}{Fit Panel} is a simple
 example of the use of all the above, in particular the \textit{OpenUI5} environment.
 
+The \textit{Fit Panel} is a user interface based on a client/server model and it runs directly
+in the browser. The layout is based on \textit{OpenUI5} framework. It uses all the
+power of ROOT fitting tools to interactively fit histograms, using predefined
+functions (such as Gaus, Exponential, Polynomial) or a function defined by
+the user. The user is able to choose between several options. There are options
+for different ROOT libraries and minimization methods along with a lot of fit
+and draw options as well as specific range selector to define the range of the
+histogram to be fit. New and old layout of \textit{Fit Panel} shown on Figures 3 and 4.
+
 \begin{figure}[h]
   \centering
 \begin{minipage}{14pc}
@@ -229,14 +238,6 @@ example of the use of all the above, in particular the \textit{OpenUI5} environm
 \end{minipage}
 \end{figure}
 
-The Fit Panel is a user interface based on a client/server model and it runs directly
-in the browser. The layout is based on \textit{OpenUI5} framework. It uses all the
-power of ROOT fitting tools to interactively fit histograms, using predefined
-functions (such as Gaus, Exponential, Polynomial) or a function defined by
-the user. The user is able to choose between several options. There are options
-for different ROOT libraries and minimization methods along with a lot of fit
-and draw options as well as specific range selector to define the range of the
-histogram to be fit.
 
 Fit Panel includes lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}. 
 A small but indicative example shows how \textit{ComboBox} control can be dynamically filled and selection results can be used in the C++.
