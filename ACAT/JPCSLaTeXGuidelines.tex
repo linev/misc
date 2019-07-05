@@ -114,20 +114,20 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
 
 The current version of ROOT6~\cite{root6} Graphical User Interface (GUI) is very ``OS-specific'' and originally based on X11.
 Meanwhile there are different problems, including missing support of X11 on MacOS ~\cite{x11} or difficulties to use OpenGL through remote X11.
-Limiting factor of current implementation also missing support of multi-threading. 
+Another limiting factor of the current implementation is the missing support of multi-threading. 
 
-To resolve these issues and increase maintanability, new widely used web technologies can be used. This would help to increase portability, 
+To resolve these issues and increase maintainability, new widely used web technologies can be used. This would help to increase portability, 
 provides support of remote displays, will enable any future platforms. And by new design multithreading can be provided.
 The answer to all the above can be \href{https://root.cern.ch/root-7}{ROOT7}~\cite{root7} development.
 
 \section{ROOT7}
 
 A web based application (as ROOT7) is a client/server computer application (Figure 2),
-where server is normal ROOT C++ application and client runs directly on the browser.
-The most important classes on C++ side are {\it THttpServer}~\cite{http} which is responsible
+where the server is a normal ROOT C++ application and the client runs directly in the browser.
+The most important classes on the C++ side are {\it THttpServer}~\cite{http} which is responsible
 for the communication between the different parts and TBufferJSON~\cite{buffer}
-which is responsible for the I/O. Client side written on JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}. 
-For implementation of high-level widgets \textit{OpenUI5}~\cite{openui} framework is used facilitating
+which is responsible for the I/O. The client side is written in JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}. 
+For the implementation of high-level widgets, the \textit{OpenUI5}~\cite{openui} framework is used facilitating the
 \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller(MVC)}~\cite{mvc}
 architecture. 
 
@@ -146,13 +146,13 @@ architecture.
 2012 and is responsible for displaying the ROOT objects in web browsers using
 JavaScript. The displayed objects can be manipulated directly in
 the web browser. JSROOT can read binary data, stored in TFile, including \textit{TTree}.
-Also ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter interface.
+Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter interface.
 
 \subsection{THttpServer}
 
 \href{https://github.com/root-project/jsroot/blob/master/docs/HttpServer.md}{{\it THttpServer}} is
-one of the most important components~\cite{http}. It gives HTTP access to run ROOT application
-and it is responsible for the execution of commands and methods. With {\it THttpServer}
+one of the most important components~\cite{http}. It gives HTTP access to any running ROOT application
+and is responsible for the execution of commands and methods. With {\it THttpServer}
 and JSROOT, it is possible to visualize ROOT objects. The communication is achieved
 via WebSockets protocol, which is bidirectional and supports binary data. WebSocket
 is a communication protocol providing full-duplex communication channels over a
@@ -161,9 +161,9 @@ single TCP connection.
 \subsection{TBufferJSON}
 
 \href{https://root.cern.ch/doc/master/classTBufferJSON.html}{TBufferJSON} can converts
-any streamable C++ object to JSON and vise versa~\cite{buffer}; also custom streamers
-can be supported. With the use of TBufferJSON the data exchange between C++ server
-and JavaScript client is simple. Real ROOT I/O remains fully on the server side.
+any streamable C++ object to JSON and vise versa~\cite{buffer}; the custom streamers
+can also be supported. With the use of TBufferJSON, the data exchange between the server (C++)
+and the client (JavaScript) is simple. The real ROOT I/O remains fully on the server side.
 
 \subsection{OpenUI5}
 The design of the GUI layout is based on \textit{\href{https://openui5.hana.ondemand.com/}{OpenUI5}}~\cite{openui}
@@ -177,8 +177,8 @@ the application logic into three separate parts:
 \end{itemize}
 
 \subsection{RWebWindow Class}
-The RWebWindow~\cite{rweb} class is a server-side entity in new ROOT window management.
-It displays windows in the web browser and manage multiple connections with the clients.
+The RWebWindow~\cite{rweb} class is a server-side entity in the new ROOT window management.
+It displays windows in the web browser and manages multiple connections with the clients.
 This class transfers the data from and to the clients. It also supports the batch
 mode (by using \textit{headless} mode).
 
@@ -187,11 +187,11 @@ mode (by using \textit{headless} mode).
  remote display on all kind of devices. The JavaScript rendering is able to be
  performed in a local canvas.
 
-There are three main components in ROOT7 graphics model:
+There are three main components in the ROOT7 graphics model:
 \begin{enumerate}[label=\alph*)]
-  \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
-  \item The \textit{Canvas}, the window's topmost pad, implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
-  \item The \textit{Drawable} entity. Drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
+  \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by the \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
+  \item The \textit{Canvas} is the window's topmost pad, implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
+  \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in the \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
 \end{enumerate}
 
 % \begin{figure}[h]
@@ -204,27 +204,27 @@ There are three main components in ROOT7 graphics model:
 
 In the current state of ROOT, there are two main kinds of batch output images:
 \begin{itemize}
-  \item \textbf{Vector graphics output} (like PDF and SVG) which is implemented by native ROOT classes
+  \item \textbf{Vector graphics output} (like PDF and SVG) which is implemented by the native ROOT classes
   \item \textbf{Bitmap output} (like PNG and JPEG) which is implemented natively on top of libAfterImage
 \end{itemize}
 
-In the new ROOT7,  the batch output doesn't rely on any dedicated ROOT graphics
+In the new ROOT7, the batch output doesn't rely on any dedicated ROOT graphics
 libraries, but it is based on the \textit{}{Headless mode} provided by the web
-browsers. In this mode graphics is generated in background by browser, re-using exactly the same code again and storing result in output files. 
+browsers. In this mode, the graphics is generated in the background by the browser, re-using exactly the same code again and storing result in the output files. 
 
 \section{Example: Fit Panel}
 
-The new version of \href{https://root.cern.ch/fit-panel}{Fit Panel} is a simple
+The new version of the \href{https://root.cern.ch/fit-panel}{Fit Panel} is a simple
 example of the use of all the above, in particular the \textit{OpenUI5} environment.
 
 The \textit{Fit Panel} is a user interface based on a client/server model and it runs directly
-in the browser. The layout is based on \textit{OpenUI5} framework. It uses all the
-power of ROOT fitting tools to interactively fit histograms, using predefined
-functions (such as Gaus, Exponential, Polynomial) or a function defined by
+in the browser. The layout is based on the \textit{OpenUI5} framework. It uses all the
+power of the ROOT fitting tools to interactively fit histograms, using predefined
+functions (such as Gaus, Exponential, Polynomial) or any function defined by
 the user. The user is able to choose between several options. There are options
 for different ROOT libraries and minimization methods along with a lot of fit
 and draw options as well as specific range selector to define the range of the
-histogram to be fit. New and old layout of \textit{Fit Panel} shown on Figures 3 and 4.
+histogram to be fit. The new and old layout of the \textit{Fit Panel} is shown on Figures 3 and 4.
 
 \begin{figure}[h]
   \centering
@@ -239,8 +239,8 @@ histogram to be fit. New and old layout of \textit{Fit Panel} shown on Figures 3
 \end{figure}
 
 
-Fit Panel includes lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}. 
-A small but indicative example shows how \textit{ComboBox} control can be dynamically filled and selection results can be used in the C++.
+The fit Panel includes a lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}. 
+A small but indicative example shows how the \textit{ComboBox} control can be dynamically filled and selection results can be used on the C++ side.
 
 The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox}:
 
@@ -259,8 +259,8 @@ The first step is the creation of C++ structures, which can represent all necess
      };
 \end{lstlisting}
 
-Model structure includes vector of items \textit{fItems} and selected element \textit{fSelected}.
-This structure should be filled with actual values and send to the client as JSON, using \textit{TBufferJSON} class for transformation:
+The model structure includes vector of items \textit{fItems} and selected element \textit{fSelected}.
+This structure should be filled with the actual values and send to the client as JSON, using the \textit{TBufferJSON} class for transformation:
 
 \begin{lstlisting}[language=C++,numbers=none]
      RFitPanelModel model;
@@ -292,7 +292,7 @@ Produced JSON code:
       }
 \end{lstlisting}
 
-When such data received by the JavaScript client, it should be parsed and model object assigned to the view:
+When such data is received by the JavaScript client, it should be parsed and the model object assigned to the view:
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
     if (msg.find("MODEL:") == 0) {
@@ -301,7 +301,7 @@ When such data received by the JavaScript client, it should be parsed and model 
     }
 \end{lstlisting}
 
-For displaying of the \textit{ComboBox} with provided data, it should be defined in the XML view files as follow:
+For displaying the \textit{ComboBox} with provided data, it should be defined in the XML view file as follow:
 
 \begin{lstlisting}[language=XML,numbers=none]
       <ComboBox 
@@ -322,7 +322,7 @@ And the produced \textit{ComboBox} element can be seen in Figure 5.
 \end{minipage}
 \end{figure}
 
-Once option is selected, it should be send back to the server side in JSON format.
+Once an option is selected, it should be send back to the server side in JSON format.
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
      var json = this.getView().getModel().getJSON();
@@ -330,7 +330,7 @@ Once option is selected, it should be send back to the server side in JSON forma
      this.websocket.Send("MODEL:" + json);
 \end{lstlisting}
 
-The final step is decoding such JSON data on C++ and processing corresponding ROOT functions:
+The final step is decoding such JSON data in C++ and processing corresponding ROOT functions:
 
 \begin{lstlisting}[language=C++,numbers=none]
     if (str.find("MODEL:") == 0) {
@@ -350,20 +350,20 @@ The final step is decoding such JSON data on C++ and processing corresponding RO
     }
 \end{lstlisting}
 
-This simple example shows how \textit{ComboBox} control of \textit{OpenUI5} can be used for item selection from provided list.
-The correspondent structure for Fit Panel is much more complex, but follows exactly the same logic. 
-Main advantage of such approach - exactly the same data structures used for communication in both directions.
+This simple example shows how the \textit{ComboBox} control of \textit{OpenUI5} can be used for item selection from a provided list.
+The correspondent structure for the Fit Panel is much more complex, but follows exactly the same logic. 
+The main advantage of such approach - exactly the same data structures are used for communication in both directions.
 
 
 \section{Conclusion}
 
 As the current graphics standards are slowly vanishing, the ROOT framework should
-base its graphics and GUI on the technologies of the next decades. ROOT7 propose
+base its graphics and GUI on the technologies of the next decades. ROOT7 proposes
 this new modern approach by being fully web oriented and based on de facto standards
-like SVG or WebGL. Being based on a client/server model it also allows to completely
-decouple the data from its graphics representation. In the same way the GUI tools
-are also acting on the data are not embedded in the main application.
-The batch output remains an issue but the browsers' headless mode provide an elegant solution.
+like SVG or WebGL. Being based on a client/server model, it also allows to completely
+discouple the data from its graphics representation. In the same way the GUI tools
+are also acting on the data, and they are not embedded in the main application.
+The batch output remains an issue but the browsers' headless mode provides an elegant solution.
 
 
 \section{References}
