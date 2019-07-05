@@ -112,44 +112,24 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
 
 \section{Objectives of the new version}
 
-\subsection{Need of new graphics}
-In the current version of ROOT6~\cite{root6}, there were some problems:
-\begin{itemize}
-  \item the current Graphical User Interface (GUI) is very ``OS-specific'', originally based on X11
-  \item using OpenGL with remote X11 is not very efficient
-  \item X11 is no longer supported on MacOS and the only way to use it is through XQuartz~\cite{x11}
-  \item ROOT6 is single-threaded
-  \item long term maintenance problems
-\end{itemize}
+The current version of ROOT6~\cite{root6} Graphical User Interface (GUI) is very ``OS-specific'' and originally based on X11.
+Meanwhile there are different problems, including missing support of X11 on MacOS ~\cite{x11} or difficulties to use OpenGL through remote X11.
+Limitng factor of current implementation also missing support of multi-threading. 
 
-\subsection{Goals of the new Version}
-
-These issues in ROOT6 are fixed in the new ROOT version thanks to widely used and
-supported technologies like SVG and WebGL. The ROOT GUI has also some specific
-requirements. it should:
-\begin{itemize}
-  \item  be web based,
-  \item be portable,
-  \item support remote displays and multiple views,
-  \item work in multi threaded environments,
-  \item support any new future platforms.
-\end{itemize}
+To resolve these issues and increace maintanability, new widely used web technologies can be used. This would help to increase portability, 
+provides support of remote displays, will enable any future platforms. And by new design multithreading can be provided.
+The answer to all the above can be \href{https://root.cern.ch/root-7}{ROOT7}~\cite{root7} development.
 
 \section{ROOT7}
 
-The answer to all the above is \href{https://root.cern.ch/root-7}{ROOT7}~\cite{root7}. A local
-application running as http server, which uses web technologies and it is able
-to run in a web browser. ROOT7 is web based, easy to use with a modern and clear layout.
-%
 A web based application (as ROOT7) is a client/server computer application (Figure 2),
-where the client and its user interface run directly on the browser.
-ROOT7 consists of \href{https://root.cern.ch/js/}{JSROOT}~\cite{jsroot} and implements a
-\href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller(MVC)}~\cite{mvc}
-architecture. The server side is written in C++ and the client side in JavaScript.
-The most important classes are {\it THttpServer}~\cite{http} which is responsible
+where server is normal ROOT C++ application and client runs directly on the browser.
+The most important classes on C++ side are {\it THttpServer}~\cite{http} which is responsible
 for the communication between the different parts and TBufferJSON~\cite{buffer}
-which is responsible for the I/O. The GUI framework is \textit{OpenUI5}~\cite{openui}
-created by \href{https://www.sap.com/index.html}{SAP}.
+which is responsible for the I/O. Client side written on JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}. 
+For implementation of high-level widgets \textit{OpenUI5}~\cite{openui} framework is used facilitating
+\href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller(MVC)}~\cite{mvc}
+architecture. 
 
 \begin{figure}[h]
   \begin{center}
@@ -164,9 +144,9 @@ created by \href{https://www.sap.com/index.html}{SAP}.
 
 \href{https://github.com/root-project/jsroot/}{JSROOT} is being developed since
 2012 and is responsible for displaying the ROOT objects in web browsers using
-JavaScript~\cite{jsroot}. The displayed objects can be manipulated directly in
-the web browser. It can read binary data (including \href{https://root.cern.ch/doc/master/classTTree.html}{TTree})
-and uses the ROOT JSON format. JSROOT is also used by the ROOT jupyter interface.
+JavaScript. The displayed objects can be manipulated directly in
+the web browser. JSROOT can read binary data, stored in TFile, including \textit{TTree}.
+Also ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter interface.
 
 \subsection{THttpServer}
 
@@ -188,10 +168,10 @@ and JavaScript client is simple. Real ROOT I/O remains fully on the server side.
 \subsection{OpenUI5}
 The design of the GUI layout is based on \textit{\href{https://openui5.hana.ondemand.com/}{OpenUI5}}~\cite{openui}
 which is a JavaScript UI library consisting of a really large number of UI controls.
-\textit{OpenUI5} implements the MVC~\cite{mvc} architecture, which separates out
+\textit{OpenUI5} implements the MVC~\cite{mvc} architecture, which split
 the application logic into three separate parts:
 \begin{itemize}
-  \item The Model component which is the central component and contains the application's dynamic data.
+  \item The Model component contains the application's dynamic data.
   \item The View component is the final output that ends up in the user's browser and defines how the application's data should be displayed.
   \item The Controller component receives inputs and contains the logic that updates the model or the view, depending on the inputs.
 \end{itemize}
@@ -203,7 +183,6 @@ This class transfers the data from and to the clients. It also supports the batc
 mode (by using \textit{headless} mode).
 
  \subsection{Graphics Model}
-
  The new graphics model is independent from any local graphics backend. It allows
  remote display on all kind of devices. The JavaScript rendering is able to be
  performed in a local canvas.
