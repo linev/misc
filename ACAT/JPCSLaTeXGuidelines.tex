@@ -187,12 +187,11 @@ mode (by using \textit{headless} mode).
  remote display on all kind of devices. The JavaScript rendering is able to be
  performed in a local canvas.
 
-\section{Concepts of ROOT7}
-There are three main concepts in ROOT7:
+There are three main components in ROOT7 graphics model:
 \begin{enumerate}[label=\alph*)]
   \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
   \item The \textit{Canvas}, the window's topmost pad, implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
-  \item The Drawable entity. Drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
+  \item The \textit{Drawable} entity. Drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
 \end{enumerate}
 
 % \begin{figure}[h]
@@ -201,7 +200,7 @@ There are three main concepts in ROOT7:
 % \end{minipage}
 % \end{figure}
 
-\section{Batch Output}
+\subsection{Batch Output}
 
 In the current state of ROOT, there are two main kinds of batch output images:
 \begin{itemize}
