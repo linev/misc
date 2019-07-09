@@ -95,11 +95,6 @@ changing the whole graphics system. The new ROOT7's graphics library in ROOT, wi
 use of modern C++ and web based architecture, redefine completely ROOT graphics (Figure 1)
  and introduce a new web based environment.
 \\
-% \begin{figure}[h]
-% \includegraphics[width=26pc]{WebEve1.eps}\hspace{2pc}%
-% \begin{minipage}[b]{14pc}\caption{\label{label}The new version of web Event Visualization Environment (EVE)}
-% \end{minipage}
-% \end{figure}
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=15pc]{alice.eps}\hspace{2pc}%
@@ -114,9 +109,9 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
 
 The current version of ROOT6~\cite{root6} Graphical User Interface (GUI) is very ``OS-specific'' and originally based on X11.
 Meanwhile there are different problems, including missing support of X11 on MacOS ~\cite{x11} or difficulties to use OpenGL through remote X11.
-Another limiting factor of the current implementation is the missing support of multi-threading. 
+Another limiting factor of the current implementation is the missing support of multi-threading.
 
-To resolve these issues and increase maintainability, new widely used web technologies can be used. This would help to increase portability, 
+To resolve these issues and increase maintainability, new widely used web technologies can be used. This would help to increase portability,
 provides support of remote displays, will enable any future platforms. And by new design multithreading can be provided.
 The answer to all the above can be \href{https://root.cern.ch/root-7}{ROOT7}~\cite{root7} development.
 
@@ -126,10 +121,10 @@ A web based application (as ROOT7) is a client/server computer application (Figu
 where the server is a normal ROOT C++ application and the client runs directly in the browser.
 The most important classes on the C++ side are {\it THttpServer}~\cite{http} which is responsible
 for the communication between the different parts and TBufferJSON~\cite{buffer}
-which is responsible for the I/O. The client side is written in JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}. 
+which is responsible for the I/O. The client side is written in JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}.
 For the implementation of high-level widgets, the \textit{OpenUI5}~\cite{openui} framework is used facilitating the
 \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller(MVC)}~\cite{mvc}
-architecture. 
+architecture.
 
 \begin{figure}[h]
   \begin{center}
@@ -194,12 +189,6 @@ There are three main components in the ROOT7 graphics model:
   \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in the \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
 \end{enumerate}
 
-% \begin{figure}[h]
-% \includegraphics[width=26pc]{BasicConcepts.eps}\hspace{2pc}%
-% \begin{minipage}[b]{14pc}\caption{\label{label}Basic Concepts of ROOT7}
-% \end{minipage}
-% \end{figure}
-
 \subsection{Batch Output}
 
 In the current state of ROOT, there are two main kinds of batch output images:
@@ -210,7 +199,7 @@ In the current state of ROOT, there are two main kinds of batch output images:
 
 In the new ROOT7, the batch output doesn't rely on any dedicated ROOT graphics
 libraries, but it is based on the \textit{}{Headless mode} provided by the web
-browsers. In this mode, the graphics is generated in the background by the browser, re-using exactly the same code again and storing result in the output files. 
+browsers. In this mode, the graphics is generated in the background by the browser, re-using exactly the same code again and storing result in the output files.
 
 \section{Example: Fit Panel}
 
@@ -239,7 +228,7 @@ histogram to be fit. The new and old layout of the \textit{Fit Panel} is shown o
 \end{figure}
 
 
-The fit Panel includes a lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}. 
+The fit Panel includes a lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}.
 A small but indicative example shows how the \textit{ComboBox} control can be dynamically filled and selection results can be used on the C++ side.
 
 The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox}:
@@ -252,7 +241,7 @@ The first step is the creation of C++ structures, which can represent all necess
         RComboBoxItem() = default;
         RComboBoxItem(const std::string &k, const std::string &v) : key(k), value(v) {}
      };
-     // complete structure 
+     // complete structure
      struct RFitPanelModel {
         std::vector<RComboBoxItem> fItems;
         std::string fSelected;
@@ -304,7 +293,7 @@ When such data is received by the JavaScript client, it should be parsed and the
 For displaying the \textit{ComboBox} with provided data, it should be defined in the XML view file as follow:
 
 \begin{lstlisting}[language=XML,numbers=none]
-      <ComboBox 
+      <ComboBox
          selectedKey="{/fSelected}"
          items="{ path: '/fItems' }">
             <core:Item key="{id}" text="{text}"/>
@@ -351,7 +340,7 @@ The final step is decoding such JSON data in C++ and processing corresponding RO
 \end{lstlisting}
 
 This simple example shows how the \textit{ComboBox} control of \textit{OpenUI5} can be used for item selection from a provided list.
-The correspondent structure for the Fit Panel is much more complex, but follows exactly the same logic. 
+The correspondent structure for the Fit Panel is much more complex, but follows exactly the same logic.
 The main advantage of such approach - exactly the same data structures are used for communication in both directions.
 
 
