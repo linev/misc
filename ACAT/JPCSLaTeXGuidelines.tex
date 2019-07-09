@@ -87,7 +87,7 @@ with the server and exchange data between front and back end and JavaScript ROOT
 \end{abstract}
 
 \section{Introduction}
-\href{https://root.cern.ch/}{ROOT}~\cite{root} exists for more than two decades and
+\href{https://root.cern/}{ROOT}~\cite{root} exists for more than two decades and
 from the beginning, it has its own graphics system. This graphics system~\cite{Antcheva:2011zz}
 used the most popular technologies at that time, like OpenGL and X11. With the rapid development
 of technology of the last years and the high turn on the web technology, it was time for
@@ -113,7 +113,7 @@ Another limiting factor of the current implementation is the missing support of 
 
 To resolve these issues and increase maintainability, new widely used web technologies can be used. This would help to increase portability,
 provides support of remote displays, will enable any future platforms. And by new design multithreading can be provided.
-The answer to all the above can be \href{https://root.cern.ch/root-7}{ROOT7}~\cite{root7} development.
+The answer to all the above can be \href{https://root.cern/root-7}{ROOT7}~\cite{root7} development.
 
 \section{ROOT7}
 
@@ -155,7 +155,7 @@ single TCP connection.
 
 \subsection{TBufferJSON}
 
-\href{https://root.cern.ch/doc/master/classTBufferJSON.html}{TBufferJSON} can converts
+\href{https://root.cern/doc/master/classTBufferJSON.html}{TBufferJSON} can converts
 any streamable C++ object to JSON and vise versa~\cite{buffer}; the custom streamers
 can also be supported. With the use of TBufferJSON, the data exchange between the server (C++)
 and the client (JavaScript) is simple. The real ROOT I/O remains fully on the server side.
@@ -184,9 +184,9 @@ mode (by using \textit{headless} mode).
 
 There are three main components in the ROOT7 graphics model:
 \begin{enumerate}[label=\alph*)]
-  \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by the \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
-  \item The \textit{Canvas} is the window's topmost pad, implemented by \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
-  \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in the \textit{\href{https://root.cern.ch/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
+  \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by the \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
+  \item The \textit{Canvas} is the window's topmost pad, implemented by \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
+  \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in the \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
 \end{enumerate}
 
 \subsection{Batch Output}
@@ -203,16 +203,13 @@ browsers. In this mode, the graphics is generated in the background by the brows
 
 \section{Example: Fit Panel}
 
-The new version of the \href{https://root.cern.ch/fit-panel}{Fit Panel} is a simple
-example of the use of all the above, in particular the \textit{OpenUI5} environment.
-
-The \textit{Fit Panel} is a user interface based on a client/server model and it runs directly
-in the browser. The layout is based on the \textit{OpenUI5} framework. It uses all the
-power of the ROOT fitting tools to interactively fit histograms, using predefined
+The new web-based version of \textit{Fit Panel} is an example of the use of all the above,
+in particular the \textit{OpenUI5} environment.
+The \href{https://root.cern/fit-panel}{\textit{Fit Panel}} is a simple user interface, providing all the
+power of the ROOT fitting tools to interactively fit histograms. One could select predefined
 functions (such as Gaus, Exponential, Polynomial) or any function defined by
-the user. The user is able to choose between several options. There are options
-for different ROOT libraries and minimization methods along with a lot of fit
-and draw options as well as specific range selector to define the range of the
+the user. There are options for different ROOT libraries and minimization methods
+along with a lot of fit and draw options as well as specific range selector to define the range of the
 histogram to be fit. The new and old layout of the \textit{Fit Panel} is shown on Figures 3 and 4.
 
 \begin{figure}[h]
@@ -227,8 +224,8 @@ histogram to be fit. The new and old layout of the \textit{Fit Panel} is shown o
 \end{minipage}
 \end{figure}
 
-
-The fit Panel includes a lot of different UI controls - text, items lists or selected values provided by ROOT as \textit{JSONModel} class of \textit{OpenUI5}.
+The \textit{Fit Panel} includes a lot of different UI controls - text, items lists, range selectors.
+Values for these controls provided through \textit{JSONModel} class of \textit{OpenUI5}.
 A small but indicative example shows how the \textit{ComboBox} control can be dynamically filled and selection results can be used on the C++ side.
 
 The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox}:
@@ -340,7 +337,7 @@ The final step is decoding such JSON data in C++ and processing corresponding RO
 \end{lstlisting}
 
 This simple example shows how the \textit{ComboBox} control of \textit{OpenUI5} can be used for item selection from a provided list.
-The correspondent structure for the Fit Panel is much more complex, but follows exactly the same logic.
+The correspondent structure for the \textit{Fit Panel} is much more complex, but follows exactly the same logic.
 The main advantage of such approach - exactly the same data structures are used for communication in both directions.
 
 
