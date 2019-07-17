@@ -92,7 +92,7 @@ from the beginning, it has its own graphics system. This graphics system~\cite{A
 used the most popular technologies at that time, like OpenGL and X11. With the rapid development
 of technology of the last years and the high turn on the web technology, it was time for
 changing the whole graphics system. The new ROOT7's graphics library in ROOT, with the
-use of modern C++ and web based architecture, redefine completely ROOT graphics (Figure 1)
+use of modern C++ and web based architecture, redefine completely ROOT graphics (see Figure 1)
  and introduce a new web based environment.
 \\
 \begin{figure}[h]
@@ -100,7 +100,7 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
     \includegraphics[width=15pc]{alice.eps}\hspace{2pc}%
   \end{center}
 \centering
-\begin{minipage}[b]{25pc}\caption{\label{label}Tracks and hits combined with ALICE detector}
+\begin{minipage}[b]{25pc}\caption{\label{label}3D view of the ALICE detector showing tracks and hits, using ROOT}
 \end{minipage}
 \end{figure}
 
@@ -111,27 +111,26 @@ The current version of ROOT6~\cite{root6} Graphical User Interface (GUI) is very
 Meanwhile there are different problems, including missing support of X11 on MacOS ~\cite{x11} or difficulties to use OpenGL through remote X11.
 Another limiting factor of the current implementation is the missing support of multi-threading.
 
-To resolve these issues and increase maintainability, new widely used web technologies can be used. This would help to increase portability,
-provides support of remote displays, will enable any future platforms. And by new design multithreading can be provided.
-The answer to all the above can be \href{https://root.cern/root-7}{ROOT7}~\cite{root7} development.
+The use of web platforms would improve portability, remote display support, and the adoption of future platforms, ensuring more robust maintenance. In addition, with this new model, support for multi-threading is assured.
+The answer to all the above can be the \href{https://root.cern/root-7}{ROOT7}~\cite{root7} development.
 
 \section{ROOT7}
 
 A web based application (as ROOT7) is a client/server computer application (Figure 2),
-where the server is a normal ROOT C++ application and the client runs directly in the browser.
-The most important classes on the C++ side are {\it THttpServer}~\cite{http} which is responsible
-for the communication between the different parts and TBufferJSON~\cite{buffer}
-which is responsible for the I/O. The client side is written in JavaScirpt and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}.
+where the server is a standard ROOT C++ application and the client runs directly in the browser.
+The most important classes on the C++ side are {\it THttpServer}~\cite{http} which is handling
+the communication between the different parts and TBufferJSON~\cite{buffer}
+which is in charge of the I/O (Input/Output). The client side is written in JavaScript and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}.
 For the implementation of high-level widgets, the \textit{OpenUI5}~\cite{openui} framework is used facilitating the
-\href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller(MVC)}~\cite{mvc}
-architecture.
+\href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller (MVC)}~\cite{mvc}
+architecture. The components are described in the following sub-section.
 
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=25pc]{figure2.eps}\hspace{2pc}%
   \end{center}
   \centering
-\begin{minipage}[b]{20pc}\caption{\label{label}Client Server model}
+\begin{minipage}[b]{20pc}\caption{\label{label}Client Server model: the connection between the client side and the server side is made with a Browser using a web socket}
 \end{minipage}
 \end{figure}
 
@@ -141,7 +140,7 @@ architecture.
 2012 and is responsible for displaying the ROOT objects in web browsers using
 JavaScript. The displayed objects can be manipulated directly in
 the web browser. JSROOT can read binary data, stored in TFile, including \textit{TTree}.
-Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter interface.
+Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter\cite{jupyter} interface.
 
 \subsection{THttpServer}
 
@@ -149,14 +148,14 @@ Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter
 one of the most important components~\cite{http}. It gives HTTP access to any running ROOT application
 and is responsible for the execution of commands and methods. With {\it THttpServer}
 and JSROOT, it is possible to visualize ROOT objects. The communication is achieved
-via WebSockets protocol, which is bidirectional and supports binary data. WebSocket
+via \textit{WebSockets} protocol, which is bidirectional and supports binary data. \textit{WebSocket}
 is a communication protocol providing full-duplex communication channels over a
 single TCP connection.
 
 \subsection{TBufferJSON}
 
 \href{https://root.cern/doc/master/classTBufferJSON.html}{TBufferJSON} can converts
-any streamable C++ object to JSON and vise versa~\cite{buffer}; the custom streamers
+any streamable C++ object to JSON and vice versa~\cite{buffer}; the custom streamers
 can also be supported. With the use of TBufferJSON, the data exchange between the server (C++)
 and the client (JavaScript) is simple. The real ROOT I/O remains fully on the server side.
 
@@ -164,7 +163,7 @@ and the client (JavaScript) is simple. The real ROOT I/O remains fully on the se
 The design of the GUI layout is based on \textit{\href{https://openui5.hana.ondemand.com/}{OpenUI5}}~\cite{openui}
 which is a JavaScript UI library consisting of a really large number of UI controls.
 \textit{OpenUI5} implements the MVC~\cite{mvc} architecture, which split
-the application logic into three separate parts:
+the application logic into three parts:
 \begin{itemize}
   \item The Model component contains the application's dynamic data.
   \item The View component is the final output that ends up in the user's browser and defines how the application's data should be displayed.
@@ -194,11 +193,11 @@ There are three main components in the ROOT7 graphics model:
 In the current state of ROOT, there are two main kinds of batch output images:
 \begin{itemize}
   \item \textbf{Vector graphics output} (like PDF and SVG) which is implemented by the native ROOT classes
-  \item \textbf{Bitmap output} (like PNG and JPEG) which is implemented natively on top of libAfterImage
+  \item \textbf{Bitmap output} (like PNG and JPEG) which is implemented natively on top of \textit{libAfterImage}
 \end{itemize}
 
 In the new ROOT7, the batch output doesn't rely on any dedicated ROOT graphics
-libraries, but it is based on the \textit{}{Headless mode} provided by the web
+libraries, but it is based on the \textit{headless mode} provided by the web
 browsers. In this mode, the graphics is generated in the background by the browser, re-using exactly the same code again and storing result in the output files.
 
 \section{Example: Fit Panel}
@@ -293,7 +292,7 @@ For displaying the \textit{ComboBox} with provided data, it should be defined in
       <ComboBox
          selectedKey="{/fSelected}"
          items="{ path: '/fItems' }">
-            <core:Item key="{id}" text="{text}"/>
+         <core:Item key="{id}" text="{text}"/>
       </ComboBox>
 \end{lstlisting}
 
@@ -312,7 +311,6 @@ Once an option is selected, it should be send back to the server side in JSON fo
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
      var json = this.getView().getModel().getJSON();
-
      this.websocket.Send("MODEL:" + json);
 \end{lstlisting}
 
@@ -321,9 +319,7 @@ The final step is decoding such JSON data in C++ and processing corresponding RO
 \begin{lstlisting}[language=C++,numbers=none]
     if (str.find("MODEL:") == 0) {
        std::string json = str.substr(6);
-
        auto model = TBufferJSON::FromJSON<RFitPanelModel>(json);
-
        if (!model) {
           // failure in JSON decoding, handle
        } else if (model->fSelected == "id0") {
@@ -345,11 +341,11 @@ The main advantage of such approach - exactly the same data structures are used 
 
 As the current graphics standards are slowly vanishing, the ROOT framework should
 base its graphics and GUI on the technologies of the next decades. ROOT7 proposes
-this new modern approach by being fully web oriented and based on de facto standards
+this new modern approach by being fully web oriented and based on \textit{de facto} standards
 like SVG or WebGL. Being based on a client/server model, it also allows to completely
 discouple the data from its graphics representation. In the same way the GUI tools
 are also acting on the data, and they are not embedded in the main application.
-The batch output remains an issue but the browsers' headless mode provides an elegant solution.
+The batch output remains an issue but the headless mode of the modern browsers provides an elegant solution.
 
 
 \section{References}
