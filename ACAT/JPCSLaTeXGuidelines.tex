@@ -97,7 +97,7 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
 \\
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[width=15pc]{alice.eps}\hspace{2pc}%
+    \includegraphics[width=16pc]{alice.eps}\hspace{2pc}%
   \end{center}
 \centering
 \begin{minipage}[b]{25pc}\caption{\label{label}3D view of the ALICE detector showing tracks and hits, using ROOT}
@@ -105,7 +105,7 @@ use of modern C++ and web based architecture, redefine completely ROOT graphics 
 \end{figure}
 
 
-\section{Objectives of the new version}
+\section{Objectives of the new version, namely ROOT7}
 
 The current version of ROOT6~\cite{root6} Graphical User Interface (GUI) is very ``OS-specific'' and originally based on X11.
 Meanwhile there are different problems, including missing support of X11 on MacOS ~\cite{x11} or difficulties to use OpenGL through remote X11.
@@ -119,15 +119,15 @@ The answer to all the above can be the \href{https://root.cern/root-7}{ROOT7}~\c
 A web based application (as ROOT7) is a client/server computer application (Figure 2),
 where the server is a standard ROOT C++ application and the client runs directly in the browser.
 The most important classes on the C++ side are {\it THttpServer}~\cite{http} which is handling
-the communication between the different parts and TBufferJSON~\cite{buffer}
-which is in charge of the I/O (Input/Output). The client side is written in JavaScript and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}.
+the communication between the different parts and \textit{TBufferJSON}~\cite{buffer}
+which is in charge of the Input/Output (I/O). The client side is written in JavaScript and uses \href{https://root.cern/js/}{JSROOT}~\cite{jsroot}.
 For the implementation of high-level widgets, the \textit{OpenUI5}~\cite{openui} framework is used facilitating the
 \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{Model-View-Controller (MVC)}~\cite{mvc}
-architecture. The components are described in the following sub-section.
+architecture. The components are described in the following sub-sections.
 
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[width=25pc]{figure2.eps}\hspace{2pc}%
+    \includegraphics[width=22pc]{figure2.eps}\hspace{2pc}%
   \end{center}
   \centering
 \begin{minipage}[b]{20pc}\caption{\label{label}Client Server model: the connection between the client side and the server side is made with a Browser using a web socket}
@@ -154,9 +154,9 @@ single TCP connection.
 
 \subsection{TBufferJSON}
 
-\href{https://root.cern/doc/master/classTBufferJSON.html}{TBufferJSON} can converts
+\href{https://root.cern/doc/master/classTBufferJSON.html}{\textit{TBufferJSON}} can convert
 any streamable C++ object to JSON and vice versa~\cite{buffer}; the custom streamers
-can also be supported. With the use of TBufferJSON, the data exchange between the server (C++)
+can also be supported. With the use of \textit{TBufferJSON}, the data exchange between the server (C++)
 and the client (JavaScript) is simple. The real ROOT I/O remains fully on the server side.
 
 \subsection{OpenUI5}
@@ -214,11 +214,11 @@ histogram to be fit. The new and old layout of the \textit{Fit Panel} is shown o
 \begin{figure}[h]
   \centering
 \begin{minipage}{14pc}
-\includegraphics[width=16pc]{rfitpanel1.eps}
+\includegraphics[width=13pc]{rfitpanel1.eps}
 \caption{\label{label}ROOT7 version of the Fit Panel}
 \end{minipage}\hspace{2pc}%
 \begin{minipage}{14pc}
-\includegraphics[width=15pc]{oldPanel.eps}
+\includegraphics[width=12pc]{oldPanel.eps}
 \caption{\label{label}ROOT6 version of the Fit Panel}
 \end{minipage}
 \end{figure}
@@ -227,7 +227,7 @@ The \textit{Fit Panel} includes a lot of different UI controls - text, items lis
 Values for these controls provided through \textit{JSONModel} class of \textit{OpenUI5}.
 A small but indicative example shows how the \textit{ComboBox} control can be dynamically filled and selection results can be used on the C++ side.
 
-The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox}:
+The first step is the creation of C++ structures, which can represent all necessary data for \textit{ComboBox} is described in the following code:
 
 \begin{lstlisting}[language=C++,numbers=none]
      // single item
@@ -245,7 +245,7 @@ The first step is the creation of C++ structures, which can represent all necess
 \end{lstlisting}
 
 The model structure includes vector of items \textit{fItems} and selected element \textit{fSelected}.
-This structure should be filled with the actual values and send to the client as JSON, using the \textit{TBufferJSON} class for transformation:
+This structure should be filled with the actual values and send to the client as JSON, using the \textit{TBufferJSON} class for transformation The C++ code below shows how to create three combo box items:
 
 \begin{lstlisting}[language=C++,numbers=none]
      RFitPanelModel model;
@@ -255,7 +255,7 @@ This structure should be filled with the actual values and send to the client as
      fWindow->Send(fConnId, "MODEL:"s + json.Data());
 \end{lstlisting}
 
-Produced JSON code:
+The C++ code above produces the following JSON output:
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
       {
@@ -277,7 +277,8 @@ Produced JSON code:
       }
 \end{lstlisting}
 
-When such data is received by the JavaScript client, it should be parsed and the model object assigned to the view:
+When such data is received by the JavaScript client, it should be parsed and the model object assigned to the view.
+Here is the JavaScript code showing how this is done:
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
     if (msg.find("MODEL:") == 0) {
@@ -286,7 +287,7 @@ When such data is received by the JavaScript client, it should be parsed and the
     }
 \end{lstlisting}
 
-For displaying the \textit{ComboBox} with provided data, it should be defined in the XML view file as follow:
+For displaying the \textit{ComboBox} with provided data, it should be defined in the XML view file as in the following piece of code:
 
 \begin{lstlisting}[language=XML,numbers=none]
       <ComboBox
@@ -307,14 +308,15 @@ And the produced \textit{ComboBox} element can be seen in Figure 5.
 \end{minipage}
 \end{figure}
 
-Once an option is selected, it should be send back to the server side in JSON format.
+\newpage
+Once an option is selected, it should be send back to the server side in JSON format, as shown in the following JavaScript code:
 
 \begin{lstlisting}[language=JavaScript,numbers=none]
      var json = this.getView().getModel().getJSON();
      this.websocket.Send("MODEL:" + json);
 \end{lstlisting}
 
-The final step is decoding such JSON data in C++ and processing corresponding ROOT functions:
+The final step is decoding such JSON data in C++ and processing corresponding ROOT functions, as shown below:
 
 \begin{lstlisting}[language=C++,numbers=none]
     if (str.find("MODEL:") == 0) {
