@@ -140,7 +140,7 @@ architecture. The components are described in the following sub-sections.
 2012 and is responsible for displaying the ROOT objects in web browsers using
 JavaScript. The displayed objects can be manipulated directly in
 the web browser. JSROOT can read binary data, stored in TFile, including \textit{TTree}.
-Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT jupyter\cite{jupyter} interface.
+Also the ROOT JSON format is fully supported. JSROOT is used by the ROOT Jupyter~\cite{jupyter} interface.
 
 \subsection{THttpServer}
 
@@ -185,7 +185,7 @@ There are three main components in the ROOT7 graphics model:
 \begin{enumerate}[label=\alph*)]
   \item The \textit{Pad} is a base entity containing the list of graphics objects to be drawn and is implemented by the \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RPad.html}{RPad}} class.
   \item The \textit{Canvas} is the window's topmost pad, implemented by \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RCanvas.html}{RCanvas}}.
-  \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \textbf{GetDrawable} method and is implemented in the \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
+  \item The \textit{Drawable} entity. A drawable can be anything that can be drawn on a pad. Each drawable entity has a \texttt{GetDrawable} method and is implemented in the \textit{\href{https://root.cern/doc/master/classROOT_1_1Experimental_1_1RDrawable.html}{RDrawable}} class.
 \end{enumerate}
 
 \subsection{Batch Output}
