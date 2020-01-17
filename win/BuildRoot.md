@@ -14,3 +14,11 @@
 
     call C:\Programme\root\bin\thisroot.bat
     set PATH=%PATH%;C:\Qt\5.12.6\msvc2017\bin
+
+## Initialize cygwin
+
+Add (or create new) Cygwin.bat file with MSVC initialization
+
+    call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+
+Remove link.exe file from cygwin to avoid conflict with the MS linker
