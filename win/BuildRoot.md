@@ -13,11 +13,17 @@ To get some debug info:
 ## Start building
 
     cmake --build . --config Release -- /maxcpucount
+    cmake --build . --config Debug -- /maxcpucount
 
 ## Initialize ROOT
 
     call C:\Programme\root\bin\thisroot.bat
     set PATH=%PATH%;C:\Qt\5.12.6\msvc2017\bin
+
+## Debug ROOT
+
+    devenv /debugexe root.exe ...
+
 
 ## Initialize cygwin
 
