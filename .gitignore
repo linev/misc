@@ -1,4 +1,6 @@
 *.pdf
 *.png
+ui5bld
 node_modules
 openui5.tar.gz
+reduce_includes/reduce_includes
