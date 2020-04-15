@@ -1,10 +1,10 @@
 #Count file statistic
 
-All files extenstion
+All files extensions
 
     ./count.sh
 
-Only "d" files extenstion
+Only "d" files extensions
 
     ./countd.sh
 

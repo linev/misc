@@ -3,6 +3,7 @@
 #include <fstream>
 #include <streambuf>
 #include <cstdlib>
+#include <cstring>
 
 std::string ReadFile(const char *fname)
 {
@@ -27,6 +28,7 @@ void WriteFile(const char *fname, const std::string &content)
 
 const char *exec_cmd = nullptr;
 
+const char *go4arg = "$$go4obj$$";
 
 int ProcessFile(const char *fname)
 {
@@ -34,9 +36,9 @@ int ProcessFile(const char *fname)
 
    printf("Processing %s len %d\n", fname, (int) content.length());
 
-   if (content.empty()) return 0;
+   if (content.length() < 20) return 0;
 
-   auto lastpos = std::string::npos;
+   auto lastpos = content.length() - 8;
 
    int nremoved = 0;
    bool modified = false;
@@ -51,7 +53,22 @@ int ProcessFile(const char *fname)
 
       WriteFile(fname, content);
 
-      int res = system(exec_cmd);
+      std::string exec = exec_cmd;
+      auto p1 = exec.find(go4arg);
+      if (p1 != std::string::npos) {
+         exec.erase(p1, strlen(go4arg));
+         std::string objname = fname;
+         objname.resize(objname.length()-3); // for default cxx extension
+         objname.append("o");  // replace extension by object file
+         exec.insert(p1,objname);
+         std::string rmfile = "rm -f ";
+         rmfile.append(objname);
+         system(rmfile.c_str());
+      }
+
+      int res = system(exec.c_str());
+
+      // printf("Exec %s res %d place %s\n", exec.c_str(), res, content.substr(pos, 28).c_str());
 
       if (res == 0) {
          nremoved++;
