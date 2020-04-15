@@ -58,7 +58,8 @@ int ProcessFile(const char *fname)
       if (p1 != std::string::npos) {
          exec.erase(p1, strlen(go4arg));
          std::string objname = fname;
-         objname.resize(objname.length()-3); // for default cxx extension
+         auto dot = objname.rfind(".");
+         objname.resize(dot+1);
          objname.append("o");  // replace extension by object file
          exec.insert(p1,objname);
          std::string rmfile = "rm -f ";
@@ -68,7 +69,12 @@ int ProcessFile(const char *fname)
 
       int res = system(exec.c_str());
 
-      // printf("Exec %s res %d place %s\n", exec.c_str(), res, content.substr(pos, 28).c_str());
+      if ((p1 != std::string::npos) && (res==0)) {
+         std::string info = content.substr(pos, 50);
+         auto newline = info.find("\n");
+         if (newline != std::string::npos) info.resize(newline);
+         printf("Exec %s res %d place %s\n", exec.c_str(), res, info.c_str());
+      }
 
       if (res == 0) {
          nremoved++;
