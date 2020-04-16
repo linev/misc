@@ -29,6 +29,7 @@ void WriteFile(const char *fname, const std::string &content)
 const char *exec_cmd = nullptr;
 
 const char *go4arg = "$$go4obj$$";
+const char *qtarg = "$$qtobj$$";
 
 int ProcessFile(const char *fname)
 {
@@ -61,6 +62,23 @@ int ProcessFile(const char *fname)
          auto dot = objname.rfind(".");
          objname.resize(dot+1);
          objname.append("o");  // replace extension by object file
+
+         exec.insert(p1,objname);
+         std::string rmfile = "rm -f ";
+         rmfile.append(objname);
+         system(rmfile.c_str());
+      } else if ((p1 = exec.find(qtarg)) != std::string::npos) {
+         exec.erase(p1, strlen(qtarg));
+
+         std::string objname = fname;
+         auto dot = objname.rfind(".");
+         objname.resize(dot+1);
+         objname.append("o");  // replace extension by object file
+         auto slash = objname.rfind("/");
+         if (slash != std::string::npos)
+            objname.erase(0, slash+1);
+         objname.insert(0,".obj/");
+
          exec.insert(p1,objname);
          std::string rmfile = "rm -f ";
          rmfile.append(objname);
@@ -99,7 +117,7 @@ int ProcessFile(const char *fname)
 
 int main(int argc, const char **argv)
 {
-   printf("Reduce includes utility v0.1\n");
+   printf("Reduce includes utility v0.2\n");
 
    if (argc < 3) {
       printf("Too few arguments\n");
