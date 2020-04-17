@@ -4,6 +4,10 @@
 #include <streambuf>
 #include <cstdlib>
 #include <cstring>
+#include <streambuf>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
 
 std::string ReadFile(const char *fname)
 {
@@ -114,10 +118,96 @@ int ProcessFile(const char *fname)
    return nremoved;
 }
 
+bool SameInclude(const std::string &name1, const std::string &name2)
+{
+   if (name1 == name2) return true;
+
+   if ((name1[0] != 'c') && (name2[0] != 'c')) return false;
+
+   static const std::vector<std::string> vect1 =
+      { "cassert",  "cctype",  "cerrno",  "cfenv",  "cfloat",  "inttypes.h",
+        "climits", "clocale",  "cmath",  "csetjmp", "csignal", "cstdarg", "cstddef",
+        "cstdint", "cstdio",  "cstring", "cstdlib", "ctime", "cuchar", "cwchar", "cwctype" };
+
+   static const std::vector<std::string> vect2 =
+      { "assert.h", "ctype.h", "errno.h", "fenv.h", "float.h", "inttypes.h",
+        "limits.h", "locale.h", "math.h", "setjmp.h", "signal.h", "stdarg.h", "stddef.h",
+        "stdint.h", "stdio.h", "string.h", "stdlib.h", "time.h", "uchar.h", "wchar.h", "wctype.h" };
+
+   std::string n1, n2;
+   if (name2[0] == 'c') { n1 = name2; n2 = name1; }
+                   else { n1 = name1; n2 = name2; }
+
+   auto pos1 = std::find(std::begin(vect1), std::end(vect1), n1);
+   if (pos1 == std::end(vect1)) return false;
+
+   int indx = pos1 - std::begin(vect1);
+
+   return vect2[indx] == n2;
+}
+
+int FindDuplicate(const char *fname)
+{
+   std::string content = ReadFile(fname);
+
+   auto len = content.length();
+   if (len < 20) return 0;
+
+   int lastpos = 0;
+
+   std::vector<std::string> includes;
+
+   while (lastpos < len) {
+
+      auto pos = content.find("#include", lastpos);
+      if (pos == std::string::npos) break;
+
+      pos += 9;
+
+      while ((pos < len) && (content[pos] == ' ')) pos++;
+      if (pos>=len) break;
+
+      char symb;
+
+      while ((pos < len) && (content[pos] == ' ') && (content[pos] != '\"')) pos++;
+
+      if (content[pos] == '<') symb = '>'; else
+      if (content[pos] == '\"') symb = '\"'; else { lastpos = pos+1; continue; }
+
+      auto pos2 = pos+1;
+      while ((pos2 < len) && (content[pos2] != symb)) pos2++;
+      if (pos2>=len) break;
+
+      lastpos = pos2+1;
+      if (pos2-pos>100) continue;
+
+      std::string inclname = content.substr(pos+1, pos2-pos-1);
+
+      includes.emplace_back(content.substr(pos+1, pos2-pos-1));
+   }
+
+   if (includes.size() < 2) return 0;
+
+   int dupl = 0;
+
+   for (int n1=0;n1<includes.size()-1;++n1) {
+      auto &name1 = includes[n1];
+      for (int n2=n1+1;n2<includes.size();++n2) {
+         auto &name2 = includes[n2];
+         if (SameInclude(name1, name2)) {
+            printf("File %s has duplicated include %s\n", fname, name1.c_str());
+            dupl++;
+         }
+      }
+   }
+
+   return dupl;
+}
+
 
 int main(int argc, const char **argv)
 {
-   printf("Reduce includes utility v0.2\n");
+   printf("Reduce includes utility v0.3\n");
 
    if (argc < 3) {
       printf("Too few arguments\n");
@@ -130,10 +220,18 @@ int main(int argc, const char **argv)
 
    int sum = 0;
 
-   for (int n=2; n<argc; ++n)
-      sum += ProcessFile(argv[n]);
+   const char *kind = "removed";
 
-   printf("Totally removed includes %d\n", sum);
+   if (!strcmp(exec_cmd,"duplicate")) {
+      kind = "duplicated";
+      for (int n=2; n<argc; ++n)
+         sum += FindDuplicate(argv[n]);
+   } else {
+      for (int n=2; n<argc; ++n)
+         sum += ProcessFile(argv[n]);
+   }
+
+   printf("Files %d Total %s includes %d\n", argc-2, kind, sum);
 
    return 0;
 
