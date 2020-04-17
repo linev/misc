@@ -162,6 +162,13 @@ int FindDuplicate(const char *fname)
       auto pos = content.find("#include", lastpos);
       if (pos == std::string::npos) break;
 
+      if (pos > 5) {
+         // simple check if include at the begin of the line
+         auto p0 = pos - 1;
+         while ((p0 > pos - 5) && ((content[p0] == ' ') || (content[p0] == '\t'))) p0--;
+         if (content[p0] != '\n') { lastpos = pos + 11; continue; }
+      }
+
       pos += 9;
 
       while ((pos < len) && (content[pos] == ' ')) pos++;
