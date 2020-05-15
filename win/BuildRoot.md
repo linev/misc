@@ -37,3 +37,23 @@ Add (or create new) Cygwin.bat file with MSVC initialization
     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
 
 Remove link.exe file from cygwin to avoid conflict with the MS linker
+
+
+
+
+# Building go4 with cmake on Windows
+
+On VirtualBox machine do following - start VC x86 console
+
+    set PATH=%PATH%;C:\Qt\5.12.6\msvc2017\bin
+    call C:\Soft\root\bin\thisroot.bat
+
+When calling cmake:
+
+     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4 -DCMAKE_CXX_STANDARD=14 -DQt5_DIR=C:\Qt\5.12.6\msvc2017\lib\cmake
+
+When building:
+
+    cmake --build . --config Release -- /maxcpucount
+    cmake --build . --config Debug -- /maxcpucount
+
