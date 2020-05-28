@@ -212,6 +212,37 @@ int FindDuplicate(const char *fname)
 }
 
 
+int CheckRootHeader(const char *fname)
+{
+   std::string content = ReadFile(fname);
+
+   const char* name1 = strrchr(fname, '/');
+   if (!name1)
+      name1 = fname;
+   else
+      name1++;
+   const char* name2 = strrchr(fname, '.');
+   if (!name2) return 0;
+   std::string expected = std::string("ROOT_") + std::string(name1, name2-name1);
+
+   if (content.find("#pragma once") != std::string::npos) return 0;
+
+   auto pos0 = content.find(std::string("#ifndef ") + expected);
+   if (pos0 == std::string::npos) {
+      printf("%s not found #ifndef %s\n", fname, expected.c_str());
+      return 1;
+   }
+
+   auto pos1 = content.find(std::string("#define ") + expected);
+   if ((pos1 == std::string::npos) || (pos1 < pos0)) {
+      printf("%s not found #define %s\n", fname, expected.c_str());
+      return 1;
+   }
+
+   return 0;
+}
+
+
 int main(int argc, const char **argv)
 {
    printf("Reduce includes utility v0.3\n");
@@ -233,6 +264,10 @@ int main(int argc, const char **argv)
       kind = "duplicated";
       for (int n=2; n<argc; ++n)
          sum += FindDuplicate(argv[n]);
+   } else if (!strcmp(exec_cmd,"roothdr")) {
+      kind = "roothdr";
+      for (int n=2; n<argc; ++n)
+         sum += CheckRootHeader(argv[n]);
    } else {
       for (int n=2; n<argc; ++n)
          sum += ProcessFile(argv[n]);
