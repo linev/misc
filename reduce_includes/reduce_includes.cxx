@@ -278,6 +278,13 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   if (content.find("TVirtualPad.h") != std::string::npos) {
+      if ((content.find("gPad")==std::string::npos) && (content.find("GetSelectedPad()")==std::string::npos)) {
+         res = 1;
+         printf("%s not used TVirtualPad.h\n", fname);
+      }
+   }
+
    if (content.find("TGClient.h") != std::string::npos) {
       if (content.find("gClient")==std::string::npos) {
          res = 1;
