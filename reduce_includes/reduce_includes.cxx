@@ -384,6 +384,15 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TApplication.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TApplication",pos0+12)==std::string::npos) &&
+          (content.find("gApplication",pos0+12)==std::string::npos)) {
+         res = 1;
+         printf("%s not used TApplication.h\n", fname);
+      }
+   }
+
    pos0 = content.find("TFile.h");
    if (pos0 != std::string::npos) {
       bool has_gfile = (content.find("gFile", pos0+7) != std::string::npos);
@@ -495,7 +504,7 @@ int CheckRootSource(const char *fname)
 
 int main(int argc, const char **argv)
 {
-   printf("Reduce includes utility v0.3\n");
+   printf("Reduce includes utility v0.5\n");
 
    if (argc < 3) {
       printf("Too few arguments\n");
