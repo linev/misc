@@ -438,6 +438,14 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TObjString.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TObjString", pos0+5) == std::string::npos) {
+         printf("%s not used TObjString.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
