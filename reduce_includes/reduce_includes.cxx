@@ -243,6 +243,68 @@ int CheckRootHeader(const char *fname)
 }
 
 
+int CheckRootSource(const char *fname)
+{
+   std::string content = ReadFile(fname);
+
+   int res = 0;
+
+   if (content.find("TROOT.h") != std::string::npos) {
+      if ((content.find("TROOT::")==std::string::npos) &&
+          (content.find("gROOT")==std::string::npos)) {
+         res = 1;
+         printf("%s not used TROOT.h\n", fname);
+      }
+   }
+
+   if (content.find("TStyle.h") != std::string::npos) {
+      if (content.find("gStyle")==std::string::npos) {
+         res = 1;
+         printf("%s not used TStyle.h\n", fname);
+      }
+   }
+
+   if ((content.find("TPad.h") != std::string::npos) && (content.find("TCanvas.h") != std::string::npos)) {
+      printf("%s both TPad.h and TCanvas.h found\n", fname);
+      res = 1;
+   }
+
+   auto pos0 = content.find("TPad.h");
+   if (pos0 != std::string::npos) {
+      bool has_gpad = (content.find("gPad", pos0+5) != std::string::npos);
+      bool has_pad = (content.find("TPad", pos0+5) != std::string::npos);
+      if (has_gpad && !has_pad) {
+         printf("%s only gPad used with TPad.h, replace by TVirtualPad.h\n", fname);
+         res = 1;
+      }
+      if (!has_gpad && !has_pad) {
+         printf("%s not used TPad.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TCanvas.h");
+   if (pos0 != std::string::npos) {
+      bool has_gpad = (content.find("gPad", pos0+8) != std::string::npos);
+      bool has_pad = (content.find("TPad", pos0+8) != std::string::npos);
+      bool has_canvas = (content.find("TCanvas", pos0+8) != std::string::npos);
+      if (has_gpad && !has_pad && !has_canvas) {
+         printf("%s only gPad used with TCanvas.h, replace by TVirtualPad.h\n", fname);
+         res = 1;
+      }
+      if (has_gpad && has_pad && !has_canvas) {
+         printf("%s only TPad used with TCanvas.h, replace by TPad.h\n", fname);
+         res = 1;
+      }
+      if (!has_gpad && !has_pad && !has_canvas) {
+         printf("%s not used TCanvas.h\n", fname);
+         res = 1;
+      }
+   }
+
+   return res;
+}
+
 int main(int argc, const char **argv)
 {
    printf("Reduce includes utility v0.3\n");
@@ -268,6 +330,10 @@ int main(int argc, const char **argv)
       kind = "roothdr";
       for (int n=2; n<argc; ++n)
          sum += CheckRootHeader(argv[n]);
+   } else if (!strcmp(exec_cmd,"rootsrc")) {
+      kind = "rootsrc";
+      for (int n=2; n<argc; ++n)
+         sum += CheckRootSource(argv[n]);
    } else {
       for (int n=2; n<argc; ++n)
          sum += ProcessFile(argv[n]);
