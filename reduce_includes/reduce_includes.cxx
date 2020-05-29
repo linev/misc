@@ -407,10 +407,19 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   if (content.find("TLegend.h") != std::string::npos) {
-      if (content.find("TLegend") == std::string::npos) {
-         res = 1;
+   pos0 = content.find("TLegend.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TLegend", pos0+8) == std::string::npos) {
          printf("%s not used TLegend.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TProfile.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TProfile", pos0+8) == std::string::npos) {
+         printf("%s not used TProfile.h\n", fname);
+         res = 1;
       }
    }
 
