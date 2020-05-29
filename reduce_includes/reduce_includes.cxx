@@ -470,6 +470,14 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TF1.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TF1", pos0+5) == std::string::npos) {
+         printf("%s not used TF1.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
