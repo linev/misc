@@ -278,6 +278,12 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   if (content.find("TGClient.h") != std::string::npos) {
+      if (content.find("gClient")==std::string::npos) {
+         res = 1;
+         printf("%s not used TGClient.h\n", fname);
+      }
+   }
 
    if ((content.find("TPad.h") != std::string::npos) && (content.find("TCanvas.h") != std::string::npos)) {
       printf("%s both TPad.h and TCanvas.h found\n", fname);
