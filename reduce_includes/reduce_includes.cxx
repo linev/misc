@@ -361,6 +361,31 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TFile.h");
+   if (pos0 != std::string::npos) {
+      bool has_gfile = (content.find("gFile", pos0+7) != std::string::npos);
+      bool has_gdir = (content.find("gDirectory", pos0+7) != std::string::npos);
+      bool has_file = (content.find("TFile", pos0+7) != std::string::npos);
+      if (has_gdir && !has_gfile && !has_file) {
+         printf("%s only gDirectory used with TFile.h, replace by TDirectory.h\n", fname);
+         res = 1;
+      }
+      if (!has_gdir && !has_gfile && !has_file) {
+         printf("%s not used TFile.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TTree.h");
+   if (pos0 != std::string::npos) {
+      bool has_gtree = (content.find("gTree", pos0+7) != std::string::npos);
+      bool has_tree = (content.find("TTree", pos0+7) != std::string::npos);
+      if (!has_gtree && !has_tree) {
+         printf("%s not used TTree.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
