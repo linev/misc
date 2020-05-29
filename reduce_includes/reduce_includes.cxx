@@ -250,10 +250,17 @@ int CheckRootSource(const char *fname)
    int res = 0;
 
    if (content.find("TROOT.h") != std::string::npos) {
-      if ((content.find("TROOT::")==std::string::npos) &&
-          (content.find("gROOT")==std::string::npos)) {
+      if ((content.find("TROOT::") == std::string::npos) &&
+          (content.find("gROOT") == std::string::npos)) {
          res = 1;
          printf("%s not used TROOT.h\n", fname);
+      }
+   }
+
+   if (content.find("TMath.h") != std::string::npos) {
+      if (content.find("TMath::") == std::string::npos) {
+         res = 1;
+         printf("%s not used TMath.h\n", fname);
       }
    }
 
