@@ -359,7 +359,7 @@ int CheckRootSource(const char *fname)
 
       static const std::vector<std::string> sys_types =
          { "FileStat_t", "UserGroup_t", "SysInfo_t", "CpuInfo_t", "MemInfo_t", "ProcInfo_t",
-           "RedirectHandle_t", "TProcessEventTimer" };
+           "RedirectHandle_t", "TProcessEventTimer", "gProgPath", "gProgName", "gRootDir", "gSystemMutex" };
 
       if (!has_gsys && !has_sys) {
          for (auto &name : sys_types)
