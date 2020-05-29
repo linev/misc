@@ -417,12 +417,22 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   if (content.find("TGraph.h") != std::string::npos) {
-      if (content.find("TGraph") == std::string::npos) {
+   pos0 = content.find("TLine.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TLine", pos0+8) == std::string::npos) {
+         printf("%s not used TLine.h\n", fname);
          res = 1;
-         printf("%s not used TGraph.h\n", fname);
       }
    }
+
+   pos0 = content.find("TMarker.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TMarker", pos0+8) == std::string::npos) {
+         printf("%s not used TMarker.h\n", fname);
+         res = 1;
+      }
+   }
+
 
    pos0 = content.find("TLegend.h");
    if (pos0 != std::string::npos) {
