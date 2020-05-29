@@ -271,6 +271,13 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   if (content.find("TEnv.h") != std::string::npos) {
+      if (content.find("gEnv")==std::string::npos) {
+         res = 1;
+         printf("%s not used TEnv.h\n", fname);
+      }
+   }
+
    if (content.find("TVirtualX.h") != std::string::npos) {
       if (content.find("gVirtualX")==std::string::npos) {
          res = 1;
