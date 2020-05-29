@@ -249,9 +249,11 @@ int CheckRootSource(const char *fname)
 
    int res = 0;
 
-   if (content.find("TROOT.h") != std::string::npos) {
+   auto pos0 = content.find("TROOT.h");
+   if (pos0 != std::string::npos) {
       if ((content.find("ROOT::") == std::string::npos) &&
-          (content.find("gROOT") == std::string::npos)) {
+          (content.find("gROOT") == std::string::npos) &&
+          (content.find("TROOT", pos0+6) == std::string::npos)) {
          res = 1;
          printf("%s not used TROOT.h\n", fname);
       }
@@ -318,7 +320,7 @@ int CheckRootSource(const char *fname)
       res = 1;
    }
 
-   auto pos0 = content.find("TPad.h");
+   pos0 = content.find("TPad.h");
    if (pos0 != std::string::npos) {
       bool has_gpad = (content.find("gPad", pos0+5) != std::string::npos);
       bool has_pad = (content.find("TPad", pos0+5) != std::string::npos);
