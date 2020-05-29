@@ -285,6 +285,13 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   if (content.find("RVersion.h") != std::string::npos) {
+      if ((content.find("ROOT_RELEASE")==std::string::npos) && (content.find("ROOT_VERSION")==std::string::npos)) {
+         res = 1;
+         printf("%s not used RVersion.h\n", fname);
+      }
+   }
+
    if (content.find("TVirtualGL.h") != std::string::npos) {
       if (content.find("gGLManager")==std::string::npos) {
          res = 1;
