@@ -264,6 +264,21 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   if (content.find("TVirtualX.h") != std::string::npos) {
+      if (content.find("gVirtualX")==std::string::npos) {
+         res = 1;
+         printf("%s not used TVirtualX.h\n", fname);
+      }
+   }
+
+   if (content.find("TVirtualGL.h") != std::string::npos) {
+      if (content.find("gGLManager")==std::string::npos) {
+         res = 1;
+         printf("%s not used TVirtualGL.h\n", fname);
+      }
+   }
+
+
    if ((content.find("TPad.h") != std::string::npos) && (content.find("TCanvas.h") != std::string::npos)) {
       printf("%s both TPad.h and TCanvas.h found\n", fname);
       res = 1;
@@ -299,6 +314,37 @@ int CheckRootSource(const char *fname)
       if (!has_gpad && !has_pad && !has_canvas) {
          printf("%s not used TCanvas.h\n", fname);
          res = 1;
+      }
+   }
+
+   pos0 = content.find("TSystem.h");
+   if (pos0 != std::string::npos) {
+      bool has_gsys = (content.find("gSystem", pos0+8) != std::string::npos);
+      bool has_sys = (content.find("TSystem", pos0+8) != std::string::npos);
+      bool has_types = false;
+
+      static const std::vector<std::string> sys_types =
+         { "FileStat_t", "UserGroup_t", "SysInfo_t", "CpuInfo_t", "MemInfo_t", "ProcInfo_t",
+           "RedirectHandle_t", "TProcessEventTimer" };
+
+      if (!has_gsys && !has_sys) {
+         for (auto &name : sys_types)
+            if (content.find(name, pos0+8) != std::string::npos) {
+               has_types = true;
+               break;
+            }
+
+         printf("%s not used TSystem.h, has types =  %s\n", fname, (has_types ? "true" : "false"));
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TDirectory.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TDirectory",pos0+10)==std::string::npos) &&
+          (content.find("gDirectory",pos0+10)==std::string::npos)) {
+         res = 1;
+         printf("%s not used TDirectory.h\n", fname);
       }
    }
 
