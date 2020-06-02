@@ -391,9 +391,18 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TApplication.h");
    if (pos0 != std::string::npos) {
       if ((content.find("TApplication",pos0+12)==std::string::npos) &&
+          (content.find("GetApplication()->",pos0+12)==std::string::npos) &&
           (content.find("gApplication",pos0+12)==std::string::npos)) {
          res = 1;
          printf("%s not used TApplication.h\n", fname);
+      }
+   }
+
+   pos0 = content.find("TRint.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TRint", pos0+8) == std::string::npos) {
+         printf("%s not used TRint.h\n", fname);
+         res = 1;
       }
    }
 
@@ -540,12 +549,30 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TClass.h");
    if (pos0 != std::string::npos) {
       if ((content.find("IsA()->", pos0+8) == std::string::npos) &&
-          (content.find("GetClass()->", pos0+8) == std::string::npos) &&
+          (content.find("Class()->", pos0+8) == std::string::npos) &&
           (content.find("TClass", pos0+8) == std::string::npos)) {
          printf("%s not uses TClass.h\n", fname);
          res = 1;
       }
    }
+
+   pos0 = content.find("TRandom.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("gRandom", pos0+8) == std::string::npos) &&
+          (content.find("TRandom", pos0+8) == std::string::npos)) {
+         printf("%s not uses TRandom.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TTimer.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TTimer", pos0+8) == std::string::npos) {
+         printf("%s not used TTimer.h\n", fname);
+         res = 1;
+      }
+   }
+
 
    return res;
 }
