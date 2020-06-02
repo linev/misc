@@ -499,6 +499,24 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TBuffer.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TBuffer", pos0+8) == std::string::npos) {
+         printf("%s not used TBuffer.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("Riostream.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("ostream", pos0+8) == std::string::npos) &&
+          (content.find("fstream", pos0+8) == std::string::npos) &&
+          (content.find("std::endl", pos0+8) == std::string::npos)) {
+         printf("%s not used Riostream.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
