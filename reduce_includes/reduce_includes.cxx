@@ -301,8 +301,11 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   if (content.find("TVirtualPad.h") != std::string::npos) {
-      if ((content.find("gPad")==std::string::npos) && (content.find("GetSelectedPad()")==std::string::npos)) {
+   pos0 = content.find("TVirtualPad.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("gPad", pos0+9)==std::string::npos) &&
+          (content.find("GetSelectedPad()", pos0+9)==std::string::npos) &&
+          (content.find("TVirtualPad", pos0+9)==std::string::npos)) {
          res = 1;
          printf("%s not used TVirtualPad.h\n", fname);
       }
@@ -339,15 +342,16 @@ int CheckRootSource(const char *fname)
       bool has_gpad = (content.find("gPad", pos0+8) != std::string::npos);
       bool has_pad = (content.find("TPad", pos0+8) != std::string::npos);
       bool has_canvas = (content.find("TCanvas", pos0+8) != std::string::npos);
-      if (has_gpad && !has_pad && !has_canvas) {
+      bool has_get = (content.find("GetCanvas()", pos0+8) != std::string::npos);
+      if (has_gpad && !has_pad && !has_canvas && !has_get) {
          printf("%s only gPad used with TCanvas.h, replace by TVirtualPad.h\n", fname);
          res = 1;
       }
-      if (has_gpad && has_pad && !has_canvas) {
+      if (has_gpad && has_pad && !has_canvas && !has_get) {
          printf("%s only TPad used with TCanvas.h, replace by TPad.h\n", fname);
          res = 1;
       }
-      if (!has_gpad && !has_pad && !has_canvas) {
+      if (!has_gpad && !has_pad && !has_canvas && !has_get) {
          printf("%s not used TCanvas.h\n", fname);
          res = 1;
       }
