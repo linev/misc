@@ -312,7 +312,7 @@ int CheckRootSource(const char *fname)
    }
 
    if (content.find("TGClient.h") != std::string::npos) {
-      if (content.find("gClient")==std::string::npos) {
+      if ((content.find("gClient")==std::string::npos) && (content.find("fClient")==std::string::npos)) {
          res = 1;
          printf("%s not used TGClient.h\n", fname);
       }
@@ -555,6 +555,16 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TView.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TView", pos0+8) == std::string::npos) &&
+          (content.find("GetView()", pos0+8) == std::string::npos)) {
+         printf("%s not uses TView.h\n", fname);
+         res = 1;
+      }
+   }
+
+
    pos0 = content.find("TRandom.h");
    if (pos0 != std::string::npos) {
       if ((content.find("gRandom", pos0+8) == std::string::npos) &&
@@ -578,6 +588,8 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TGSplitter.h");
    if (pos0 != std::string::npos) {
       if ((content.find("TGSplitter", pos0+8) == std::string::npos) &&
+          (content.find("TGVSplitter", pos0+8) == std::string::npos) &&
+          (content.find("TGHSplitter", pos0+8) == std::string::npos) &&
           (content.find("fSplitter", pos0+8) == std::string::npos)) {
          printf("%s not uses TGSplitter.h\n", fname);
          res = 1;
@@ -594,65 +606,83 @@ int CheckRootSource(const char *fname)
    }
 
 
+   pos0 = content.find("TGDockableFrame.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGDockableFrame", pos0+8) == std::string::npos) &&
+          (content.find("GetToolDock()->", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGDockableFrame.h\n", fname);
+         res = 1;
+      }
+   }
+
+
    pos0 = content.find("TGDoubleSlider.h");
    if (pos0 != std::string::npos) {
       if ((content.find("TGDoubleSlider", pos0+8) == std::string::npos) &&
           (content.find("GetSlider()", pos0+8) == std::string::npos) &&
-          (content.find("fSlider", pos0+8) == std::string::npos)) {
+          (content.find("Slider->", pos0+8) == std::string::npos)) {
          printf("%s not uses TGDoubleSlider.h\n", fname);
          res = 1;
       }
    }
 
-   pos0 = content.find("TGHSlider.h");
+   pos0 = content.find("TGSlider.h");
    if (pos0 != std::string::npos) {
-      if ((content.find("TGHSlider", pos0+8) == std::string::npos) &&
+      if ((content.find("TGSlider", pos0+8) == std::string::npos) &&
+          (content.find("TGHSlider", pos0+8) == std::string::npos) &&
+          (content.find("TGVSlider", pos0+8) == std::string::npos) &&
           (content.find("fSlider", pos0+8) == std::string::npos)) {
-         printf("%s not uses TGHSlider.h\n", fname);
+         printf("%s not uses TGSlider.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TGButton.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGButton", pos0+8) == std::string::npos) &&
+          (content.find("TGTextButton", pos0+8) == std::string::npos) &&
+          (content.find("TGPictureButton", pos0+8) == std::string::npos) &&
+          (content.find("TGCheckButton", pos0+8) == std::string::npos) &&
+          (content.find("TGRadioButton", pos0+8) == std::string::npos) &&
+          (content.find("TGSplitButton", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGButton.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TGFSContainer.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGFileItem", pos0+8) == std::string::npos) &&
+          (content.find("TGFileContainer", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGFSContainer.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TGTextEditDialogs.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGSearchDialog", pos0+8) == std::string::npos) &&
+          (content.find("TGPrintDialog", pos0+8) == std::string::npos) &&
+          (content.find("TGGotoDialog", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGTextEditDialogs.h\n", fname);
          res = 1;
       }
    }
 
    static const std::vector<std::string> test_types = {
-      "TObjString", "TTimer", "TUrl", "TBrowser",
-      "TGButton", "TGCanvas", "TGColorDialog", "TGColorSelect", "TGComboBox",
-      "TGDockableFrame", "TGFileBrowser", "TGFileDialog", "TGFontDialog",
-      "TGFont", "TGFrame", "TGFSComboBox", "TGFSContainer", "TGIcon",
+      "TObjString", "TTimer", "TUrl", "TBrowser", "TImage", "THStack",
+      // gui classes
+      "TGCanvas", "TGColorDialog", "TGColorSelect", "TGComboBox",
+      "TGFileBrowser", "TGFileDialog", "TGFontDialog",
+      "TGFont", "TGFrame", "TGFSComboBox",  "TGIcon",
       "TGInputDialog", "TGLabel", "TGLayout", "TGListBox", "TGListTree", "TGListView",
       "TGMdiDecorFrame", "TGMdiFrame", "TGMdi", "TGMdiMainFrame",
-"TGMdiMenu",
-"TGMsgBox",
-"TGNumberEntry",
-"TGObject",
-"TGPack",
-"TGPasswdDialog",
-"TGPicture",
-"TGProgressBar",
-"TGScrollBar",
-"TGSimpleTable",
-"TGSimpleTableInterface",
-"TGSlider",
-"TGSpeedo",
-"TGSplitFrame",
-"TGStatusBar",
-"TGTableCell",
-"TGTableContainer",
-"TGTable",
-"TGTableHeader",
-"TGTableLayout",
-"TGTextBuffer",
-"TGTextEditDialogs",
-"TGTextEdit",
-"TGTextEditor",
-"TGTextEntry",
-"TGText",
-"TGTextView",
-"TGToolBar",
-"TGToolTip",
-"TGTripleSlider",
-"TGuiBuilder",
-"TGView",
-"TGXYLayout"
+      "TGMdiMenu", "TGMsgBox", "TGNumberEntry", "TGObject", "TGPack", "TGPasswdDialog",
+      "TGPicture", "TGProgressBar", "TGScrollBar", "TGSimpleTable", "TGSimpleTableInterface",
+      "TGSpeedo", "TGSplitFrame", "TGStatusBar", "TGTableCell", "TGTable",
+      "TGTableHeader", "TGTableLayout", "TGTextBuffer", "TGTextEdit", "TGTextEditor",
+      "TGTextEntry", "TGText", "TGTextView", "TGToolBar", "TGToolTip", "TGuiBuilder",
+      "TGView", "TGXYLayout"
    };
 
    for(auto &clname : test_types) {
