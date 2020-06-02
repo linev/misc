@@ -385,6 +385,7 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TDirectory.h");
    if (pos0 != std::string::npos) {
       if ((content.find("TDirectory",pos0+10)==std::string::npos) &&
+          (content.find("GetDirectory", pos0+7) == std::string::npos) &&
           (content.find("gDirectory",pos0+10)==std::string::npos)) {
          res = 1;
          printf("%s not used TDirectory.h\n", fname);
@@ -410,7 +411,8 @@ int CheckRootSource(const char *fname)
    }
 
    pos0 = content.find("TFile.h");
-   if (pos0 != std::string::npos) {
+   if ((pos0 != std::string::npos) && (content.find("GetCurrentFile", pos0+7) == std::string::npos) &&
+      (content.find("GetFile", pos0+7) == std::string::npos)) {
       bool has_gfile = (content.find("gFile", pos0+7) != std::string::npos);
       bool has_gdir = (content.find("gDirectory", pos0+7) != std::string::npos);
       bool has_file = (content.find("TFile", pos0+7) != std::string::npos);
@@ -423,6 +425,16 @@ int CheckRootSource(const char *fname)
          res = 1;
       }
    }
+
+   pos0 = content.find("TKey.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TKey",pos0+10)==std::string::npos) &&
+          (content.find("GetKey",pos0+10)==std::string::npos)) {
+         res = 1;
+         printf("%s not used TKey.h\n", fname);
+      }
+   }
+
 
    pos0 = content.find("TTree.h");
    if (pos0 != std::string::npos) {
@@ -447,6 +459,8 @@ int CheckRootSource(const char *fname)
    if (pos0 != std::string::npos) {
       if ((content.find("ostream", pos0+8) == std::string::npos) &&
           (content.find("fstream", pos0+8) == std::string::npos) &&
+          (content.find("std::cout", pos0+8) == std::string::npos) &&
+          (content.find("std::cerr", pos0+8) == std::string::npos) &&
           (content.find("std::endl", pos0+8) == std::string::npos)) {
          printf("%s not used Riostream.h\n", fname);
          res = 1;
@@ -454,9 +468,12 @@ int CheckRootSource(const char *fname)
    } else {
       pos0 = content.find("<iostream>");
       if (pos0 != std::string::npos) {
-        if ((content.find("std::cout", pos0+8) == std::string::npos) &&
-            (content.find("std::cerr", pos0+8) == std::string::npos) &&
-            (content.find("std::endl", pos0+8) == std::string::npos)) {
+        if ((content.find("cout", pos0+8) == std::string::npos) &&
+            (content.find("istream", pos0+8) == std::string::npos) &&
+            (content.find("ostream", pos0+8) == std::string::npos) &&
+            (content.find("cin", pos0+8) == std::string::npos) &&
+            (content.find("cerr", pos0+8) == std::string::npos) &&
+            (content.find("endl", pos0+8) == std::string::npos)) {
               printf("%s not used <iostream>\n", fname);
               res = 1;
            }
@@ -472,8 +489,11 @@ int CheckRootSource(const char *fname)
 
       pos0 = content.find("<iomanip>");
       if (pos0 != std::string::npos) {
-        if ((content.find("std::setw", pos0+8) == std::string::npos) && 
-            (content.find("std::setprecision", pos0+8) == std::string::npos)) {
+        if ((content.find("setw", pos0+8) == std::string::npos) && 
+            (content.find("setprecision", pos0+8) == std::string::npos) && 
+            (content.find("setfill", pos0+8) == std::string::npos) && 
+            (content.find("setiosflags", pos0+8) == std::string::npos) && 
+            (content.find("setbase", pos0+8) == std::string::npos)) {
           printf("%s not used <iomanip>\n", fname);
           res = 1;
         }
@@ -613,7 +633,7 @@ int CheckRootSource(const char *fname)
       "TPaveText", "TPaveStats", "TGraph", "TMarker", "TPoint", "TEllipse",
       "TPolyLine3D", "TPolyMarker3D", "TLegend", "TProfile",
       "TH1", "TH2", "TH3", "TF1", "TF2", "TF3", "TBuffer", "TMap",
-      "TStopwatch",
+      "TStopwatch", "TExec", "TMemFile", "TNamed", "TObject",
 
       // gui classes
       "TGCanvas", "TGColorDialog", "TGColorSelect", "TGComboBox",
