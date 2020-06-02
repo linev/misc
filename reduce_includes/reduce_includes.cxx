@@ -280,8 +280,10 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   if (content.find("TVirtualX.h") != std::string::npos) {
-      if (content.find("gVirtualX")==std::string::npos) {
+   pos0 = content.find("TVirtualX.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("gVirtualX", pos0+10)==std::string::npos) && 
+          (content.find("TVirtualX", pos0+10)==std::string::npos)) {
          res = 1;
          printf("%s not used TVirtualX.h\n", fname);
       }
@@ -304,6 +306,7 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TVirtualPad.h");
    if (pos0 != std::string::npos) {
       if ((content.find("gPad", pos0+9)==std::string::npos) &&
+          (content.find("fPad", pos0+9)==std::string::npos) &&
           (content.find("GetSelectedPad()", pos0+9)==std::string::npos) &&
           (content.find("TVirtualPad", pos0+9)==std::string::npos)) {
          res = 1;
@@ -431,30 +434,6 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   pos0 = content.find("TGraph.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TGraph", pos0+8) == std::string::npos) {
-         printf("%s not used TGraph.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TLine.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TLine", pos0+8) == std::string::npos) {
-         printf("%s not used TLine.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TMarker.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TMarker", pos0+8) == std::string::npos) {
-         printf("%s not used TMarker.h\n", fname);
-         res = 1;
-      }
-   }
-
    pos0 = content.find("TColor.h");
    if (pos0 != std::string::npos) {
       if (content.find("TColor", pos0+8) == std::string::npos) {
@@ -463,77 +442,6 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   pos0 = content.find("TPolyLine3D.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TPolyLine3D", pos0+12) == std::string::npos) {
-         printf("%s not used TPolyLine3D.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TPolyMarker3D.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TPolyMarker3D", pos0+12) == std::string::npos) {
-         printf("%s not used TPolyMarker3D.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TLegend.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TLegend", pos0+8) == std::string::npos) {
-         printf("%s not used TLegend.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TProfile.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TProfile", pos0+8) == std::string::npos) {
-         printf("%s not used TProfile.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TH1.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TH1", pos0+5) == std::string::npos) {
-         printf("%s not used TH1.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TH2.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TH2", pos0+5) == std::string::npos) {
-         printf("%s not used TH2.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TH3.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TH3", pos0+5) == std::string::npos) {
-         printf("%s not used TH3.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TF1.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TF1", pos0+5) == std::string::npos) {
-         printf("%s not used TF1.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TBuffer.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TBuffer", pos0+8) == std::string::npos) {
-         printf("%s not used TBuffer.h\n", fname);
-         res = 1;
-      }
-   }
 
    pos0 = content.find("Riostream.h");
    if (pos0 != std::string::npos) {
@@ -542,6 +450,33 @@ int CheckRootSource(const char *fname)
           (content.find("std::endl", pos0+8) == std::string::npos)) {
          printf("%s not used Riostream.h\n", fname);
          res = 1;
+      }
+   } else {
+      pos0 = content.find("<iostream>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("std::cout", pos0+8) == std::string::npos) &&
+            (content.find("std::cerr", pos0+8) == std::string::npos) &&
+            (content.find("std::endl", pos0+8) == std::string::npos)) {
+              printf("%s not used <iostream>\n", fname);
+              res = 1;
+           }
+     }
+
+      pos0 = content.find("<fstream>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("fstream", pos0+8) == std::string::npos)) {
+          printf("%s not used <fstream>\n", fname);
+          res = 1;
+        }
+      }
+
+      pos0 = content.find("<iomanip>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("std::setw", pos0+8) == std::string::npos) && 
+            (content.find("std::setprecision", pos0+8) == std::string::npos)) {
+          printf("%s not used <iomanip>\n", fname);
+          res = 1;
+        }
       }
    }
 
@@ -619,6 +554,8 @@ int CheckRootSource(const char *fname)
    pos0 = content.find("TGDoubleSlider.h");
    if (pos0 != std::string::npos) {
       if ((content.find("TGDoubleSlider", pos0+8) == std::string::npos) &&
+          (content.find("TGDoubleVSlider", pos0+8) == std::string::npos) &&
+          (content.find("TGDoubleHSlider", pos0+8) == std::string::npos) &&
           (content.find("GetSlider()", pos0+8) == std::string::npos) &&
           (content.find("Slider->", pos0+8) == std::string::npos)) {
          printf("%s not uses TGDoubleSlider.h\n", fname);
@@ -670,7 +607,14 @@ int CheckRootSource(const char *fname)
    }
 
    static const std::vector<std::string> test_types = {
-      "TObjString", "TTimer", "TUrl", "TBrowser", "TImage", "THStack",
+      "TObjString", "TTimer", "TUrl", "TBrowser", "TImage",
+      "TDatime", "TTimeStamp", "TDate", "TVectorD", "TMatrixD",
+      "THStack", "TArc", "TLine", "TText", "TLatex", "TCutG", "TBox", "TGaxis",
+      "TPaveText", "TPaveStats", "TGraph", "TMarker", "TPoint", "TEllipse",
+      "TPolyLine3D", "TPolyMarker3D", "TLegend", "TProfile",
+      "TH1", "TH2", "TH3", "TF1", "TF2", "TF3", "TBuffer", "TMap",
+      "TStopwatch",
+
       // gui classes
       "TGCanvas", "TGColorDialog", "TGColorSelect", "TGComboBox",
       "TGFileBrowser", "TGFileDialog", "TGFontDialog",
