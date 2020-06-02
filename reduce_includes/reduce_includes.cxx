@@ -525,6 +525,14 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TUrl.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TUrl", pos0+6) == std::string::npos) {
+         printf("%s not used TUrl.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
