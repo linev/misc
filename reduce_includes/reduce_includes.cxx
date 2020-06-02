@@ -455,6 +455,29 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TColor.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TColor", pos0+8) == std::string::npos) {
+         printf("%s not used TColor.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TPolyLine3D.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TPolyLine3D", pos0+12) == std::string::npos) {
+         printf("%s not used TPolyLine3D.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TPolyMarker3D.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TPolyMarker3D", pos0+12) == std::string::npos) {
+         printf("%s not used TPolyMarker3D.h\n", fname);
+         res = 1;
+      }
+   }
 
    pos0 = content.find("TLegend.h");
    if (pos0 != std::string::npos) {
@@ -496,14 +519,6 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   pos0 = content.find("TObjString.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TObjString", pos0+5) == std::string::npos) {
-         printf("%s not used TObjString.h\n", fname);
-         res = 1;
-      }
-   }
-
    pos0 = content.find("TF1.h");
    if (pos0 != std::string::npos) {
       if (content.find("TF1", pos0+5) == std::string::npos) {
@@ -530,22 +545,6 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   pos0 = content.find("TBrowser.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TBrowser", pos0+8) == std::string::npos) {
-         printf("%s not used TBrowser.h\n", fname);
-         res = 1;
-      }
-   }
-
-   pos0 = content.find("TUrl.h");
-   if (pos0 != std::string::npos) {
-      if (content.find("TUrl", pos0+6) == std::string::npos) {
-         printf("%s not used TUrl.h\n", fname);
-         res = 1;
-      }
-   }
-
    pos0 = content.find("TClass.h");
    if (pos0 != std::string::npos) {
       if ((content.find("IsA()->", pos0+8) == std::string::npos) &&
@@ -565,14 +564,108 @@ int CheckRootSource(const char *fname)
       }
    }
 
-   pos0 = content.find("TTimer.h");
+   pos0 = content.find("TGMenu.h");
    if (pos0 != std::string::npos) {
-      if (content.find("TTimer", pos0+8) == std::string::npos) {
-         printf("%s not used TTimer.h\n", fname);
+      if ((content.find("TGMenuBar", pos0+8) == std::string::npos) &&
+          (content.find("TGPopupMenu", pos0+8) == std::string::npos) &&
+          (content.find("TGMenuEntry", pos0+8) == std::string::npos) &&
+          (content.find("TGMenuTitle", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGMenu.h\n", fname);
          res = 1;
       }
    }
 
+   pos0 = content.find("TGSplitter.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGSplitter", pos0+8) == std::string::npos) &&
+          (content.find("fSplitter", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGSplitter.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TGTab.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGTab", pos0+8) == std::string::npos) &&
+          (content.find("fTab", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGTab.h\n", fname);
+         res = 1;
+      }
+   }
+
+
+   pos0 = content.find("TGDoubleSlider.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGDoubleSlider", pos0+8) == std::string::npos) &&
+          (content.find("GetSlider()", pos0+8) == std::string::npos) &&
+          (content.find("fSlider", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGDoubleSlider.h\n", fname);
+         res = 1;
+      }
+   }
+
+   pos0 = content.find("TGHSlider.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("TGHSlider", pos0+8) == std::string::npos) &&
+          (content.find("fSlider", pos0+8) == std::string::npos)) {
+         printf("%s not uses TGHSlider.h\n", fname);
+         res = 1;
+      }
+   }
+
+   static const std::vector<std::string> test_types = {
+      "TObjString", "TTimer", "TUrl", "TBrowser",
+      "TGButton", "TGCanvas", "TGColorDialog", "TGColorSelect", "TGComboBox",
+      "TGDockableFrame", "TGFileBrowser", "TGFileDialog", "TGFontDialog",
+      "TGFont", "TGFrame", "TGFSComboBox", "TGFSContainer", "TGIcon",
+      "TGInputDialog", "TGLabel", "TGLayout", "TGListBox", "TGListTree", "TGListView",
+      "TGMdiDecorFrame", "TGMdiFrame", "TGMdi", "TGMdiMainFrame",
+"TGMdiMenu",
+"TGMsgBox",
+"TGNumberEntry",
+"TGObject",
+"TGPack",
+"TGPasswdDialog",
+"TGPicture",
+"TGProgressBar",
+"TGScrollBar",
+"TGSimpleTable",
+"TGSimpleTableInterface",
+"TGSlider",
+"TGSpeedo",
+"TGSplitFrame",
+"TGStatusBar",
+"TGTableCell",
+"TGTableContainer",
+"TGTable",
+"TGTableHeader",
+"TGTableLayout",
+"TGTextBuffer",
+"TGTextEditDialogs",
+"TGTextEdit",
+"TGTextEditor",
+"TGTextEntry",
+"TGText",
+"TGTextView",
+"TGToolBar",
+"TGToolTip",
+"TGTripleSlider",
+"TGuiBuilder",
+"TGView",
+"TGXYLayout"
+   };
+
+   for(auto &clname : test_types) {
+      std::string incname = clname + ".h";
+      auto pos = content.find(incname);
+
+      if (pos != std::string::npos) {
+         if (content.find(clname, pos+incname.length()) == std::string::npos) {
+            printf("%s not used %s\n", fname, incname.c_str());
+            res = 1;
+         }
+      }
+   }
 
    return res;
 }
