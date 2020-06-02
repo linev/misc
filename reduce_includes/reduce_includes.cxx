@@ -533,6 +533,16 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TClass.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("IsA()->", pos0+8) == std::string::npos) &&
+          (content.find("GetClass()->", pos0+8) == std::string::npos) &&
+          (content.find("TClass", pos0+8) == std::string::npos)) {
+         printf("%s not uses TClass.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
