@@ -517,6 +517,14 @@ int CheckRootSource(const char *fname)
       }
    }
 
+   pos0 = content.find("TBrowser.h");
+   if (pos0 != std::string::npos) {
+      if (content.find("TBrowser", pos0+8) == std::string::npos) {
+         printf("%s not used TBrowser.h\n", fname);
+         res = 1;
+      }
+   }
+
    return res;
 }
 
