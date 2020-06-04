@@ -216,6 +216,18 @@ int CheckRootHeader(const char *fname)
 {
    std::string content = ReadFile(fname);
 
+   int res = 0;
+
+   if (content.find("Rtypes.h") != std::string::npos) {
+      if ((content.find("ClassDef") == std::string::npos) &&
+          (content.find("BIT(") == std::string::npos)) {
+         res = 1;
+         printf("%s not really using Rtypes.h, replace by RtypesCore.h\n", fname);
+      }
+   }
+
+   return res;
+
    const char* name1 = strrchr(fname, '/');
    if (!name1)
       name1 = fname;
@@ -225,7 +237,7 @@ int CheckRootHeader(const char *fname)
    if (!name2) return 0;
    std::string expected = std::string("ROOT_") + std::string(name1, name2-name1);
 
-   if (content.find("#pragma once") != std::string::npos) return 0;
+   if (content.find("#pragma once") != std::string::npos) return res;
 
    auto pos0 = content.find(std::string("#ifndef ") + expected);
    if (pos0 == std::string::npos) {
@@ -239,7 +251,7 @@ int CheckRootHeader(const char *fname)
       return 1;
    }
 
-   return 0;
+   return res;
 }
 
 
@@ -282,7 +294,7 @@ int CheckRootSource(const char *fname)
 
    pos0 = content.find("TVirtualX.h");
    if (pos0 != std::string::npos) {
-      if ((content.find("gVirtualX", pos0+10)==std::string::npos) && 
+      if ((content.find("gVirtualX", pos0+10)==std::string::npos) &&
           (content.find("TVirtualX", pos0+10)==std::string::npos)) {
          res = 1;
          printf("%s not used TVirtualX.h\n", fname);
@@ -489,10 +501,10 @@ int CheckRootSource(const char *fname)
 
       pos0 = content.find("<iomanip>");
       if (pos0 != std::string::npos) {
-        if ((content.find("setw", pos0+8) == std::string::npos) && 
-            (content.find("setprecision", pos0+8) == std::string::npos) && 
-            (content.find("setfill", pos0+8) == std::string::npos) && 
-            (content.find("setiosflags", pos0+8) == std::string::npos) && 
+        if ((content.find("setw", pos0+8) == std::string::npos) &&
+            (content.find("setprecision", pos0+8) == std::string::npos) &&
+            (content.find("setfill", pos0+8) == std::string::npos) &&
+            (content.find("setiosflags", pos0+8) == std::string::npos) &&
             (content.find("setbase", pos0+8) == std::string::npos)) {
           printf("%s not used <iomanip>\n", fname);
           res = 1;
