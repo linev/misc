@@ -226,6 +226,67 @@ int CheckRootHeader(const char *fname)
       }
    }
 
+   static const std::vector<std::string> std_types = { "vector", "deque", "list", "set", "multiset", "map", "multimap",
+                                                       "unordered_set", "unordered_multiset", "unordered_map", "unordered_multimap" };
+
+
+   for(auto &name : std_types) {
+      std::string incl = std::string("<") + name + std::string(">");
+      if (name == "multimap") incl = "<map>";
+      if (name == "unordered_multimap") incl = "<unordered_map>";
+
+      std::string srch = std::string("std::") + name + std::string("<");
+
+      if (content.find(incl) != std::string::npos) {
+         if (content.find(srch) == std::string::npos) {
+            res = 1;
+            printf("%s not used %s include\n", fname, incl.c_str());
+         }
+      } else if (content.find(srch) != std::string::npos) {
+          res = 1;
+          printf("%s using std::%s without %s include\n", fname, name.c_str(), incl.c_str());
+      }
+   }
+
+   auto poss = content.find("#include <string>");
+   if (poss != std::string::npos) {
+      if (content.find("std::string", poss+20) == std::string::npos) {
+          res = 1;
+          printf("%s not used <string> include\n", fname);
+      }
+   } else if (content.find("std::string") != std::string::npos) {
+      res = 1;
+      printf("%s using std::string without <string> include\n", fname);
+   }
+
+   poss = content.find("#include <utility>");
+   if (poss != std::string::npos) {
+      if (((content.find("std::pair", poss+20) == std::string::npos) &&
+          (content.find("std::tuple", poss+20) == std::string::npos)) || (content.find("map>") != std::string::npos) ) {
+          res = 1;
+          printf("%s check usage of <utility> include\n", fname);
+      }
+   } else if (((content.find("std::pair") != std::string::npos) && (content.find("map>") == std::string::npos))
+              || (content.find("std::tuple") != std::string::npos)) {
+      res = 1;
+      printf("%s using std::pair or std::tuple without <utility> include\n", fname);
+   }
+
+
+   static const std::vector<std::string> test_types = { "TObject", "TNamed" };
+
+   for(auto &clname : test_types) {
+      std::string incname = clname + ".h";
+      auto pos = content.find(incname);
+
+      if (pos != std::string::npos) {
+         if (content.find(clname, pos+incname.length()) == std::string::npos) {
+            printf("%s not used %s\n", fname, incname.c_str());
+            res = 1;
+         }
+      }
+   }
+
    return res;
 
    const char* name1 = strrchr(fname, '/');
