@@ -232,13 +232,16 @@ int CheckRootHeader(const char *fname)
 
    for(auto &name : std_types) {
       std::string incl = std::string("<") + name + std::string(">");
-      if (name == "multimap") incl = "<map>";
-      if (name == "unordered_multimap") incl = "<unordered_map>";
-
       std::string srch = std::string("std::") + name + std::string("<");
+      std::string srch2 = srch;
+
+      if (name == "map") { srch2 = "std::multimap"; }
+      if (name == "unordered_map") { srch2 = "std::unordered_multimap"; }
+      if (name == "multimap") { incl = "<map>"; srch2 = "std::map"; }
+      if (name == "unordered_multimap") { incl = "<unordered_map>"; srch2 = "std::unordered_map"; }
 
       if (content.find(incl) != std::string::npos) {
-         if (content.find(srch) == std::string::npos) {
+         if ((content.find(srch) == std::string::npos) && (content.find(srch2) == std::string::npos)) {
             res = 1;
             printf("%s not used %s include\n", fname, incl.c_str());
          }
