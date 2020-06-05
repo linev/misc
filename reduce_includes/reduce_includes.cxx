@@ -264,13 +264,13 @@ int CheckRootHeader(const char *fname)
 
    poss = content.find("#include <utility>");
    if (poss != std::string::npos) {
-      if (((content.find("std::pair", poss+20) == std::string::npos) &&
-          (content.find("std::tuple", poss+20) == std::string::npos)) || (content.find("map>") != std::string::npos) ) {
+      if (((content.find("std::pair", poss+20) == std::string::npos) && (content.find("std::tuple", poss+20) == std::string::npos)) || 
+           (content.find("map>") != std::string::npos)) {
           res = 1;
           printf("%s check usage of <utility> include\n", fname);
       }
-   } else if (((content.find("std::pair") != std::string::npos) && (content.find("map>") == std::string::npos))
-              || (content.find("std::tuple") != std::string::npos)) {
+   } else if (((content.find("std::pair") != std::string::npos) || (content.find("std::tuple") != std::string::npos)) 
+           && (content.find("map>") == std::string::npos)) {
       res = 1;
       printf("%s using std::pair or std::tuple without <utility> include\n", fname);
    }
