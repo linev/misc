@@ -262,6 +262,17 @@ int CheckRootHeader(const char *fname)
       printf("%s using std::string without <string> include\n", fname);
    }
 
+   poss = content.find("<sstream>");
+   if (poss != std::string::npos) {
+      if (content.find("stringstream", poss+10) == std::string::npos) {
+          res = 1;
+          printf("%s not used <sstream> include\n", fname);
+      }
+   } else if (content.find("stringstream") != std::string::npos) {
+      res = 1;
+      printf("%s using std::stringstream without <sstream> include\n", fname);
+   }
+
    poss = content.find("#include <utility>");
    if (poss != std::string::npos) {
       if (((content.find("std::pair", poss+20) == std::string::npos) && (content.find("std::tuple", poss+20) == std::string::npos)) || 
@@ -275,8 +286,54 @@ int CheckRootHeader(const char *fname)
       printf("%s using std::pair or std::tuple without <utility> include\n", fname);
    }
 
+   auto pos0 = content.find("Riostream.h");
+   if (pos0 != std::string::npos) {
+      if ((content.find("ostream", pos0+8) == std::string::npos) &&
+          (content.find("fstream", pos0+8) == std::string::npos) &&
+          (content.find("std::cout", pos0+8) == std::string::npos) &&
+          (content.find("std::cerr", pos0+8) == std::string::npos) &&
+          (content.find("std::endl", pos0+8) == std::string::npos)) {
+         printf("%s not used Riostream.h\n", fname);
+         res = 1;
+      }
+   } else {
+      pos0 = content.find("<iostream>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("cout", pos0+8) == std::string::npos) &&
+            (content.find("istream", pos0+8) == std::string::npos) &&
+            (content.find("ostream", pos0+8) == std::string::npos) &&
+            (content.find("cin", pos0+8) == std::string::npos) &&
+            (content.find("cerr", pos0+8) == std::string::npos) &&
+            (content.find("endl", pos0+8) == std::string::npos)) {
+              printf("%s not used <iostream>\n", fname);
+              res = 1;
+           } 
+     } 
 
-   static const std::vector<std::string> test_types = { "TObject", "TNamed" };
+      pos0 = content.find("<fstream>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("fstream", pos0+8) == std::string::npos)) {
+          printf("%s not used <fstream>\n", fname);
+          res = 1;
+        }
+      }
+
+      pos0 = content.find("<iomanip>");
+      if (pos0 != std::string::npos) {
+        if ((content.find("setw", pos0+8) == std::string::npos) &&
+            (content.find("setprecision", pos0+8) == std::string::npos) &&
+            (content.find("setfill", pos0+8) == std::string::npos) &&
+            (content.find("setiosflags", pos0+8) == std::string::npos) &&
+            (content.find("setbase", pos0+8) == std::string::npos)) {
+          printf("%s not used <iomanip>\n", fname);
+          res = 1;
+        } else {
+           printf("OK iostream\n");
+        }
+      }
+   }
+
+   static const std::vector<std::string> test_types = { "TObject", "TNamed", "TString" };
 
    for(auto &clname : test_types) {
       std::string incname = clname + ".h";
@@ -303,7 +360,7 @@ int CheckRootHeader(const char *fname)
 
    if (content.find("#pragma once") != std::string::npos) return res;
 
-   auto pos0 = content.find(std::string("#ifndef ") + expected);
+   pos0 = content.find(std::string("#ifndef ") + expected);
    if (pos0 == std::string::npos) {
       printf("%s not found #ifndef %s\n", fname, expected.c_str());
       return 1;
@@ -572,6 +629,8 @@ int CheckRootSource(const char *fname)
             (content.find("setbase", pos0+8) == std::string::npos)) {
           printf("%s not used <iomanip>\n", fname);
           res = 1;
+        } else {
+           printf("OK iostream\n");
         }
       }
    }
