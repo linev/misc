@@ -4,7 +4,8 @@
 
 ## For VirtualBox pathes
     set PATH=%PATH%;C:\Qt\5.12.6\msvc2017\bin
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -DQt5_DIR=C:\Qt\5.12.6\msvc2017\lib\cmake -Dqt5web=ON
+    set CEF_ROOT=C:\Soft\cef
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -DQt5_DIR=C:\Qt\5.12.6\msvc2017\lib\cmake -Dqt5web=ON -Dcefweb=ON
 
 ## For GSI Windows with many limitations
     set PATH=%PATH%;C:\Programme\Qt\5.12.6\msvc2017\bin
@@ -39,8 +40,6 @@ Add (or create new) Cygwin.bat file with MSVC initialization
 Remove link.exe file from cygwin to avoid conflict with the MS linker
 
 
-
-
 # Building go4 with cmake on Windows
 
 On VirtualBox machine do following - start VC x86 console
@@ -56,4 +55,17 @@ When building:
 
     cmake --build . --config Release -- /maxcpucount
     cmake --build . --config Debug -- /maxcpucount
+
+
+
+# Building CEF on windows
+
+Downdlod win32 version, change /MT -> /MD compiler falgs for dynamic linking
+
+    mkdir build
+    cd build
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 ..
+    cmake --build . --config Release --target libcef_dll_wrapper
+
+
 
