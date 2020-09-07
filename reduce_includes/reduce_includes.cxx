@@ -307,8 +307,8 @@ int CheckRootHeader(const char *fname)
             (content.find("endl", pos0+8) == std::string::npos)) {
               printf("%s not used <iostream>\n", fname);
               res = 1;
-           } 
-     } 
+           }
+     }
 
       pos0 = content.find("<fstream>");
       if (pos0 != std::string::npos) {
@@ -327,8 +327,6 @@ int CheckRootHeader(const char *fname)
             (content.find("setbase", pos0+8) == std::string::npos)) {
           printf("%s not used <iomanip>\n", fname);
           res = 1;
-        } else {
-           printf("OK iostream\n");
         }
       }
    }
