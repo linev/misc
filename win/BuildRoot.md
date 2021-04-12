@@ -1,15 +1,14 @@
 # Building ROOT on Windows
 
-## Calling cmake
+## Call cmake for VirtualBox pathes
 
-## For VirtualBox pathes
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
     set CEF_ROOT=C:\Soft\cef
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -DQt5_DIR=C:\Qt5\5.15.2\msvc2019\lib\cmake -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
 
-## For GSI Windows with many limitations
+## Call cmake for GSI Windows with many limitations
     set PATH=%PATH%;C:\Programme\Qt\5.12.6\msvc2017\bin
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\Users\linev\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -DQt5_DIR=C:\Programme\Qt\5.12.6\msvc2017\lib\cmake -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\Users\linev\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
 
 To get some debug info:
 
@@ -19,6 +18,9 @@ To get some debug info:
 ## Start building
 
     cmake --build . --config Release -- /maxcpucount
+
+One also can try to make Debug build, but it may not work because of external libs
+
     cmake --build . --config Debug -- /maxcpucount
 
 ## Initialize ROOT
@@ -49,13 +51,11 @@ On VirtualBox machine do following - start VC x86 console
 
 When calling cmake:
 
-     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4 -DCMAKE_CXX_STANDARD=14 -DQt5_DIR=C:\Qt5\5.15.2\msvc2019\lib\cmake
+     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4
 
 When building:
 
     cmake --build . --config Release -- /maxcpucount
-    cmake --build . --config Debug -- /maxcpucount
-
 
 
 # Building CEF on windows
@@ -66,6 +66,4 @@ Downdlod win32 version, change /MT -> /MD compiler falgs for dynamic linking
     cd build
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 ..
     cmake --build . --config Release --target libcef_dll_wrapper
-
-
 
