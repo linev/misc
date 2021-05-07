@@ -1,7 +1,11 @@
 using namespace ROOT::Experimental;
 
+std::string selectJson;
+
 void do_macro(const char *macroname, const char *jsonname)
 {
+   if (!selectJson.empty() && (selectJson != jsonname)) return;
+
    printf("Producing %s ...\n", jsonname);
 
    gInterpreter->ExecuteMacro(Form("$ROOTSYS/tutorials/v7/%s",macroname));
@@ -16,10 +20,12 @@ void do_macro(const char *macroname, const char *jsonname)
 }
 
 
-void make_json()
+void make_json(const char *sel)
 {
    // call macro in webgui batch mode to avoid real start of web browser
    // like root --web=batch make_json.cxx
+
+   if (sel) selectJson = sel;
 
    do_macro("draw_axes.cxx", "axes.json");
    do_macro("draw_frame.cxx", "frame.json");

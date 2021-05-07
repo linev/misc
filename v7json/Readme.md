@@ -9,4 +9,6 @@ One should run macro as:
 
     root --web=batch make_json.cxx -q
 
+To generate only specific json file:
 
+    root.exe --web=batch -q 'make_json.cxx("frame.json")'
