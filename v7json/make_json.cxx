@@ -20,7 +20,7 @@ void do_macro(const char *macroname, const char *jsonname)
 }
 
 
-void make_json(const char *sel)
+void make_json(const char *sel = nullptr)
 {
    // call macro in webgui batch mode to avoid real start of web browser
    // like root --web=batch make_json.cxx
