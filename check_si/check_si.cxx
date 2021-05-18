@@ -1,7 +1,9 @@
 void TestClass(const std::string &clname)
 {
    printf("Checking class %s\n", clname.c_str());
-   if ((clname == "TTreeCache") ||  (clname == "TTreeCacheUnzip"))
+   if ((clname == "TTreeCache") ||
+       (clname == "TTreeCacheUnzip") ||
+       (clname == "TMVA::VarTransformHandler"))
       return; // fails in GetStreamerInfo
 
    TClass *cl = TClass::GetClass(clname.c_str());
@@ -22,7 +24,7 @@ void TestClass(const std::string &clname)
          for (auto bcl : base_classes) {
             auto offset = bcl->GetDataMemberOffset(elem->GetName());
             if (offset)
-               printf("\n DUPL: class: %s member: %s found again in class %s\n\n", cl->GetName(), elem->GetName(), bcl->GetName());
+               printf("\nDUPL: class: %s member: %s found also in class %s\n\n", cl->GetName(), elem->GetName(), bcl->GetName());
 
          }
       }
@@ -47,23 +49,24 @@ void TestLinkDef(const char *fname)
 
       if (line.find("+protected") == 0) line.erase(0, 10); // there are class+protected declaration for TSelector
 
-      while ((line.length() > 0) && (line[0] == ' '))
-         line.erase(0, 1);
+      auto len = line.length();
 
-      while ((line.length() > 0) && (line[line.length()-1] == ' '))
-         line.resize(line.length()-1);
+      while (len > 0) {
+         len--;
+         if (line[len] == ' ') line.erase(len, 1);
+      }
 
-      if (line.find("-;") == line.length()-2) continue;
+      len = line.length();
+      while (len > 3) {
+         len--;
+         if ((line[len] == ';') || (line[len] == '+') || (line[len] == '!')) {
+            line.resize(len);
+            continue;
+         }
+         break;
+      }
 
-      if (line.length() < 3) continue;
-
-      if (line[line.length()-1] == ';')
-         line.resize(line.length()-1);
-
-      if (line[line.length()-1] == '+')
-         line.resize(line.length()-1);
-
-      TestClass(line);
+      if (line[len] != '-') TestClass(line);
    }
 }
 

@@ -11,4 +11,4 @@ Then run macro
 
      [shell] root -l check_si.cxx -q > log.txt 2>&1
 
-And check for "DUPL" in output string
+And then check for "DUPL" in output string
