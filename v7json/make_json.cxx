@@ -32,6 +32,7 @@ void make_json(const char *sel = nullptr)
    do_macro("draw_legend.cxx", "legend.json");
    do_macro("draw_pave.cxx", "pave.json");
    do_macro("draw_rh1.cxx", "rh1.json");
+   do_macro("draw_rh1_twoaxes.cxx", "rh1_twoaxes.json");
    do_macro("draw_rh2.cxx", "rh2.json");
    do_macro("draw_rh2_colz.cxx", "rh2_colz.json");
    do_macro("draw_rh3.cxx", "rh3.json");
