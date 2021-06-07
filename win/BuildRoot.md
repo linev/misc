@@ -4,7 +4,7 @@
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
     set CEF_ROOT=C:\Soft\cef
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
 
 ## Call cmake for GSI Windows with many limitations
     set PATH=%PATH%;C:\Programme\Qt\5.12.6\msvc2017\bin
