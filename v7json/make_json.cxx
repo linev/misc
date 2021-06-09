@@ -8,7 +8,7 @@ void do_macro(const char *macroname, const char *jsonname)
 
    printf("Producing %s ...\n", jsonname);
 
-   gInterpreter->ExecuteMacro(Form("$HOME/git/root/tutorials/v7/%s",macroname));
+   gInterpreter->ExecuteMacro(Form("$HOME/git/webgui/tutorials/v7/%s",macroname));
 
    auto canv = RCanvas::GetCanvases()[0];
 
@@ -27,6 +27,7 @@ void make_json(const char *sel = nullptr)
 
    if (sel) selectJson = sel;
 
+   do_macro("box.cxx", "box.json");
    do_macro("draw_axes.cxx", "axes.json");
    do_macro("draw_frame.cxx", "frame.json");
    do_macro("draw_legend.cxx", "legend.json");
