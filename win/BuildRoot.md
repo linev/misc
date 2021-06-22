@@ -33,7 +33,7 @@ One also can try to make Debug build, but it may not work because of external li
     devenv /debugexe root.exe ...
 
 
-## Initialize cygwin
+## Initialize cygwin (obsolete)
 
 Add (or create new) Cygwin.bat file with MSVC initialization
 
@@ -57,8 +57,17 @@ When building:
 
     cmake --build . --config Release -- /maxcpucount
 
+# Create packages with cpack
 
-# Building CEF on windows
+First of all - install https://sourceforge.net/projects/nsis/
+When after building ROOT and Go4, call for both:
+
+    cpack -C Release
+
+This should produce installers, which are half-ready for use.
+
+
+# Building CEF on Windows
 
 Downdlod win32 version, change /MT -> /MD compiler falgs for dynamic linking
 
