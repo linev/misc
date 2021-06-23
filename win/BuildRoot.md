@@ -66,6 +66,14 @@ When after building ROOT and Go4, call for both:
 
 This should produce installers, which are half-ready for use.
 
+# Create go4 windows package with cpack
+
+1. Install and configure qt5
+2. Build root with qt5web support
+3. Create ROOT package and install it
+4. Compile go4 with installed ROOT package
+5. Finally call `cpack` for go4
+
 
 # Building CEF on Windows
 
