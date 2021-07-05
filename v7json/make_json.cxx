@@ -31,7 +31,7 @@ void make_json(const char *sel = nullptr)
    do_macro("rbox.cxx", "rbox.json");
    do_macro("rframe.cxx", "rframe.json");
    do_macro("rh1_large.cxx", "rh1_large.json");
-   do_macro("rh1_twoaxes.cxx", "rh1_twoaxes.json");
+   do_macro("rh1_twoscales.cxx", "rh1_twoscales.json");
    do_macro("rh1.cxx", "rh1.json");
    do_macro("rh2_colz.cxx", "rh2_colz.json");
    do_macro("rh2_large.cxx", "rh2_large.json");
@@ -49,5 +49,6 @@ void make_json(const char *sel = nullptr)
    do_macro("rtext.cxx", "rtext.json");
    do_macro("subpads.cxx", "subpads.json");
    do_macro("symlog.cxx", "symlog.json");
+   do_macro("th1_twoscales.cxx", "th1_twoscales.json");
    do_macro("tobject.cxx", "tobject.json");
 }
