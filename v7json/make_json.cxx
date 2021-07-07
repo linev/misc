@@ -8,6 +8,8 @@ void do_macro(const char *macroname, const char *jsonname)
 
    printf("Producing %s ...\n", jsonname);
 
+   gRandom->SetSeed(112233);
+
    gInterpreter->ExecuteMacro(Form("$HOME/git/webgui/tutorials/rcanvas/%s",macroname));
 
    auto canv = RCanvas::GetCanvases()[0];
@@ -46,7 +48,9 @@ void make_json(const char *sel = nullptr)
    do_macro("rpad.cxx", "rpad.json");
    do_macro("rpave.cxx", "rpave.json");
    do_macro("rstyle.cxx", "rstyle.json");
-   do_macro("rtext.cxx", "rtext.json");
+   do_macro("rtext_angle.cxx", "rtext_angle.json");
+   do_macro("rtext_align.cxx", "rtext_align.json");
+   do_macro("rtext_font.cxx", "rtext_font.json");
    do_macro("subpads.cxx", "subpads.json");
    do_macro("symlog.cxx", "symlog.json");
    do_macro("th1_twoscales.cxx", "th1_twoscales.json");
