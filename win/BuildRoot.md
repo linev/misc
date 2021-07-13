@@ -6,7 +6,11 @@
     set CEF_ROOT=C:\Soft\cef
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root624 -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
+
+
 ## Call cmake for GSI Windows with many limitations
+
     set PATH=%PATH%;C:\Programme\Qt\5.12.6\msvc2017\bin
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\Users\linev\git\root -Droot7=ON -Dpython=OFF -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
@@ -47,14 +51,8 @@ Remove link.exe file from cygwin to avoid conflict with the MS linker
 On VirtualBox machine do following - start VC x86 console
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
-    call C:\Soft\root\bin\thisroot.bat
-
-When calling cmake:
-
-     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4
-
-When building:
-
+    call C:\Soft\root624\bin\thisroot.bat
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4
     cmake --build . --config Release -- /maxcpucount
 
 # Create packages with cpack
