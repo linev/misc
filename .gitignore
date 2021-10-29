@@ -5,3 +5,4 @@ node_modules
 openui5.tar.gz
 reduce_includes/reduce_includes
 dist
+package-lock.json
