@@ -1,0 +1,9 @@
+{
+	"name": "rootui5-build",
+	"version": "6.25.01",
+	"description": "Building of compressed libs",
+	"private": true,
+	"dependencies": {
+		"@ui5/cli": "^2.14.0"
+	}
+}

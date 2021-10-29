@@ -1,0 +1,8 @@
+specVersion: '2.0'
+metadata:
+  name: rootui5-canvas
+type: application
+resources:
+  configuration:
+    paths:
+      webapp: ../../webgui/ui5/canv
