@@ -18,7 +18,19 @@
 
          const mysvg = d3.select("#mysvg");
 
-         const first = 32, last = 127, checked = {};
+         const first = 32, last = 127, checked = {}, symbl_codes = [];
+         for (let symbl = first; symbl < last; ++symbl)
+        	    symbl_codes.push(symbl);
+
+         if (ltx.symbols_map) {
+            for (let name in ltx.symbols_map) {
+                let symb = ltx.symbols_map[name];
+                if (!symb || symb.length != 1) continue;
+                let code = symb.charCodeAt(0);
+                if ((code > 127) && (symbl_codes.indexOf(code) < 0))
+                   symbl_codes.push(code);
+            }
+         }
 
          let txt = mysvg.append("svg:text");
          txt.attr("x","100")
@@ -32,25 +44,24 @@
 
          let all_arr, all_cnt = 0;
 
-         for (let indx=1;indx<20;++indx) {
+         let fwidth = [];
+
+         for (let indx=0;indx<20;++indx) {
         	    let font = new JSROOT.FontHandler(indx*10, 100);
 
              let fullname = font.getFontHtml();
-             if (checked[fullname]) continue;
-
-             checked[fullname] = true;
 
              console.log('Font', indx, fullname);
 
              font.setFont(txt);
              font.setFont(txt2);
 
-
-             let sum1 = 0, sum2 = 0;
+             let sum1 = 0, sum2 = 0, max_height = 0;
 
              let font_arr = [];
 
-        	    for (let symbl = first; symbl < last; ++symbl) {
+        	    for (let i = 0; i < symbl_codes.length; ++i) {
+        	    	  let symbl = symbl_codes[i];
         	    	  let c = String.fromCharCode(symbl), s = "";
         	    	  for (let k = 0; k < 100; ++k) s += c;
 
@@ -60,22 +71,36 @@
                  let rect = jsrp.getElementRect(txt, 'nopadding')
                  let rect2 = jsrp.getElementRect(txt2, 'nopadding')
 
-                 let symb_width = rect.width / 100;
+                 let symb_width = rect2.width / 100 / 100;
 
-                 if ((symb_width < 0.2) || (symb_width > 2))
-                    console.log('symbol', symbl, c, 'width', symb_width)
-                 sum1 += 1;
-                 sum2 += symb_width;
+                 if ((symb_width < 0.18) || (symb_width > 2))
+                    console.error('symbol', symbl, c, 'width', symb_width);
+
+                 if (symbl < last)
+                	 max_height = Math.max(max_height, rect2.height / 100);
+
+                 if (((symbl >= 48) && (symbl<= 57)) || ((symbl >= 65) && (symbl<= 90)) || ((symbl >= 97) && (symbl<= 122)))  {
+                    sum1 += 1;
+                    sum2 += symb_width;
+                 }
 
                  font_arr[symbl] = symb_width;
         	    }
 
+             font.clearFont(txt);
+             font.clearFont(txt2);
+
         	    let aver_width = sum2/sum1;
 
-        	    console.log('Average width ', aver_width);
+        	    fwidth[indx] = aver_width;
 
-        	    if (!font.isMonospace()) {
-        	       for (let symbl = first; symbl < last; ++symbl) {
+        	    console.log('Average width ', aver_width, 'max height', max_height);
+
+        	    if (!font.isMonospace() && !checked[fullname]) {
+                checked[fullname] = true;
+
+                for (let i = 0; i < symbl_codes.length; ++i) {
+                   let symbl = symbl_codes[i];
         	       	 font_arr[symbl] = font_arr[symbl]/aver_width;
         	    	    if (all_arr) all_arr[symbl] += font_arr[symbl];
         	       }
@@ -89,12 +114,31 @@
         	    }
          }
 
-         for (let symbl = first; symbl < last; ++symbl) {
+         for (let i = 0; i < symbl_codes.length; ++i) {
+            let symbl = symbl_codes[i];
             all_arr[symbl] = all_arr[symbl]/all_cnt;
             console.log('symbol', symbl, String.fromCharCode(symbl), 'koef', all_arr[symbl])
          }
 
-         console.log('All checked', all_cnt);
+         let fonts_str = "[";
+         fwidth.forEach(v => fonts_str += v.toFixed(4) + ",");
+
+         console.log('Font widths', fonts_str);
+
+         let base_symbl_widths = "[", extra_symbl_widths = "{";
+
+         for (let i = 0; i < symbl_codes.length; ++i) {
+             let symbl = symbl_codes[i];
+        	    let value = Math.round(all_arr[symbl]*1000);
+        	    if (symbl < last)
+        	       base_symbl_widths += value + ",";
+        	    else
+        	    	extra_symbl_widths += symbl+":"+value+",";
+
+         }
+         console.log('Base widths:', base_symbl_widths);
+
+         console.log('Extra widths:', extra_symbl_widths);
 
       });
 
