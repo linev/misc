@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>JSROOT symbols width</title>
+      <link rel="shortcut icon" href="img/RootIcon.ico"/>
+      <script type="text/javascript" src="../../jsroot/scripts/JSRoot.core.js"></script>
+   </head>
+   <body>
+      <svg id="mysvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" preserveAspectRatio="none" width="1500" height="500">
+         <circle cx="50" cy="150" r="35" fill="red"/>
+      </svg>
+
+      <script type="text/javascript">
+
+      JSROOT.require(['d3', 'painter','latex']).then(arr => {
+    	   const d3 = arr[0], jsrp = arr[1], ltx = arr[2];
+
+         const mysvg = d3.select("#mysvg");
+
+         const first = 32, last = 127, checked = {};
+
+         let txt = mysvg.append("svg:text");
+         txt.attr("x","100")
+         txt.attr("y","100")
+         txt.text("TTTTTTTTTT");
+
+         let txt2 = mysvg.append("svg:text");
+         txt2.attr("x","100")
+         txt2.attr("y","200")
+         txt2.text("T");
+
+         let all_arr, all_cnt = 0;
+
+         for (let indx=1;indx<20;++indx) {
+        	    let font = new JSROOT.FontHandler(indx*10, 100);
+
+             let fullname = font.getFontHtml();
+             if (checked[fullname]) continue;
+
+             checked[fullname] = true;
+
+             console.log('Font', indx, fullname);
+
+             font.setFont(txt);
+             font.setFont(txt2);
+
+
+             let sum1 = 0, sum2 = 0;
+
+             let font_arr = [];
+
+        	    for (let symbl = first; symbl < last; ++symbl) {
+        	    	  let c = String.fromCharCode(symbl), s = "";
+        	    	  for (let k = 0; k < 100; ++k) s += c;
+
+        	    	  txt.text(c);
+                 txt2.text(s);
+
+                 let rect = jsrp.getElementRect(txt, 'nopadding')
+                 let rect2 = jsrp.getElementRect(txt2, 'nopadding')
+
+                 let symb_width = rect.width / 100;
+
+                 if ((symb_width < 0.2) || (symb_width > 2))
+                    console.log('symbol', symbl, c, 'width', symb_width)
+                 sum1 += 1;
+                 sum2 += symb_width;
+
+                 font_arr[symbl] = symb_width;
+        	    }
+
+        	    let aver_width = sum2/sum1;
+
+        	    console.log('Average width ', aver_width);
+
+        	    if (!font.isMonospace()) {
+        	       for (let symbl = first; symbl < last; ++symbl) {
+        	       	 font_arr[symbl] = font_arr[symbl]/aver_width;
+        	    	    if (all_arr) all_arr[symbl] += font_arr[symbl];
+        	       }
+
+                if (!all_arr) {
+                   all_arr = font_arr;
+                   all_cnt = 1;
+                 } else {
+               	  all_cnt++;
+                 }
+        	    }
+         }
+
+         for (let symbl = first; symbl < last; ++symbl) {
+            all_arr[symbl] = all_arr[symbl]/all_cnt;
+            console.log('symbol', symbl, String.fromCharCode(symbl), 'koef', all_arr[symbl])
+         }
+
+         console.log('All checked', all_cnt);
+
+      });
+
+
+
+      </script>
+   </body>
+</html>
+
