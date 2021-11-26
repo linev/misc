@@ -193,16 +193,18 @@ export { ShapeUtils } from '../../threejs/src/extras/ShapeUtils.js';
 export { PMREMGenerator } from '../../threejs/src/extras/PMREMGenerator.js';
 export { WebGLUtils } from '../../threejs/src/renderers/webgl/WebGLUtils.js';
 export * from '../../threejs/src/constants.js';
-export * from '../../threejs/src/Three.Legacy.js';
+// export * from '../../threejs/src/Three.Legacy.js';
 
 // jsroot part
 export { TextGeometry } from '../../threejs/examples/jsm/geometries/TextGeometry.js';
 
 import * as json1 from "../../threejs/examples/fonts/helvetiker_regular.typeface.json";
 
-let HelveticerRegularFont = new Font(json1);
+let HelveticerRegularJson = json1;
 
-export { HelveticerRegularFont };
+export { HelveticerRegularJson };
+
+export { Font } from "../../threejs/examples/jsm/loaders/FontLoader.js";
 
 export { OrbitControls} from "../../threejs/examples/jsm/controls/OrbitControls.js";
 export { TransformControls } from "../../threejs/examples/jsm/controls/TransformControls.js";
