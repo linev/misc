@@ -56,7 +56,7 @@
     }
   },
   "scripts": {
-    "build": "cp Three_jsroot.js ../../threejs/src && rollup -c rollup.jsroot.config.js"
+    "build": "cp Three_jsroot.js ../../threejs/src && rollup -c rollup.jsroot.config.js && rm ../../threejs/src/Three_jsroot.js"
   },
   "keywords": [
     "three",
