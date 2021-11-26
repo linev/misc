@@ -104,9 +104,6 @@
     "url": "https://github.com/mrdoob/three.js/issues"
   },
   "homepage": "https://threejs.org/",
-  "dependencies": {
-     "three": "0.134.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/eslint-parser": "^7.15.7",
