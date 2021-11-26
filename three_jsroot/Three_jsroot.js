@@ -35,16 +35,15 @@ export { CanvasTexture } from '../../threejs/src/textures/CanvasTexture.js';
 export { DepthTexture } from '../../threejs/src/textures/DepthTexture.js';
 export { Texture } from '../../threejs/src/textures/Texture.js';
 
-// export * from '../../threejs/src/geometries/Geometries.js';
+export * from '../../threejs/src/geometries/Geometries.js';
 
-export { BoxGeometry } from '../../threejs/src/geometries/BoxGeometry.js';
-
+// export { BoxGeometry } from '../../threejs/src/geometries/BoxGeometry.js';
 //export * from './CircleGeometry.js';
 //export * from './ConeGeometry.js';
-//export * from './CylinderGeometry.js';
+//export { CylinderGeometry } from '../../threejs/src/geometries/CylinderGeometry.js';
 //export * from './DodecahedronGeometry.js';
 //export * from './EdgesGeometry.js';
-export { ExtrudeGeometry } from '../../threejs/src/geometries/ExtrudeGeometry.js';
+//export { ExtrudeGeometry } from '../../threejs/src/geometries/ExtrudeGeometry.js';
 //export * from './IcosahedronGeometry.js';
 //export * from './LatheGeometry.js';
 //export * from './OctahedronGeometry.js';
@@ -54,10 +53,10 @@ export { ExtrudeGeometry } from '../../threejs/src/geometries/ExtrudeGeometry.js
 //export * from './ShapeGeometry.js';
 //export * from './SphereGeometry.js';
 //export * from './TetrahedronGeometry.js';
-//export * from './TorusGeometry.js';
+//export { TorusGeometry } from '../../threejs/src/geometries/TorusGeometry.js';
 //export * from './TorusKnotGeometry.js';
 //export * from './TubeGeometry.js';
-export { WireframeGeometry } from '../../threejs/src/geometries/WireframeGeometry.js';
+//export { WireframeGeometry } from '../../threejs/src/geometries/WireframeGeometry.js';
 
 // export * from '../../threejs/src/materials/Materials.js';
 

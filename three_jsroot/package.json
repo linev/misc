@@ -65,7 +65,7 @@
   "scripts": {
     "start": "npm run dev",
     "test": "npm run lint && npm run test-unit",
-    "jsroot": "rollup -c rollup.jsroot.config.js",
+    "jsroot": "cp Three_jsroot.js ../../threejs/src && rollup -c rollup.jsroot.config.js",
     "build": "rollup -c utils/build/rollup.config.js",
     "build-module": "ONLY_MODULE=true rollup -c utils/build/rollup.config.js",
     "build-examples": "rollup -c utils/build/rollup.examples.config.js && echo '\nFormatting...' && eslint examples/js --ext js --ignore-pattern libs --ignore-pattern ifc --fix",
