@@ -52,7 +52,7 @@ On VirtualBox machine do following - start VC x86 console
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
     call C:\Soft\root624_install\bin\thisroot.bat
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
     cmake --build . --config Release -- /maxcpucount
 
 # Create packages with cpack
