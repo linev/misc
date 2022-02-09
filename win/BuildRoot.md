@@ -53,12 +53,22 @@ Remove link.exe file from cygwin to avoid conflict with the MS linker
 
 # Building go4 with cmake on Windows
 
-On VirtualBox machine do following - start VC x86 console
+On VirtualBox machine do following - start VC **x86** console
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
     call C:\Soft\root624_install\bin\thisroot.bat
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
     cmake --build . --config Release -- /maxcpucount
+
+# Build go4 on 64 bit Windows
+
+On VirtualBox machine do following - start VC **x64** console
+
+    set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019_64\bin
+    call C:\Soft\root_64\bin\thisroot.bat
+    cmake -G"Visual Studio 16 2019" -A x64 c:\git\go4
+    cmake --build . --config Release -- /maxcpucount
+
 
 # Create packages with cpack
 
