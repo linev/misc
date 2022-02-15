@@ -5,7 +5,8 @@ let jsroot = { version : "7.0.0" };
 jsroot.require = function(arr) {
    let promises = [];
    arr.forEach(name => {
-      promises.push(import('./'+name+'.js'));
+      let v = import('./'+name+'.js');
+      promises.push(v);
    });
 
    return Promise.all(promises).then(res_arr => {
