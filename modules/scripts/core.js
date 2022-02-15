@@ -24,7 +24,7 @@
    JSROOT.require = function(arr) {
       let promises = [];
       arr.forEach(name => {
-         promises.push(import('./'+name));
+         promises.push(import('./'+name+'.js'));
       });
 
       return Promise.all(promises).then(res_arr => {

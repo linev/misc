@@ -13,10 +13,10 @@
       let elem = document.getElementById("drawing");
       elem.innerHTML = "version = " + JSROOT.version;
 
-      JSROOT.require(['module1.js', 'module2.js']).then(arr => {
+      JSROOT.require(['module1', 'module2']).then(arr => {
          console.log('arr', arr[0], arr[1]);
 
-         elem.innerHTML += "<br/> Loading done " + arr.length;
+         elem.innerHTML += "<br/> Loading len = " + arr.length + "<br/> arr = " + JSON.stringify(arr);
       });
 
 
