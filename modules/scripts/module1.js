@@ -2,9 +2,9 @@ console.log('load module1.js');
 
 import jsroot from './core.js';
 
-export default jsroot.require(['module_base']).then(res1 => {
+export default jsroot.require(['module_base']).then(async res1 => {
 
-  console.log('res1', res1[0]);
+   let p1 = await import("../src/painter1.js");
 
-   return { name: "module1" };
+   return { name: "module1", Painter1: p1.Painter1 };
 });
