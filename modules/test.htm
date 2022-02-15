@@ -7,17 +7,16 @@
 </head>
 <body>
    <div id="drawing" style="width:800px; height:600px"></div>
-   <script type='text/javascript'>
+   <script type='module'>
 
       let elem = document.getElementById("drawing");
 
-      import('./scripts/core.js').then(res => {
-         let jsroot = res.default;
-         console.log('jsroot', jsroot);
+      import jsroot from './scripts/core.js';
 
-         elem.innerHTML = "version = " + jsroot.version;
-         return jsroot.require(['module1', 'module2']);
-      }).then(arr => {
+      console.log('jsroot', jsroot);
+
+      elem.innerHTML = "version = " + jsroot.version;
+      jsroot.require(['module1', 'module2']).then(arr => {
          console.log('arr', arr[0], arr[1]);
          elem.innerHTML += "<br/> Loading len = " + arr.length + "<br/> arr = " + JSON.stringify(arr);
       });
