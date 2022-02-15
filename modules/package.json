@@ -1,0 +1,41 @@
+{
+  "name": "jsroot_modules",
+  "type": "module",
+  "version": "6.3.99",
+  "engines": {
+    "node": ">=0.14"
+  },
+  "description": "JavaScript ROOT with modules",
+  "homepage": "https://root.cern/js/",
+  "main": "./scripts/core.js",
+  "contributors": [
+    {
+      "name": "Bertrand Bellenot",
+      "email": "bertrand.bellenot@cern.ch"
+    },
+    {
+      "name": "Sergey Linev",
+      "email": "s.linev@gsi.de"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
+    "canvas": "^2.9.0",
+    "gl": "^5.0.0",
+    "jsdom": "^19.0.0",
+    "mathjax": "3.2.0",
+    "xhr2": "^0.2.1",
+    "zstd-codec": "^0.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/root-project/jsroot.git"
+  },
+  "files": [
+    "scripts/*",
+    "style/*",
+    "LICENSE"
+  ]
+}
