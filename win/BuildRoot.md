@@ -6,7 +6,7 @@
     set CEF_ROOT=C:\Soft\cef
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root624 -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=14 -Dwebgui=ON -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root626 -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
 ## Call cmake for VirtualBox pathes, 64 bit
 
@@ -56,7 +56,7 @@ Remove link.exe file from cygwin to avoid conflict with the MS linker
 On VirtualBox machine do following - start VC **x86** console
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
-    call C:\Soft\root624_install\bin\thisroot.bat
+    call C:\Soft\root626_install\bin\thisroot.bat
     cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\go4 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
     cmake --build . --config Release -- /maxcpucount
 
