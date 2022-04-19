@@ -13,7 +13,7 @@
 
 	--border-style: 1px solid #E8E8E8;
 	--header-height: 48px;
-	--panel-width: 300px;
+	--panel-width: 280px;
 	--panel-padding: 16px;
 	--icon-size: 20px;
 }
@@ -144,10 +144,10 @@ h1 a {
 		display: none;
 		background-color: var(--text-color);
 		background-size: var(--icon-size);
-		-webkit-mask-image: url(../files/ic_close_black_24dp.svg);
+		-webkit-mask-image: url(ic_close_black_24dp.svg);
 		-webkit-mask-position: 50% 50%;
 		-webkit-mask-repeat: no-repeat;
-		mask-image: url(../files/ic_close_black_24dp.svg);
+		mask-image: url(ic_close_black_24dp.svg);
 		mask-position: 50% 50%;
 		mask-repeat: no-repeat;
 		cursor: pointer;
@@ -178,10 +178,10 @@ h1 a {
 		cursor: pointer;
 		background-color: var(--text-color);
 		background-size: var(--icon-size);
-		-webkit-mask-image: url(../files/ic_menu_black_24dp.svg);
+		-webkit-mask-image: url(ic_menu_black_24dp.svg);
 		-webkit-mask-position: 50% 50%;
 		-webkit-mask-repeat: no-repeat;
-		mask-image: url(../files/ic_menu_black_24dp.svg);
+		mask-image: url(ic_menu_black_24dp.svg);
 		mask-position: 50% 50%;
 		mask-repeat: no-repeat;
 	}
@@ -248,10 +248,10 @@ h1 a {
 		border: 0px;
 		background-color: var(--text-color);
 		background-size: var(--icon-size);
-		-webkit-mask-image: url(../files/ic_search_black_24dp.svg);
+		-webkit-mask-image: url(ic_search_black_24dp.svg);
 		-webkit-mask-position: 0 50%;
 		-webkit-mask-repeat: no-repeat;
-		mask-image: url(../files/ic_search_black_24dp.svg);
+		mask-image: url(ic_search_black_24dp.svg);
 		mask-position: 0 50%;
 		mask-repeat: no-repeat;
 		font-family: 'Roboto Mono', monospace;
@@ -459,7 +459,7 @@ iframe#viewer {
 
 @media all and ( min-width: 1700px ) {
 	:root {
-		--panel-width: 360px;
+		--panel-width: 280px;
 		--font-size: 18px;
 		--line-height: 28px;
 		--header-height: 56px;
