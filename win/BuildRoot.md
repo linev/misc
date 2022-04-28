@@ -90,7 +90,7 @@ This should produce installers, which are half-ready for use.
 
 # Building CEF on Windows
 
-Downdlod win32 version, change /MT -> /MD compiler falgs for dynamic linking
+Download win32 version, change /MT -> /MD compiler flags for dynamic linking
 
     mkdir build
     cd build
