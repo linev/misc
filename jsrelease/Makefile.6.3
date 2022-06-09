@@ -1,0 +1,130 @@
+tgt = 6.3.4
+
+curr = old63
+
+src = /home/linev/git/jsroot
+
+libs = $(curr)/scripts/jquery.min.js \
+       $(curr)/scripts/jquery-ui.min.js \
+       $(curr)/scripts/rawinflate.min.js \
+       $(curr)/scripts/d3.min.js \
+       $(curr)/scripts/three.min.js \
+       $(curr)/scripts/three.extra.min.js \
+       $(curr)/scripts/dat.gui.min.js \
+       $(curr)/scripts/jquery.mousewheel.min.js
+
+
+scripts = $(curr)/scripts/JSRoot.core.js \
+          $(curr)/scripts/JSRoot.math.js \
+          $(curr)/scripts/JSRoot.io.js \
+          $(curr)/scripts/JSRoot.tree.js \
+          $(curr)/scripts/JSRoot.openui5.js \
+          $(curr)/scripts/JSRoot.interactive.js \
+          $(curr)/scripts/JSRoot.latex.js \
+          $(curr)/scripts/JSRoot.webwindow.js \
+          $(curr)/scripts/JSRoot.painter.js \
+          $(curr)/scripts/JSRoot.hist.js \
+          $(curr)/scripts/JSRoot.hist3d.js \
+          $(curr)/scripts/JSRoot.more.js \
+          $(curr)/scripts/JSRoot.hierarchy.js \
+          $(curr)/scripts/JSRoot.menu.js \
+          $(curr)/scripts/JSRoot.jq2d.js \
+          $(curr)/scripts/JSRoot.base3d.js \
+          $(curr)/scripts/JSRoot.csg.js \
+          $(curr)/scripts/JSRoot.geom.js \
+          $(curr)/scripts/JSRoot.geobase.js  \
+          $(curr)/scripts/JSRoot.geoworker.js \
+          $(curr)/scripts/JSRoot.gpad.js \
+          $(curr)/scripts/JSRoot.v7gpad.js \
+          $(curr)/scripts/JSRoot.v7hist.js \
+          $(curr)/scripts/JSRoot.v7hist3d.js \
+          $(curr)/scripts/JSRoot.v7more.js
+
+
+styles = $(curr)/style/jquery-ui.css \
+         $(curr)/style/JSRoot.painter.css \
+         $(curr)/style/JSRoot.geom.css
+
+
+pages = $(curr)/index.htm \
+        $(curr)/examples.htm \
+        $(curr)/api.htm \
+        $(curr)/changes.md \
+        $(curr)/files/online.htm \
+        $(curr)/files/draw.htm \
+        $(curr)/package.json
+
+
+mini_js = $(scripts:.js=.min.js)
+mini_css = $(styles:.css=.min.css)
+
+all: $(libs) $(styles) $(mini_js) $(mini_css) $(pages)
+	cd $(curr); cp $(src)/files/*.htm files; rm -f JsRootDev.tar*; rm -rf demo/node/node_modules; rm -f demo/node/node_modules; tar chf JsRootDev.tar index.htm changes.md package.json LICENSE img scripts style files; gzip JsRootDev.tar
+	cd $(curr)/scripts; echo "All JSROOT files"; du -c -b JSRoot.*.min.js
+	cd $(curr); rm -f build.tar*; cp $(src)/demo/*.js $(src)/demo/*.htm demo/; cp -r $(src)/demo/openui5/* demo/openui5/; cp $(src)/demo/node/*.js demo/node/; tar chf build.tar *; gzip build.tar
+	scp $(curr)/build.tar.gz linev@lxg0538:/u/linev/abc
+	ssh linev@lxg0538 "cd /u/linev/web-docs/js/$(tgt); tar xzf /u/linev/abc/build.tar.gz; rm -f /u/linev/abc/build.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	cd $(curr); rm -rf build.tar.gz jsdoc.tar.gz
+#	cd 2.1; rm -f JsRoot21.tar*; tar chf JsRoot21.tar index.htm fonts img scripts style; gzip JsRoot21.tar
+#	cd 3.7; rm -f JsRoot37.tar*; tar chf JsRoot37.tar index.htm changes.md img scripts style; gzip JsRoot37.tar
+#	cp /u/linev/git/jsroot/docs/*.htm $(curr)/demo/
+#	cp /u/linev/git/jsroot/changes.md /u/linev/git/jsroot/examples.htm /u/linev/git/jsroot/api.htm /u/linev/git/jsroot/index.htm $(curr)/
+#	rm -f js.tar*; tar chf js.tar index.html dev files/geom/*.C files/img/*.png files/histpainter6.root files/fitLinear56.root files/graph_twopad.root files/graph2d.root files/tf2.json.gz;  gzip js.tar
+
+
+docs: all $(libs) $(mini_js) $(mini_css)
+	cd $(curr); rm -rf jsdoc
+	cd $(curr); /home/linev/soft/jsdoc/node_modules/.bin/jsdoc -a public -a undefined -c $(src)/docs/jsdoc.json -t /home/linev/soft/jsdoc/node_modules/jaguarjs-jsdoc
+	cd $(curr); tar chf jsdoc.tar jsdoc; gzip jsdoc.tar
+	scp $(curr)/jsdoc.tar.gz linev@lxg0538:/u/linev/abc
+	ssh linev@lxg0538 "cd /u/linev/web-docs/js/$(tgt); rm -rf jsdoc; tar xzf /u/linev/abc/jsdoc.tar.gz; rm -f /u/linev/abc/jsdoc.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	rm -f $(curr)/jsdoc.tar.gz
+
+fulldocs: $(libs) $(mini_js) $(mini_css) docs
+	cd $(curr); rm -rf jsdocfull
+	cd $(curr); /home/linev/soft/jsdoc/node_modules/.bin/jsdoc -p -c $(src)/docs/jsdoc.json -t /home/linev/soft/jsdoc/node_modules/jaguarjs-jsdoc; mv jsdoc jsdocfull
+	cd $(curr); tar chf jsdoc.tar jsdocfull; gzip jsdoc.tar
+	scp $(curr)/jsdoc.tar.gz linev@lxg0538:/u/linev/abc
+	ssh linev@lxg0538 "cd /u/linev/web-docs/js/$(tgt); rm -rf jsdocfull; tar xzf /u/linev/abc/jsdoc.tar.gz; rm -f /u/linev/abc/jsdoc.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	rm -f $(curr)/jsdoc.tar.gz
+
+
+$(mini_js): %.min.js : %.js
+#	java -jar closure-compiler-v20210601.jar --js $< --js_output_file $@
+	java -jar closure-compiler-v20190909.jar --js $< --js_output_file $@
+
+#$(curr)/scripts/JSRootCore.min.js : $(curr)/scripts/JSRootCore.js
+#	@echo Just copy $@ instead of minified
+#	cp -f $< $@
+
+%.min.css : %.css
+	java -jar yuicompressor-2.4.8.jar $< -o $@
+
+$(curr)/scripts/JSRoot.core.js : $(src)/scripts/JSRoot.core.js
+	@echo Preformatting $@
+	cp -f $< $@
+	sed -i 's/\/\/openuicfg/JSROOT.openui5src = "nojsroot";/g' $@
+
+$(curr)/%.js : $(src)/%.js
+	cp -f $< $@
+
+$(curr)/%.css : $(src)/%.css
+	cp -f $< $@
+
+$(curr)/index.htm : $(src)/index.htm
+	cp -f $< $@
+
+$(curr)/files/%.htm : $(src)/files/%.htm
+	cp -f $< $@
+
+$(curr)/examples.htm : $(src)/demo/examples.htm
+	cp -f $< $@
+
+$(curr)/package.json : $(src)/package.json
+	cp -f $< $@
+
+$(curr)/%.htm : $(src)/docs/%.htm
+	cp -f $< $@
+
+$(curr)/%.md : $(src)/%.md
+	cp -f $< $@
