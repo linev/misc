@@ -7,4 +7,6 @@ reduce_includes/reduce_includes
 dist
 package-lock.json
 build
+.project
+.pydevproject
 
