@@ -66,32 +66,30 @@
         </div>
       </div>
 
-		<script>
-		var panel = document.getElementById( 'panel' );
-		var expandButton = document.getElementById( 'expandButton' );
-		var panelScrim = document.getElementById( 'panelScrim' );
+      <script>
+         let panel = document.getElementById( 'panel' );
+         let expandButton = document.getElementById( 'expandButton' );
+         let panelScrim = document.getElementById( 'panelScrim' );
 
-		expandButton.addEventListener( 'click', function ( event ) {
+         expandButton.addEventListener( 'click', event => {
 
-			panel.classList.toggle( 'open' );
-			event.preventDefault();
+            panel.classList.toggle( 'open' );
+            event.preventDefault();
 
-		} );
+         });
 
-		panelScrim.onclick = function ( event ) {
+         panelScrim.onclick = event => {
+            event.preventDefault();
+            panel.classList.toggle( 'open' );
+         };
 
-			event.preventDefault();
-			panel.classList.toggle( 'open' );
+      </script>
 
-		};
+      <div id="viewer">
 
-		</script>
+         <!-- a id="button" class="text" href="https://discourse.threejs.org/c/showcase">submit project</a-->
 
-		<div id="viewer">
-
-			<!-- a id="button" class="text" href="https://discourse.threejs.org/c/showcase">submit project</a-->
-
-			<div id="projects">
+         <div id="projects">
            <a href="latest/?nobrowser&file=../files/hsimple.root&item=hpx;1&opt=" title="TH1 class" target="_blank" rel="noopener"><img src="files/img/th1.png"></a>
            <a href="latest/?nobrowser&file=../files/hitmap.root&item=EnergyMeanAsyLo;1&opt=hist,fill_red" title="TH1 class" target="_blank" rel="noopener"><img src="files/img/negfill.png"></a>
            <a href="latest/?nobrowser&file=../files/hsimple.root&item=hpxpy;1&opt=COLZ" title="TH2 class" target="_blank" rel="noopener"><img src="files/img/th2.png"></a>
