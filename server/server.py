@@ -45,6 +45,15 @@ class RangeRequestHandler(SimpleHTTPRequestHandler):
     - Override send_head to look for 'Range' and respond appropriately.
     - Override copyfile to only transmit a range when requested.
     """
+
+    def translate_path(self, path):
+        res = SimpleHTTPRequestHandler.translate_path(self, path)
+        p = res.find('?stamp')
+        if p > 0:
+           res = res[0:p]
+        return res
+
+
     def send_head(self):
         if 'Range' not in self.headers:
             self.range = None
