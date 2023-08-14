@@ -4,14 +4,14 @@
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019\bin
     set CEF_ROOT=C:\Soft\cef
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DPYTHON_EXECUTABLE=python -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
-    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root626 -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A Win32 -Thost=x64 c:\git\root626 -Dpython=OFF -DPYTHON_EXECUTABLE=python -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
 ## Call cmake for VirtualBox pathes, 64 bit
 
     set PATH=%PATH%;C:\Qt5\5.15.2\msvc2019_64\bin
-    cmake -G"Visual Studio 16 2019" -A x64 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
+    cmake -G"Visual Studio 16 2019" -A x64 -Thost=x64 c:\git\root -Droot7=ON -Dpython=OFF -DPYTHON_EXECUTABLE=python -Dtesting=ON -DCMAKE_CXX_STANDARD=17 -Dwebgui=ON -Dqt5web=ON
 
 
 ## Call cmake for GSI Windows with many limitations
