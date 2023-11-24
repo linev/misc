@@ -10,4 +10,4 @@ build
 .project
 .pydevproject
 .settings
-
+.vscode
