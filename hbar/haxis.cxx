@@ -1,9 +1,25 @@
+/// \file
+/// \ingroup tutorial_graphics
+/// \notebook -js
+/// Swap X/Y axes drawing and use to draw TH1 as bar and as markers
+/// Option "haxisg;y+" draw histogram axis as for "hbar" plus allow to draw grids plus draw Y labels on other side
+/// Option "bar,base0,same" draws histogram as bars with 0 as reference value
+/// Option "P,same" draws histogram as markers
+/// Macro also shows how frame margins can be configured and poly-line drawing like filled arrow can be
+/// placed relative to frame.
+///
+/// \macro_image (tcanvas_js)
+/// \macro_code
+///
+/// \author Sergey Linev
+
 #include <fstream>
 #include <string>
 #include <vector>
 
 #include "TCanvas.h"
 #include "TH1.h"
+#include "TPolyLine.h"
 
 void haxis()
 {
@@ -64,11 +80,11 @@ void haxis()
    c1->SetGridy(1);
    //c1->SetGridx(1);
 
-   c1->Add(haxis, "haxisg;y+"); // horizontal axis with grids, y on top
+   c1->Add(haxis, "haxisg;y+"); // swap x/y axis, let draw grids, y on top
 
-   c1->Add(hpos, "bar,base0,same"); // draw as bar, 0 as base
-   c1->Add(hneg, "bar,base0,same"); // draw as bar, 0 as base
-   c1->Add(hmain, "P,same");        // draw as marker, 0 as base
+   c1->Add(hpos, "bar,base0,same"); // draw as bar, 0 as base, use drawn frame
+   c1->Add(hneg, "bar,base0,same"); // draw as bar, 0 as base, use drawn frame
+   c1->Add(hmain, "P,same");        // draw as marker, , use drawn frame
 
    TLatex *title = new TLatex((frame_left + frame_right)*0.5, 0.96, "Example of haxis with overlayed histograms");
    title->SetNDC(true);
@@ -77,15 +93,14 @@ void haxis()
    title->SetTextColor(kBlue);
    c1->Add(title);
 
-
    auto add_arrow = [&](bool left_side, const char *txt) {
       double x1 = left_side ? frame_0 - 0.02 : frame_0 + 0.02,
              x2 = left_side ? frame_left + 0.05 : frame_right - 0.05,
              x3 = left_side ? frame_left + 0.03 : frame_right - 0.03,
              y0 = frame_top + 0.08, wy = 0.02;
 
-      std::vector<double>  xpos = {x1,  x2, x2, x3, x2, x2, x1, x1 };
-      std::vector<double>  ypos = {y0 + wy, y0 + wy, y0 + wy*1.5, y0, y0 - wy*1.5, y0 - wy, y0 - wy, y0 + wy };
+      std::vector<double>  xpos = { x1,  x2, x2, x3, x2, x2, x1, x1 };
+      std::vector<double>  ypos = { y0 + wy, y0 + wy, y0 + wy*1.5, y0, y0 - wy*1.5, y0 - wy, y0 - wy, y0 + wy };
       TPolyLine *pleft = new TPolyLine(xpos.size(),xpos.data(),ypos.data());
       pleft->SetFillColor(left_side ? kGreen : kRed);
       pleft->SetNDC();
