@@ -147,7 +147,7 @@ void draw(const char *fname = "test.csv")
           scale_min = (hmin - (hmax-hmin) * 0.1) * scale,
           scale_max = (hmax + (hmax-hmin) * 0.1) * scale,
           frame_left = 0.3, frame_right = 0.9,
-          frame_top = 0.85, frame_bottom = 0.05,
+          frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
    auto haxis = new TH1D("haxis", "title", main.size(), 0, main.size());
@@ -205,37 +205,37 @@ void draw(const char *fname = "test.csv")
       c1->Add(l);
    }
 
-   // draw left arrow
+   TLatex *title = new TLatex((frame_left + frame_right) * 0.5, 0.96, "Graphics title");
+   title->SetNDC(true);
+   title->SetTextAlign(22);
+   title->SetTextSize(0.08);
+   title->SetTextColor(kBlue);
+   c1->Add(title);
 
-   Double_t xleft[8] = {frame_0 - 0.02,  frame_left + 0.05, frame_left + 0.05, frame_left + 0.03, frame_left + 0.05, frame_left + 0.05, frame_0 - 0.02, frame_0 - 0.02 };
-   Double_t yleft[8] = {0.97,            0.97,              0.98,               0.95,      0.92,              0.93,              0.93,    0.97 };
-   TPolyLine *pleft = new TPolyLine(8,xleft,yleft);
-   pleft->SetFillColor(kGreen);
-   pleft->SetNDC();
-   c1->Add(pleft, "f");
+   auto add_arrow = [&](bool left_side, const char *txt) {
+      double x1 = left_side ? frame_0 - 0.02 : frame_0 + 0.02,
+             x2 = left_side ? frame_left + 0.05 : frame_right - 0.05,
+             x3 = left_side ? frame_left + 0.03 : frame_right - 0.03,
+             y0 = frame_top + 0.08, wy = 0.02;
 
-   TLatex *lleft = new TLatex(frame_0 - 0.05, 0.95, "Left arrow");
-   lleft->SetNDC(true);
-   lleft->SetTextAlign(32);
-   lleft->SetTextSize(0.02);
-   lleft->SetTextColor(kWhite);
-   c1->Add(lleft, "f");
+      std::vector<double>  xpos = {x1,  x2, x2, x3, x2, x2, x1, x1 };
+      std::vector<double>  ypos = {y0 + wy, y0 + wy, y0 + wy*1.5, y0, y0 - wy*1.5, y0 - wy, y0 - wy, y0 + wy };
+      TPolyLine *pleft = new TPolyLine(xpos.size(),xpos.data(),ypos.data());
+      pleft->SetFillColor(left_side ? kGreen : kRed);
+      pleft->SetNDC();
+      c1->Add(pleft, "f");
 
-   // draw right arrow
+      TLatex *l = new TLatex(left_side ? x1 - 0.03 : x1 + 0.03, y0, txt);
+      l->SetNDC(true);
+      l->SetTextAlign(left_side ? 32 : 12);
+      l->SetTextSize(0.03);
+      l->SetTextColor(kWhite);
+      c1->Add(l);
+   };
 
-   Double_t xright[8] = {frame_0 + 0.02,  frame_right - 0.05, frame_right - 0.05, frame_right - 0.03, frame_right - 0.05, frame_right - 0.05, frame_0 + 0.02, frame_0 + 0.02 };
-   Double_t yright[8] = {0.97,            0.97,              0.98,               0.95,      0.92,              0.93,              0.93,    0.97 };
-   TPolyLine *pright = new TPolyLine(8,xright,yright);
-   pright->SetFillColor(kRed);
-   pright->SetNDC();
-   c1->Add(pright, "f");
+   add_arrow(true, "Reduction");
 
-   TLatex *lright = new TLatex(frame_0 + 0.05, 0.95, "Right arrow");
-   lright->SetNDC(true);
-   lright->SetTextAlign(12);
-   lright->SetTextSize(0.02);
-   lright->SetTextColor(kWhite);
-   c1->Add(lright, "f");
+   add_arrow(false, "Increase");
 
    c1->SaveAs("hbar.root");
 }
