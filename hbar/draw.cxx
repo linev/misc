@@ -143,9 +143,16 @@ void draw(const char *fname = "test.csv")
 
    finish_category();
 
+   double scale = 1e-6,
+          scale_min = (hmin - (hmax-hmin) * 0.1) * scale,
+          scale_max = (hmax + (hmax-hmin) * 0.1) * scale,
+          frame_left = 0.3, frame_right = 0.9,
+          frame_top = 0.85, frame_bottom = 0.05,
+          frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
+
    auto haxis = new TH1D("haxis", "title", main.size(), 0, main.size());
-   haxis->SetMinimum(hmin - (hmax-hmin) * 0.1);
-   haxis->SetMaximum(hmax + (hmax-hmin) * 0.1);
+   haxis->SetMinimum(scale_min);
+   haxis->SetMaximum(scale_max);
    haxis->SetStats(false);
    haxis->GetXaxis()->SetTickSize(0);
    haxis->GetXaxis()->SetLabelSize(0);
@@ -168,29 +175,67 @@ void draw(const char *fname = "test.csv")
    hneg->SetBarWidth(0.5);
 
    for (unsigned n = 0; n < main.size(); n++) {
-      hmain->SetBinContent(n + 1, main[n]);
-      hpos->SetBinContent(n + 1, positive[n]);
-      hneg->SetBinContent(n + 1, negative[n]);
+      hmain->SetBinContent(n + 1, main[n]*scale);
+      hpos->SetBinContent(n + 1, positive[n]*scale);
+      hneg->SetBinContent(n + 1, negative[n]*scale);
    }
 
    auto c1 = new TCanvas("c1", "title", 1500, 800);
-   c1->SetLeftMargin(0.3);
+   c1->SetLeftMargin(frame_left);
+   c1->SetRightMargin(1 - frame_right);
+   c1->SetTopMargin(1 - frame_top);
+   c1->SetBottomMargin(frame_bottom);
    c1->SetGridy(1);
    //c1->SetGridx(1);
-   c1->Add(haxis, "haxisg");
+
+   c1->Add(haxis, "haxisg;y+"); // horizontal axis with grids, y on top
 
    c1->Add(hpos, "bar,base0,same");
    c1->Add(hneg, "bar,base0,same");
    c1->Add(hmain, "P,same");
 
+   // draw labels on the right side
+
    for (unsigned n = 0; n < main.size(); n++) {
-      TLatex *l = new TLatex(0.05, 0.1 + 0.8 * (n+0.5) / main.size(), main_labels[n].substr(1, 40).c_str());
+      TLatex *l = new TLatex(0.05, frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size(), main_labels[n].substr(1, 40).c_str());
       l->SetNDC(true);
       l->SetTextAlign(12);
       l->SetTextSize(0.02);
       l->SetTextColor(kBlue);
       c1->Add(l);
    }
+
+   // draw left arrow
+
+   Double_t xleft[8] = {frame_0 - 0.02,  frame_left + 0.05, frame_left + 0.05, frame_left + 0.03, frame_left + 0.05, frame_left + 0.05, frame_0 - 0.02, frame_0 - 0.02 };
+   Double_t yleft[8] = {0.97,            0.97,              0.98,               0.95,      0.92,              0.93,              0.93,    0.97 };
+   TPolyLine *pleft = new TPolyLine(8,xleft,yleft);
+   pleft->SetFillColor(kGreen);
+   pleft->SetNDC();
+   c1->Add(pleft, "f");
+
+   TLatex *lleft = new TLatex(frame_0 - 0.05, 0.95, "Left arrow");
+   lleft->SetNDC(true);
+   lleft->SetTextAlign(32);
+   lleft->SetTextSize(0.02);
+   lleft->SetTextColor(kWhite);
+   c1->Add(lleft, "f");
+
+   // draw right arrow
+
+   Double_t xright[8] = {frame_0 + 0.02,  frame_right - 0.05, frame_right - 0.05, frame_right - 0.03, frame_right - 0.05, frame_right - 0.05, frame_0 + 0.02, frame_0 + 0.02 };
+   Double_t yright[8] = {0.97,            0.97,              0.98,               0.95,      0.92,              0.93,              0.93,    0.97 };
+   TPolyLine *pright = new TPolyLine(8,xright,yright);
+   pright->SetFillColor(kRed);
+   pright->SetNDC();
+   c1->Add(pright, "f");
+
+   TLatex *lright = new TLatex(frame_0 + 0.05, 0.95, "Right arrow");
+   lright->SetNDC(true);
+   lright->SetTextAlign(12);
+   lright->SetTextSize(0.02);
+   lright->SetTextColor(kWhite);
+   c1->Add(lright, "f");
 
    c1->SaveAs("hbar.root");
 }
