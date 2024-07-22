@@ -164,17 +164,14 @@ void draw(const std::string &fname = "test.xlsx")
          }
 
          if ((vect.size() > 5) && !vect[5].empty()) {
-            double x1, x2;
-            if (subv < 0) {
-               x1 = current_negative;
-               x2 = x1 + subv;
-            } else {
-               x1 = current_pos;
-               x2 = x1 + subv;
-            }
+            double x1 = (subv < 0) ? current_negative : current_pos,
+                   x2 = x1 + subv;
 
             TBox *box = new TBox(main.size() + 0.25, x1*scale, main.size() + 0.75, x2*scale);
-            box->SetFillColor(kYellow);
+            if (subv > 0)
+               box->SetFillColor(TColor::GetColor((Float_t) 1., (Float_t) 0., (Float_t) boxes.size()*0.2 + 0.5, 1.));
+            else
+               box->SetFillColor(TColor::GetColor((Float_t) 0., (Float_t) 1., (Float_t) boxes.size()*0.2 + 0.5, 1.));
             boxes.push_back(box);
 
             TLatex *lbl = new TLatex(main.size() + 0.5, (x1+x2)*0.5*scale,  vect[5].c_str());
