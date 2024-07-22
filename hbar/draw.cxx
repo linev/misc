@@ -4,6 +4,8 @@
 
 #include "TCanvas.h"
 #include "TH1.h"
+#include "TBox.h"
+#include "TLatex.h"
 
 
 std::vector<std::string> split_line(const std::string &line)
@@ -96,6 +98,8 @@ void draw(const std::string &fname = "test.xlsx")
 
    std::vector<double> main, positive, negative;
    std::vector<std::string> main_labels;
+   std::vector<TBox *> boxes;
+   std::vector<TLatex *> labels;
 
    std::vector<double> last_sub;
 
@@ -103,8 +107,9 @@ void draw(const std::string &fname = "test.xlsx")
 
    double current_value = 0., current_direct = 0.,current_sum = 0.,
           current_pos = 0., current_negative = 0.;
-   double hmin = 0., hmax = 0.;
+   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6;
    std::vector<double> current_sub;
+   bool first_line = true;
 
    auto finish_category = [&]() {
       if (current_sub.size() == 0)
@@ -134,23 +139,48 @@ void draw(const std::string &fname = "test.xlsx")
       if (line.empty())
          continue;
 
-      if (line.find(",,") == 0) {
-         auto vect = split_line(line);
-         if (vect.size() < 4) {
-            printf("Format failure in %s\n", line.c_str());
-            return;
-         }
+      auto vect = split_line(line);
+      if (vect.size() < 4)
+         continue;
 
-         if (!vect[0].empty() || !vect[1].empty()) {
-            printf("Format failure in %s\n", line.c_str());
-            return;
+      if (!vect[0].empty()) {
+         // use first line for extra config
+         if (!vect[3].empty() && first_line) {
+            glimit = std::stod(vect[3]);
+            printf("Global limits %f\n", glimit);
          }
+         first_line = false;
+
+         continue;
+      }
+
+      if (vect[0].empty() && vect[1].empty()) {
+         // sub-sub category
 
          auto subv = std::stod(vect[3]);
          double direct = 0.;
          if (vect.size() > 4 && !vect[4].empty()) {
-            direct = std::stod(vect[4]);
-            // subv += direct;
+           direct = std::stod(vect[4]);
+         }
+
+         if ((vect.size() > 5) && !vect[5].empty()) {
+            double x1, x2;
+            if (subv < 0) {
+               x1 = current_negative;
+               x2 = x1 + subv;
+            } else {
+               x1 = current_pos;
+               x2 = x1 + subv;
+            }
+
+            TBox *box = new TBox(main.size() + 0.25, x1*scale, main.size() + 0.75, x2*scale);
+            box->SetFillColor(kYellow);
+            boxes.push_back(box);
+
+            TLatex *lbl = new TLatex(main.size() + 0.5, (x1+x2)*0.5*scale,  vect[5].c_str());
+            lbl->SetTextAlign(22);
+            lbl->SetTextSize(0.015);
+            labels.push_back(lbl);
          }
 
          if (subv > 0) {
@@ -166,22 +196,11 @@ void draw(const std::string &fname = "test.xlsx")
          continue;
       }
 
-      if (line[0] != ',')
+      if (!vect[0].empty() || vect[1].empty())
          continue;
-
-      finish_category();
-
       // start of new category
 
-      // printf("%s\n", line.c_str());
-      auto vect = split_line(line);
-      // for (unsigned n = 0; n < vect.size(); n++)
-      //    printf("   [%u]: %s\n", n, vect[n].c_str());
-
-      if (vect.size() < 4) {
-         printf("Format failure in %s\n", line.c_str());
-         return;
-      }
+      finish_category();
 
       current_sum = 0;
       current_pos = current_negative = 0.;
@@ -200,9 +219,8 @@ void draw(const std::string &fname = "test.xlsx")
 
    finish_category();
 
-   double scale = 1e-6,
-          scale_min = (hmin - (hmax-hmin) * 0.1) * scale,
-          scale_max = (hmax + (hmax-hmin) * 0.1) * scale,
+   double scale_min = glimit != 0 ? -glimit : (hmin - (hmax-hmin) * 0.1) * scale,
+          scale_max = glimit != 0 ? glimit : (hmax + (hmax-hmin) * 0.1) * scale,
           frame_left = 0.35, frame_right = 0.98,
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
@@ -232,7 +250,7 @@ void draw(const std::string &fname = "test.xlsx")
    hneg->SetBarWidth(0.5);
 
    for (unsigned n = 0; n < main.size(); n++) {
-      hmain->SetBinContent(n + 1, main[n]*scale);
+      hmain->SetBinContent(n + 1, positive[n]!=0 && negative[n] != 0 ? main[n]*scale : 0);
       hpos->SetBinContent(n + 1, positive[n]*scale);
       hneg->SetBinContent(n + 1, negative[n]*scale);
    }
@@ -249,6 +267,14 @@ void draw(const std::string &fname = "test.xlsx")
 
    c1->Add(hpos, "bar,base0,same");
    c1->Add(hneg, "bar,base0,same");
+
+   // draw custom boxes after histograms
+   for (auto &box : boxes)
+      c1->Add(box);
+
+   for (auto &lbl : labels)
+      c1->Add(lbl);
+
    c1->Add(hmain, "P,same");
 
    // draw labels on the right side
@@ -259,7 +285,7 @@ void draw(const std::string &fname = "test.xlsx")
       l->SetNDC(true);
       l->SetTextAlign(12);
       l->SetTextSize(0.02);
-      l->SetTextColor(kBlue);
+      l->SetTextColor(kBlack);
       c1->Add(l);
 
       l = new TLatex(frame_left - 0.01, y, TString::Format("%6.4g", main[n]*scale).Data());
@@ -302,5 +328,5 @@ void draw(const std::string &fname = "test.xlsx")
 
    add_arrow(false, "Increase");
 
-   // c1->SaveAs("hbar.root");
+   c1->SaveAs("hbar2.root");
 }
