@@ -34,12 +34,38 @@ std::vector<std::string> split_line(const std::string &line)
           res.emplace_back(line.substr(p));
           p = line.length();
        } else {
-          res.emplace_back(line.substr(p, p2 - p - 1));
+          res.emplace_back(line.substr(p, p2 - p));
           p = p2 + 1;
        }
     }
 
     return res;
+}
+
+std::string remap_title(const std::string &src)
+{
+   std::map<std::string, std::string> repl = {
+
+   { "market for natural gas, from low pressure network" , "Market for natural gas"},
+   {"market for tap water","Market for tap water"},
+   {"hydrogen peroxide production","Hydrogen peroxide production"},
+   {"sulfuric acid production","Sulfuric acid production"},
+   {"11.6.7.2. optimierte Direkte Emissionen","Optimierte Direkte Emissionen"},
+   {"11.1.4. Aktivkohle aus Steinkohel","Aktivkohle aus Steinkohle"},
+   {"11.6.1.2. solare trocknung mit pv strom","Solare trocknung mit pv strom"},
+   {"11.6.2.2. Netzauslegung mit DOPPELT ","Netzauslegung mit DOPPELT verstärktem rohr"},
+   {"soda production, solvay process","Soda production, solvay process"},
+   {"treatment of hazardous waste,","Treatment of hazardous waste"},
+   {"market for ammonia, liquid |","Market for ammonia, liquid ammonia"},
+   {"market for sodium hydroxide,", "Market for sodium hydroxide"},
+   {"11.6.6. Direkte Verwendung der Soda", "Direkte Verwendung der Soda"}
+   };
+
+   for (auto &entry : repl)
+     if (src.find(entry.first) == 0)
+        return entry.second;
+
+   return src.substr(0, 40);
 }
 
 void draw(const char *fname = "test.csv")
@@ -58,7 +84,8 @@ void draw(const char *fname = "test.csv")
 
    std::string line, current_label;
 
-   double current_value = 0., current_sum = 0., current_pos = 0., current_negative = 0.;
+   double current_value = 0., current_direct = 0.,current_sum = 0.,
+          current_pos = 0., current_negative = 0.;
    double hmin = 0., hmax = 0.;
    std::vector<double> current_sub;
 
@@ -66,7 +93,7 @@ void draw(const char *fname = "test.csv")
       if (current_sub.size() == 0)
          return;
 
-      printf("   sum: %f diff: %f\n", current_sum, current_sum - current_value);
+      printf("   sum: %f diff: %f\n", current_sum, current_sum + current_direct - current_value);
 
       main.push_back(current_value);
       main_labels.push_back(current_label);
@@ -103,17 +130,21 @@ void draw(const char *fname = "test.csv")
          }
 
          auto subv = std::stod(vect[3]);
+         double direct = 0.;
+         if (vect.size() > 4 && !vect[4].empty()) {
+            direct = std::stod(vect[4]);
+            // subv += direct;
+         }
 
          if (subv > 0) {
             current_pos += subv;
          } else {
             current_negative += subv;
-
          }
          current_sum += subv;
          current_sub.push_back(subv);
 
-         printf("          %f info:%s\n", subv, vect[2].substr(0,10).c_str());
+         printf("          %f %f info:%s\n", subv, direct, vect[2].substr(0,10).c_str());
 
          continue;
       }
@@ -136,9 +167,18 @@ void draw(const char *fname = "test.csv")
       }
 
       current_sum = 0;
+      current_pos = current_negative = 0.;
       current_value = std::stod(vect[3]);
+      current_direct = 0.;
+      if (vect.size() > 4 && !vect[4].empty()) {
+         current_direct = std::stod(vect[4]);
+      }
+      if (current_direct > 0)
+         current_pos = current_direct;
+      else
+         current_negative = current_direct;
       current_label = vect[1];
-      printf("v = %f  title: %s\n", current_value, vect[1].c_str());
+      printf("v = %f %f title: %s\n", current_value, current_direct,  vect[1].c_str());
    }
 
    finish_category();
@@ -197,7 +237,7 @@ void draw(const char *fname = "test.csv")
    // draw labels on the right side
 
    for (unsigned n = 0; n < main.size(); n++) {
-      TLatex *l = new TLatex(0.05, frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size(), main_labels[n].substr(1, 40).c_str());
+      TLatex *l = new TLatex(0.05, frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size(), remap_title(main_labels[n]).c_str());
       l->SetNDC(true);
       l->SetTextAlign(12);
       l->SetTextSize(0.02);
@@ -237,5 +277,5 @@ void draw(const char *fname = "test.csv")
 
    add_arrow(false, "Increase");
 
-   c1->SaveAs("hbar.root");
+   // c1->SaveAs("hbar.root");
 }
