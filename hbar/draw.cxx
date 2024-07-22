@@ -58,7 +58,11 @@ std::string remap_title(const std::string &src)
    {"treatment of hazardous waste,","Treatment of hazardous waste"},
    {"market for ammonia, liquid |","Market for ammonia, liquid ammonia"},
    {"market for sodium hydroxide,", "Market for sodium hydroxide"},
-   {"11.6.6. Direkte Verwendung der Soda", "Direkte Verwendung der Soda"}
+   {"11.6.6. Direkte Verwendung der Soda", "Direkte Verwendung der Soda"},
+   {"treatment of hard coal ash, ", "Treatment of hard coal ash"},
+   {"single superphosphate production ", "Single superphosphate production"},
+   {"transport, freight, lorry >32 metric ton, EURO4", "Transport, freight, lorry >32 metric ton"},
+   {"xxx", "yyy"}
    };
 
    for (auto &entry : repl)
@@ -68,12 +72,25 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const char *fname = "test.csv")
+void draw(const std::string &fname = "test.xlsx")
 {
-   std::ifstream f(fname);
+
+   std::string csv_name;
+
+   auto pp = fname.find(".xlsx");
+   if (pp == std::string::npos) {
+      csv_name = fname;
+   } else {
+      csv_name = fname.substr(0, pp) + ".csv";
+      auto exec = TString::Format("./xlsx2csv.py %s %s", fname.c_str(), csv_name.c_str());
+      int res = gSystem->Exec(exec);
+      printf("Did EXEC %s res %d\n", exec.Data(), res);
+   }
+
+   std::ifstream f(csv_name);
 
    if (!f) {
-      printf("fail to open file %s\n", fname);
+      printf("fail to open file %s\n", csv_name.c_str());
       return;
    }
 
@@ -186,7 +203,7 @@ void draw(const char *fname = "test.csv")
    double scale = 1e-6,
           scale_min = (hmin - (hmax-hmin) * 0.1) * scale,
           scale_max = (hmax + (hmax-hmin) * 0.1) * scale,
-          frame_left = 0.3, frame_right = 0.9,
+          frame_left = 0.35, frame_right = 0.98,
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
@@ -237,10 +254,18 @@ void draw(const char *fname = "test.csv")
    // draw labels on the right side
 
    for (unsigned n = 0; n < main.size(); n++) {
-      TLatex *l = new TLatex(0.05, frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size(), remap_title(main_labels[n]).c_str());
+      double y = frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size();
+      TLatex *l = new TLatex(0.02, y, remap_title(main_labels[n]).c_str());
       l->SetNDC(true);
       l->SetTextAlign(12);
       l->SetTextSize(0.02);
+      l->SetTextColor(kBlue);
+      c1->Add(l);
+
+      l = new TLatex(frame_left - 0.01, y, TString::Format("%6.4g", main[n]*scale).Data());
+      l->SetNDC(true);
+      l->SetTextAlign(32);
+      l->SetTextSize(0.03);
       l->SetTextColor(kBlue);
       c1->Add(l);
    }
