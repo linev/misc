@@ -48,17 +48,17 @@ std::string remap_title(const std::string &src)
 {
    std::map<std::string, std::string> repl = {
 
-   { "market for natural gas, from low pressure network" , "Market for natural gas"},
-   {"market for tap water","Market for tap water"},
-   {"hydrogen peroxide production","Hydrogen peroxide production"},
-   {"sulfuric acid production","Sulfuric acid production"},
-   {"11.6.7.2. optimierte Direkte Emissionen","Optimierte Direkte Emissionen"},
-   {"11.1.4. Aktivkohle aus Steinkohel","Aktivkohle aus Steinkohle"},
-   {"11.6.1.2. solare trocknung mit pv strom","Solare trocknung mit pv strom"},
-   {"11.6.2.2. Netzauslegung mit DOPPELT ","Netzauslegung mit DOPPELT verstärktem rohr"},
-   {"soda production, solvay process","Soda production, solvay process"},
-   {"treatment of hazardous waste,","Treatment of hazardous waste"},
-   {"market for ammonia, liquid |","Market for ammonia, liquid ammonia"},
+   {"market for natural gas, from low pressure network" , "Market for natural gas"},
+   {"market for tap water", "Market for tap water"},
+   {"hydrogen peroxide production", "Hydrogen peroxide production"},
+   {"sulfuric acid production", "Sulfuric acid production"},
+   {"11.6.7.2. optimierte Direkte Emissionen", "Optimierte Direkte Emissionen"},
+   {"11.1.4. Aktivkohle aus Steinkohel", "Aktivkohle aus Steinkohle"},
+   {"11.6.1.2. solare trocknung mit pv strom", "Solare trocknung mit pv strom"},
+   {"11.6.2.2. Netzauslegung mit DOPPELT ", "Netzauslegung mit DOPPELT verstärktem rohr"},
+   {"soda production, solvay process", "Soda production, solvay process"},
+   {"treatment of hazardous waste,", "Treatment of hazardous waste"},
+   {"market for ammonia, liquid |", "Market for ammonia, liquid ammonia"},
    {"market for sodium hydroxide,", "Market for sodium hydroxide"},
    {"11.6.6. Direkte Verwendung der Soda", "Direkte Verwendung der Soda"},
    {"treatment of hard coal ash, ", "Treatment of hard coal ash"},
@@ -103,13 +103,14 @@ void draw(const std::string &fname = "test.xlsx")
 
    std::vector<double> last_sub;
 
-   std::string line, current_label;
+   std::string line, current_label,
+                graph_title = "Graphics title";
 
    double current_value = 0., current_direct = 0.,current_sum = 0.,
           current_pos = 0., current_negative = 0.;
-   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6;
+   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6, total_result = 0;
    std::vector<double> current_sub;
-   bool first_line = true;
+   int first_line = 0;
 
    auto finish_category = [&]() {
       if (current_sub.size() == 0)
@@ -145,11 +146,16 @@ void draw(const std::string &fname = "test.xlsx")
 
       if (!vect[0].empty()) {
          // use first line for extra config
-         if (!vect[3].empty() && first_line) {
+         if (!vect[3].empty() && first_line == 0) {
             glimit = std::stod(vect[3]);
             printf("Global limits %f\n", glimit);
          }
-         first_line = false;
+
+         if (first_line == 2) {
+           graph_title = vect[0];
+           total_result = std::stod(vect[3]);
+         }
+         first_line++;
 
          continue;
       }
@@ -169,9 +175,9 @@ void draw(const std::string &fname = "test.xlsx")
 
             TBox *box = new TBox(main.size() + 0.25, x1*scale, main.size() + 0.75, x2*scale);
             if (subv > 0)
-               box->SetFillColor(TColor::GetColor((Float_t) 1., (Float_t) 0., (Float_t) boxes.size()*0.2 + 0.5, 1.));
+               box->SetFillColor(TColor::GetColor((Float_t) 1., (Float_t) .3, (Float_t) 1. - boxes.size()*0.2));
             else
-               box->SetFillColor(TColor::GetColor((Float_t) 0., (Float_t) 1., (Float_t) boxes.size()*0.2 + 0.5, 1.));
+               box->SetFillColor(TColor::GetColor((Float_t) .3, (Float_t) 1., (Float_t) 1. - boxes.size()*0.2));
             boxes.push_back(box);
 
             TLatex *lbl = new TLatex(main.size() + 0.5, (x1+x2)*0.5*scale,  vect[5].c_str());
@@ -293,17 +299,26 @@ void draw(const std::string &fname = "test.xlsx")
       c1->Add(l);
    }
 
-   TLatex *title = new TLatex((frame_left + frame_right) * 0.5, 0.96, "Graphics title");
+   TLatex *title = new TLatex(0.5 /* (frame_left + frame_right) * 0.5 */, 0.96, graph_title.c_str());
    title->SetNDC(true);
    title->SetTextAlign(22);
-   title->SetTextSize(0.08);
+   title->SetTextSize(0.06);
    title->SetTextColor(kBlue);
    c1->Add(title);
 
+   if (total_result != 0) {
+      TLatex *res_title = new TLatex(frame_left - 0.03, 0.85, TString::Format("Ergebnis: %5.3f", total_result * scale));
+      res_title->SetNDC(true);
+      res_title->SetTextAlign(32);
+      res_title->SetTextSize(0.05);
+      res_title->SetTextColor(kBlue);
+      c1->Add(res_title);
+   }
+
    auto add_arrow = [&](bool left_side, const char *txt) {
-      double x1 = left_side ? frame_0 - 0.02 : frame_0 + 0.02,
-             x2 = left_side ? frame_left + 0.05 : frame_right - 0.05,
-             x3 = left_side ? frame_left + 0.03 : frame_right - 0.03,
+      double x1 = left_side ? frame_0 - 0.01 : frame_0 + 0.01,
+             x2 = left_side ? frame_left + 0.04 : frame_right - 0.04,
+             x3 = left_side ? frame_left + 0.02 : frame_right - 0.02,
              y0 = frame_top + 0.08, wy = 0.02;
 
       std::vector<double>  xpos = {x1,  x2, x2, x3, x2, x2, x1, x1 };
@@ -325,5 +340,12 @@ void draw(const std::string &fname = "test.xlsx")
 
    add_arrow(false, "Increase");
 
+   TColor::DefinedColors(1);
+
    c1->SaveAs("hbar2.root");
+
+   TColor::DefinedColors(-1);
+
+   // c1->SaveAs("hbar2.png");
+
 }
