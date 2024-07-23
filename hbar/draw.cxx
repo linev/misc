@@ -99,7 +99,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-1-3.xlsx")
+void draw(const std::string &fname = "11-6-1-6.xlsx")
 {
    std::string csv_name;
 
@@ -263,7 +263,10 @@ void draw(const std::string &fname = "11-6-1-3.xlsx")
 
    if (total_direct_contr != 0) {
       main.push_back(total_direct_contr);
-      main_labels.push_back("Eingespartes CO2");
+      if (total_direct_contr < 0)
+         main_labels.push_back("Eingespartes CO2");
+      else
+         main_labels.push_back("Direkte Emiss. Trocknung");
       positive.push_back(total_direct_contr > 0 ? total_direct_contr : 0);
       negative.push_back(total_direct_contr < 0 ? total_direct_contr : 0);
       if (total_direct_contr < hmin) hmin = total_direct_contr;
