@@ -73,13 +73,22 @@ std::string remap_title(const std::string &src)
    {"market for lignite ash", "Asche Braunkohlekraftwerk"},
    {"market for lignite | lignite", "Braunkohle Gewinnung"},
    {"electricity production, lignite | electricity", "elektrische E. Braunkohle"},
-
    {"11.1.3.2. Direkte Emissionen P-Extract Anlage", "Direkte Emissionen"},
    {"11.1.3.1. Direkte Emissionen P-Extract Anlage", "Direkte Emissionen"},
    {"market for sand | sand |", "Sand"},
    {"11.1.6. Gutschrift Polymervorheizung", "Polymervorheizung"},
    {"market for phosphate rock, as P2O5", "Substituiertes Phosphatgestein"},
-   {"11.5.1. Aufwendungen für das Stuttgarter Verfahren", "Aufwendungen Stuttgarter V."}
+   {"11.5.1. Aufwendungen für das Stuttgarter Verfahren", "Aufwendungen Stuttgarter V."},
+   {"11.4.3.11111 - CH", "Direkte Emissionen"},
+
+   {"market for concrete, 30-32MPa", "Beton"},
+   {"market for forging, steel |", "Stahl"},
+   {"flat glass production, uncoated |", "Glass"},
+   {"electricity production, photovoltaic, 3kWp", "elektrische Energie PV"},
+   {"market for floor heating from borehole heat pump", "subst. Wärme, Sole-WP"},
+   {"heat production, air-water heat pump 10kW", "subst. Wärme, Luft-WP"},
+
+   {"xxxx","yyyy"}
 
    };
 
@@ -90,7 +99,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-3-6.xlsx")
+void draw(const std::string &fname = "11-6-1-3.xlsx")
 {
    std::string csv_name;
 
