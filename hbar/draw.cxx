@@ -94,8 +94,9 @@ std::string remap_title(const std::string &src)
    {"heat production, borehole heat exchanger, brine-water", "subst. Wärme, Sole-WP"},
    {"market for transport, freight, sea, transoceanic ship |", "Transport Übersee"},
    {"transport, freight, inland waterways, barge | ", "Transport Binnenschiff"},
+   {"market for chemical factory, organics |", "Infrastruktur Düngemittelfabrik"},
 
-   {"market for chemical factory, organics |", "Infrastruktur Düngemittelfabrik"}
+   {"xxxx", "yyyy"}
 
    };
 
@@ -106,7 +107,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-6.xlsx")
+void draw(const std::string &fname = "11-6-5.xlsx")
 {
    std::string csv_name;
 
@@ -274,6 +275,8 @@ void draw(const std::string &fname = "11-6-6.xlsx")
          main_labels.push_back("Eingespartes CO2");
       else if (graph_title.find("Trona") != std::string::npos)
          main_labels.push_back("Aufwendungen Tronabergbau");
+      else if (fname.find("11-6-7") != std::string::npos)
+         main_labels.push_back("Direkte Emissionen");
       else
          main_labels.push_back("Direkte Emiss. Trocknung");
       positive.push_back(total_direct_contr > 0 ? total_direct_contr : 0);
