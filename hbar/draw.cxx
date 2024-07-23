@@ -74,8 +74,11 @@ std::string remap_title(const std::string &src)
    {"market for lignite | lignite", "Braunkohle Gewinnung"},
    {"electricity production, lignite | electricity", "elektrische E. Braunkohle"},
 
-   {"11.1.6. Gutschrift Polymervorheizung", "Gutschrift Polymervorheizung"},
-   {"market for phosphate rock, as P2O5", "Phosphate rock"},
+   {"11.1.3.2. Direkte Emissionen P-Extract Anlage", "Direkte Emissionen"},
+   {"11.1.3.1. Direkte Emissionen P-Extract Anlage", "Direkte Emissionen"},
+   {"market for sand | sand |", "Sand"},
+   {"11.1.6. Gutschrift Polymervorheizung", "Polymervorheizung"},
+   {"market for phosphate rock, as P2O5", "Substituiertes Phosphatgestein"},
    {"11.5.1. Aufwendungen für das Stuttgarter Verfahren", "Aufwendungen Stuttgarter V."}
 
    };
@@ -87,7 +90,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-4-1.xlsx")
+void draw(const std::string &fname = "11-2.xlsx")
 {
    std::string csv_name;
 
@@ -126,10 +129,14 @@ void draw(const std::string &fname = "11-4-1.xlsx")
    int first_line = 0, main_column = 6;
 
    auto finish_category = [&]() {
-      if (current_sub.size() == 0)
+      //if (current_sub.size() == 0)
+      //   return;
+
+      if (!current_value && current_label.empty())
          return;
 
-      printf("   sum: %f diff: %f\n", current_sum, current_sum + current_direct - current_value);
+
+      printf("   value: %f sum: %f diff: %f\n", current_value, current_sum, current_sum + current_direct - current_value);
 
       main.push_back(current_value);
       main_labels.push_back(current_label);
@@ -368,6 +375,8 @@ void draw(const std::string &fname = "11-4-1.xlsx")
 
       if (!left_side && (x1 > x2))
          return;
+      if (left_side && (x1 < x2))
+         return;
 
       std::vector<double>  xpos = {x1,  x2, x2, x3, x2, x2, x1, x1 };
       std::vector<double>  ypos = {y0 + wy, y0 + wy, y0 + wy*1.5, y0, y0 - wy*1.5, y0 - wy, y0 - wy, y0 + wy };
@@ -375,6 +384,9 @@ void draw(const std::string &fname = "11-4-1.xlsx")
       pleft->SetFillColor(left_side ? kGreen : kRed);
       pleft->SetNDC();
       c1->Add(pleft, "f");
+
+      if (fabs(x2 - x1) < 0.05)
+         return;
 
       TLatex *l = new TLatex(left_side ? x1 - 0.01 : x1 + 0.01, y0, txt);
       l->SetNDC(true);
