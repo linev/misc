@@ -48,23 +48,28 @@ std::string remap_title(const std::string &src)
 {
    std::map<std::string, std::string> repl = {
 
-   {"market for natural gas, from low pressure network" , "Market for natural gas"},
-   {"market for tap water", "Market for tap water"},
-   {"hydrogen peroxide production", "Hydrogen peroxide production"},
-   {"sulfuric acid production", "Sulfuric acid production"},
-   {"11.6.7.2. optimierte Direkte Emissionen", "Optimierte Direkte Emissionen"},
-   {"11.1.4. Aktivkohle aus Steinkohel", "Aktivkohle aus Steinkohle"},
-   {"11.6.1.2. solare trocknung mit pv strom", "Solare trocknung mit pv strom"},
-   {"11.6.2.2. Netzauslegung mit DOPPELT ", "Netzauslegung mit DOPPELT verstärktem rohr"},
-   {"soda production, solvay process", "Soda production, solvay process"},
-   {"treatment of hazardous waste,", "Treatment of hazardous waste"},
-   {"market for ammonia, liquid |", "Market for ammonia, liquid ammonia"},
-   {"market for sodium hydroxide,", "Market for sodium hydroxide"},
-   {"11.6.6. Direkte Verwendung der Soda", "Direkte Verwendung der Soda"},
-   {"treatment of hard coal ash, ", "Treatment of hard coal ash"},
-   {"single superphosphate production ", "Single superphosphate production"},
-   {"transport, freight, lorry >32 metric ton, EURO4", "Transport, freight, lorry >32 metric ton"},
+   {"market for natural gas, from low pressure network" , "Erdgas"},
+   {"market for tap water", "Wasser"},
+   {"hydrogen peroxide production", "Wasserstoff Peroxid"},
+   {"sulfuric acid production", "Schwefelsäure Trocknung"},
+   {"11.6.7.2. optimierte Direkte Emissionen", "Direkte Emissionen"},
+   {"11.1.4. Aktivkohle aus Steinkohel", "Aktivkohle"},
+   {"11.6.1.2. solare trocknung mit pv strom", "Solare Trocknung, PV"},
+   {"11.6.2.2. Netzauslegung mit DOPPELT ", "Wärmenutzung Nahwärme"},
+   {"soda production, solvay process", "sekundäres Soda"},
+   {"treatment of hazardous waste,", "Zyklonasche DK4"},
+   {"market for ammonia, liquid |", "Amonium"},
+   {"market for sodium hydroxide,", "Natrium Hydroxid"},
+   {"11.6.6. Direkte Verwendung der Soda", "Direkte Düngemittelvermarktung"},
+   {"treatment of hard coal ash, ", "Filterasche DK2"},
+   {"single superphosphate production ", "Substitution Phosphordünger"},
+   {"transport, freight, lorry >32 metric ton, EURO4", "LKW Transport"},
+   {"market for hard coal", "Substituierte Kohle"},
+   {"market for lime", "Substituierter Kalkstein"},
+   {"market for clay", "Substituierter Ton"},
+   {"11.5.2. Aufwendungen ", "Aufwendungen Stuttgarter V."},
    {"xxx", "yyy"}
+
    };
 
    for (auto &entry : repl)
@@ -74,9 +79,8 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "test.xlsx")
+void draw(const std::string &fname = "11-6-8-3.xlsx")
 {
-
    std::string csv_name;
 
    auto pp = fname.find(".xlsx");
@@ -106,11 +110,12 @@ void draw(const std::string &fname = "test.xlsx")
    std::string line, current_label,
                 graph_title = "Graphics title";
 
-   double current_value = 0., current_direct = 0.,current_sum = 0.,
+   double current_value = 0., current_direct = 0., current_sum = 0.,
           current_pos = 0., current_negative = 0.;
-   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6, total_result = 0;
+   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6,
+           total_result = 0, total_direct_contr = 0;
    std::vector<double> current_sub;
-   int first_line = 0;
+   int first_line = 0, main_column = 6;
 
    auto finish_category = [&]() {
       if (current_sub.size() == 0)
@@ -141,35 +146,45 @@ void draw(const std::string &fname = "test.xlsx")
          continue;
 
       auto vect = split_line(line);
-      if (vect.size() < 4)
+      if (vect.size() < main_column + 1)
          continue;
 
       if (!vect[0].empty()) {
          // use first line for extra config
-         if (!vect[3].empty() && first_line == 0) {
-            glimit = std::stod(vect[3]);
+         if (!vect[main_column].empty() && first_line == 0) {
+            glimit = std::stod(vect[main_column]);
             printf("Global limits %f\n", glimit);
          }
 
          if (first_line == 2) {
            graph_title = vect[0];
-           total_result = std::stod(vect[3]);
+           printf("main result %s\n", vect[main_column].c_str());
+           total_result = std::stod(vect[main_column]);
+           if (!vect[main_column+1].empty())
+              total_direct_contr = std::stod(vect[main_column + 1]);
          }
          first_line++;
 
          continue;
       }
 
+      // ignore sub-sub-sub category
+      if (vect[0].empty() && vect[1].empty() && vect[2].empty())
+         continue;
+
+
       if (vect[0].empty() && vect[1].empty()) {
          // sub-sub category
 
-         auto subv = std::stod(vect[3]);
+         // printf("subv %s\n", vect[main_column].c_str());
+
+         auto subv = std::stod(vect[main_column]);
          double direct = 0.;
-         if (vect.size() > 4 && !vect[4].empty()) {
-           direct = std::stod(vect[4]);
+         if (vect.size() > main_column + 1 && !vect[main_column + 1].empty()) {
+           direct = std::stod(vect[main_column + 1]);
          }
 
-         if ((vect.size() > 5) && !vect[5].empty()) {
+         if ((vect.size() > main_column + 2) && !vect[main_column + 2].empty()) {
             double x1 = (subv < 0) ? current_negative : current_pos,
                    x2 = x1 + subv;
 
@@ -180,7 +195,7 @@ void draw(const std::string &fname = "test.xlsx")
                box->SetFillColor(TColor::GetColor((Float_t) .3, (Float_t) 1., (Float_t) 1. - boxes.size()*0.2));
             boxes.push_back(box);
 
-            TLatex *lbl = new TLatex(main.size() + 0.5, (x1+x2)*0.5*scale,  vect[5].c_str());
+            TLatex *lbl = new TLatex(main.size() + 0.5, (x1+x2)*0.5*scale,  vect[main_column + 2].c_str());
             lbl->SetTextAlign(22);
             lbl->SetTextSize(0.015);
             labels.push_back(lbl);
@@ -207,10 +222,10 @@ void draw(const std::string &fname = "test.xlsx")
 
       current_sum = 0;
       current_pos = current_negative = 0.;
-      current_value = std::stod(vect[3]);
+      current_value = std::stod(vect[main_column]);
       current_direct = 0.;
-      if (vect.size() > 4 && !vect[4].empty()) {
-         current_direct = std::stod(vect[4]);
+      if (vect.size() > main_column + 1 && !vect[main_column + 1].empty()) {
+         current_direct = std::stod(vect[main_column + 1]);
       }
       if (current_direct > 0)
          current_pos = current_direct;
@@ -222,9 +237,18 @@ void draw(const std::string &fname = "test.xlsx")
 
    finish_category();
 
+   if (total_direct_contr != 0) {
+      main.push_back(total_direct_contr);
+      main_labels.push_back("Eingespartes CO2");
+      positive.push_back(total_direct_contr > 0 ? total_direct_contr : 0);
+      negative.push_back(total_direct_contr < 0 ? total_direct_contr : 0);
+      if (total_direct_contr < hmin) hmin = total_direct_contr;
+      if (total_direct_contr > hmax) hmax = total_direct_contr;
+   }
+
    double scale_min = glimit != 0 ? -glimit : (hmin - (hmax-hmin) * 0.1) * scale,
           scale_max = glimit != 0 ? glimit : (hmax + (hmax-hmin) * 0.1) * scale,
-          frame_left = 0.35, frame_right = 0.98,
+          frame_left = 0.09, frame_right = 0.78,
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
@@ -284,10 +308,10 @@ void draw(const std::string &fname = "test.xlsx")
 
    for (unsigned n = 0; n < main.size(); n++) {
       double y = frame_bottom + (frame_top - frame_bottom) * (n+0.5) / main.size();
-      TLatex *l = new TLatex(0.02, y, remap_title(main_labels[n]).c_str());
+      TLatex *l = new TLatex(frame_right + 0.01, y, remap_title(main_labels[n]).c_str());
       l->SetNDC(true);
       l->SetTextAlign(12);
-      l->SetTextSize(0.02);
+      l->SetTextSize(0.03);
       l->SetTextColor(kBlack);
       c1->Add(l);
 
@@ -302,14 +326,19 @@ void draw(const std::string &fname = "test.xlsx")
    TLatex *title = new TLatex(0.5 /* (frame_left + frame_right) * 0.5 */, 0.96, graph_title.c_str());
    title->SetNDC(true);
    title->SetTextAlign(22);
-   title->SetTextSize(0.06);
+
+   // printf("LEN %u\n", graph_title.length());
+   if (graph_title.length() > 100)
+      title->SetTextSize(0.04);
+   else
+      title->SetTextSize(0.06);
    title->SetTextColor(kBlue);
    c1->Add(title);
 
    if (total_result != 0) {
-      TLatex *res_title = new TLatex(frame_left - 0.03, 0.85, TString::Format("Ergebnis: %5.3f", total_result * scale));
+      TLatex *res_title = new TLatex(frame_right + 0.01, 0.85, TString::Format("Ergebnis: #color[%d]{%5.3f}", total_result > 0 ? kRed : kGreen, total_result * scale));
       res_title->SetNDC(true);
-      res_title->SetTextAlign(32);
+      res_title->SetTextAlign(12);
       res_title->SetTextSize(0.05);
       res_title->SetTextColor(kBlue);
       c1->Add(res_title);
