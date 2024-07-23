@@ -72,7 +72,11 @@ std::string remap_title(const std::string &src)
    {"electricity, high voltage, production mix", "elektrischer Energiemix"},
    {"market for lignite ash", "Asche Braunkohlekraftwerk"},
    {"market for lignite | lignite", "Braunkohle Gewinnung"},
-   {"electricity production, lignite | electricity", "elektrische E. Braunkohle"}
+   {"electricity production, lignite | electricity", "elektrische E. Braunkohle"},
+
+   {"11.1.6. Gutschrift Polymervorheizung", "Gutschrift Polymervorheizung"},
+   {"market for phosphate rock, as P2O5", "Phosphate rock"},
+   {"11.5.1. Aufwendungen für das Stuttgarter Verfahren", "Aufwendungen Stuttgarter V."}
 
    };
 
@@ -83,7 +87,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-8-3.xlsx")
+void draw(const std::string &fname = "11-4-1.xlsx")
 {
    std::string csv_name;
 
@@ -361,6 +365,9 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
              x2 = left_side ? frame_left + 0.04 : frame_right - 0.04,
              x3 = left_side ? frame_left + 0.02 : frame_right - 0.02,
              y0 = frame_top + 0.08, wy = 0.02;
+
+      if (!left_side && (x1 > x2))
+         return;
 
       std::vector<double>  xpos = {x1,  x2, x2, x3, x2, x2, x1, x1 };
       std::vector<double>  ypos = {y0 + wy, y0 + wy, y0 + wy*1.5, y0, y0 - wy*1.5, y0 - wy, y0 - wy, y0 + wy };
