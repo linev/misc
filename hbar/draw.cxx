@@ -68,7 +68,11 @@ std::string remap_title(const std::string &src)
    {"market for lime", "Substituierter Kalkstein"},
    {"market for clay", "Substituierter Ton"},
    {"11.5.2. Aufwendungen ", "Aufwendungen Stuttgarter V."},
-   {"xxx", "yyy"}
+   {"11.1.5. Natriumhydrogencarbonat", "Natriumhydrogencarbonat"},
+   {"electricity, high voltage, production mix", "elektrischer Energiemix"},
+   {"market for lignite ash", "Asche Braunkohlekraftwerk"},
+   {"market for lignite | lignite", "Braunkohle Gewinnung"},
+   {"electricity production, lignite | electricity", "elektrische E. Braunkohle"}
 
    };
 
@@ -79,7 +83,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-8-3.xlsx")
+void draw(const std::string &fname = "11-6-8-2.xlsx")
 {
    std::string csv_name;
 
@@ -112,7 +116,7 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
 
    double current_value = 0., current_direct = 0., current_sum = 0.,
           current_pos = 0., current_negative = 0.;
-   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-6,
+   double hmin = 0., hmax = 0., glimit = 0., scale = 1e-3,
            total_result = 0, total_direct_contr = 0;
    std::vector<double> current_sub;
    int first_line = 0, main_column = 6;
@@ -160,7 +164,7 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
            graph_title = vect[0];
            printf("main result %s\n", vect[main_column].c_str());
            total_result = std::stod(vect[main_column]);
-           if (!vect[main_column+1].empty())
+           if (vect.size() > main_column+1 && !vect[main_column+1].empty())
               total_direct_contr = std::stod(vect[main_column + 1]);
          }
          first_line++;
@@ -246,9 +250,9 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
       if (total_direct_contr > hmax) hmax = total_direct_contr;
    }
 
-   double scale_min = glimit != 0 ? -glimit : (hmin - (hmax-hmin) * 0.1) * scale,
-          scale_max = glimit != 0 ? glimit : (hmax + (hmax-hmin) * 0.1) * scale,
-          frame_left = 0.09, frame_right = 0.78,
+   double scale_min = glimit != 0 ? -glimit : (hmin - (hmax-hmin) * 0.02) * scale,
+          scale_max = glimit != 0 ? glimit : (hmax + (hmax-hmin) * 0.02) * scale,
+          frame_left = 0.1, frame_right = 0.76,
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
@@ -315,7 +319,7 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
       l->SetTextColor(kBlack);
       c1->Add(l);
 
-      l = new TLatex(frame_left - 0.01, y, TString::Format("%6.4g", main[n]*scale).Data());
+      l = new TLatex(frame_left - 0.01, y, TString::Format("%8.2ft", main[n]*1e-3).Data());
       l->SetNDC(true);
       l->SetTextAlign(32);
       l->SetTextSize(0.03);
@@ -335,8 +339,16 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
    title->SetTextColor(kBlue);
    c1->Add(title);
 
+   TLatex *axis_title = new TLatex(frame_left - 0.01, 0.84, "t CO_{2} Eq");
+   axis_title->SetNDC(true);
+   axis_title->SetTextAlign(32);
+   axis_title->SetTextSize(0.04);
+   axis_title->SetTextColor(kBlack);
+   c1->Add(axis_title);
+
+
    if (total_result != 0) {
-      TLatex *res_title = new TLatex(frame_right + 0.01, 0.85, TString::Format("Ergebnis: #color[%d]{%5.3f}", total_result > 0 ? kRed : kGreen, total_result * scale));
+      TLatex *res_title = new TLatex(frame_right + 0.01, 0.85, TString::Format("Ergebnis: #color[%d]{%7.1ft}", total_result > 0 ? kRed : kGreen, total_result * scale));
       res_title->SetNDC(true);
       res_title->SetTextAlign(12);
       res_title->SetTextSize(0.05);
@@ -357,7 +369,7 @@ void draw(const std::string &fname = "11-6-8-3.xlsx")
       pleft->SetNDC();
       c1->Add(pleft, "f");
 
-      TLatex *l = new TLatex(left_side ? x1 - 0.03 : x1 + 0.03, y0, txt);
+      TLatex *l = new TLatex(left_side ? x1 - 0.01 : x1 + 0.01, y0, txt);
       l->SetNDC(true);
       l->SetTextAlign(left_side ? 32 : 12);
       l->SetTextSize(0.03);
