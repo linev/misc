@@ -86,15 +86,16 @@ std::string remap_title(const std::string &src)
    {"electricity production, photovoltaic, 3kWp", "elektrische Energie PV"},
    {"market for floor heating from borehole heat pump", "subst. Wärme, Sole-WP"},
    {"heat production, air-water heat pump 10kW", "subst. Wärme, Luft-WP"},
-
    {"chromium steel pipe production |", "Stahlrohr"},
    {"market for mastic asphalt |", "Asphalt"},
    {"polyurethane production, rigid foam | ", "PU-Schaum"},
    {"market for gravel, round |", "Sand und Kies"},
    {"polyethylene production, high density, granulate", "PE-Mantel"},
    {"heat production, borehole heat exchanger, brine-water", "subst. Wärme, Sole-WP"},
+   {"market for transport, freight, sea, transoceanic ship |", "Transport Übersee"},
+   {"transport, freight, inland waterways, barge | ", "Transport Binnenschiff"},
 
-   {"xxxx","yyyy"}
+   {"market for chemical factory, organics |", "Infrastruktur Düngemittelfabrik"}
 
    };
 
@@ -105,7 +106,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-2-4.xlsx")
+void draw(const std::string &fname = "11-6-6.xlsx")
 {
    std::string csv_name;
 
@@ -271,6 +272,8 @@ void draw(const std::string &fname = "11-6-2-4.xlsx")
       main.push_back(total_direct_contr);
       if (total_direct_contr < 0)
          main_labels.push_back("Eingespartes CO2");
+      else if (graph_title.find("Trona") != std::string::npos)
+         main_labels.push_back("Aufwendungen Tronabergbau");
       else
          main_labels.push_back("Direkte Emiss. Trocknung");
       positive.push_back(total_direct_contr > 0 ? total_direct_contr : 0);
