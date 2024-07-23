@@ -1,6 +1,8 @@
 *.pdf
 *.png
 *.root
+*.csv
+*.png
 ui5bld
 node_modules
 openui5.tar.gz
