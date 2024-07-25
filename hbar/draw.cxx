@@ -95,9 +95,7 @@ std::string remap_title(const std::string &src)
    {"market for transport, freight, sea, transoceanic ship |", "Transport Übersee"},
    {"transport, freight, inland waterways, barge | ", "Transport Binnenschiff"},
    {"market for chemical factory, organics |", "Infrastruktur Düngemittelfabrik"},
-
-   {"xxxx", "yyyy"}
-
+   {"Natriumhydrogencabonat Natron", "Natriumhydrogencabonat"}
    };
 
    for (auto &entry : repl)
@@ -107,7 +105,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-2-4.xlsx")
+void draw(const std::string &fname = "11-6-3-1.xlsx")
 {
    std::string csv_name;
 
@@ -273,7 +271,7 @@ void draw(const std::string &fname = "11-6-2-4.xlsx")
       if (total_direct_contr < 0)
          main_labels.push_back("Eingespartes CO2");
       else if (graph_title.find("Trona") != std::string::npos)
-         main_labels.push_back("Aufwendungen Tronabergbau");
+         main_labels.push_back("Tronabergbau");
       else if (fname.find("11-6-7") != std::string::npos)
          main_labels.push_back("Direkte Emissionen");
       else
@@ -290,7 +288,7 @@ void draw(const std::string &fname = "11-6-2-4.xlsx")
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
-   double text_scale = fname.find("11-6-1") == 0 || fname.find("11-6-2") == 0? 1.3 : 1.;
+   double text_scale = fname.find("11-6-1") == 0 || fname.find("11-6-2") == 0 || fname.find("11-6-3") == 0 ? 1.3 : 1.;
 
    auto haxis = new TH1D("haxis", "title", main.size(), 0, main.size());
    haxis->SetMinimum(scale_min);
