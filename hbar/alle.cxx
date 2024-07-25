@@ -125,7 +125,7 @@ void alle(const std::string &fname = "11-7-1.xlsx")
    }
 
    auto draw_sub = [&](TVirtualPad *pad, const std::string &prefix, const std::string &title, std::vector<double> &vect, double scale = 1) {
-      pad->SetLeftMargin(0.1);
+      pad->SetLeftMargin(0.12);
       pad->SetRightMargin(0.02);
       pad->SetTopMargin(0.01);
       pad->SetBottomMargin(0.07);
@@ -152,6 +152,7 @@ void alle(const std::string &fname = "11-7-1.xlsx")
       haxis->GetYaxis()->SetTitle(title.c_str());
       haxis->GetYaxis()->SetLabelSize(0.04);
       haxis->GetYaxis()->SetTitleSize(0.06);
+      haxis->GetYaxis()->SetTitleOffset(0.8);
 
       pad->Add(haxis, "axisg");
 
@@ -172,7 +173,7 @@ void alle(const std::string &fname = "11-7-1.xlsx")
       // pad->Add(l);
    };
 
-   auto c1 = new TCanvas("c1", "title", 800, 1500);
+   auto c1 = new TCanvas("c1", "title", 1600, 2400);
    c1->SetLeftMargin(0);
    c1->SetRightMargin(0);
    c1->SetTopMargin(0);
@@ -183,4 +184,6 @@ void alle(const std::string &fname = "11-7-1.xlsx")
    draw_sub(c1->GetPad(1), "co2", titles[6], main, 1e-3);
    draw_sub(c1->GetPad(2), "phos", titles[7], res_phos, 1e-3);
    draw_sub(c1->GetPad(3), "ratio", titles[9], res_ratio);
+
+   c1->SaveAs("11-7-1.png");
 }
