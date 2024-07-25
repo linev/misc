@@ -107,7 +107,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-3-6.xlsx")
+void draw(const std::string &fname = "11-6-2-4.xlsx")
 {
    std::string csv_name;
 
@@ -170,7 +170,6 @@ void draw(const std::string &fname = "11-3-6.xlsx")
       current_label.clear();
 
    };
-
 
    while (std::getline(f, line)) {
 
@@ -291,6 +290,8 @@ void draw(const std::string &fname = "11-3-6.xlsx")
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
+   double text_scale = fname.find("11-6-1") == 0 || fname.find("11-6-2") == 0? 1.3 : 1.;
+
    auto haxis = new TH1D("haxis", "title", main.size(), 0, main.size());
    haxis->SetMinimum(scale_min);
    haxis->SetMaximum(scale_max);
@@ -350,14 +351,14 @@ void draw(const std::string &fname = "11-3-6.xlsx")
       TLatex *l = new TLatex(frame_right + 0.01, y, remap_title(main_labels[n]).c_str());
       l->SetNDC(true);
       l->SetTextAlign(12);
-      l->SetTextSize(0.03);
+      l->SetTextSize(0.03*text_scale);
       l->SetTextColor(kBlack);
       c1->Add(l);
 
       l = new TLatex(frame_left - 0.01, y, TString::Format("%8.2ft", main[n]*1e-3).Data());
       l->SetNDC(true);
       l->SetTextAlign(32);
-      l->SetTextSize(0.03);
+      l->SetTextSize(0.03*text_scale);
       l->SetTextColor(kBlue);
       c1->Add(l);
    }
