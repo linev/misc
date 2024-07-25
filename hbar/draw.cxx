@@ -105,7 +105,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-1-3-1.xlsx")
+void draw(const std::string &fname = "11-6-8-1.xlsx")
 {
    std::string csv_name;
 
@@ -276,6 +276,8 @@ void draw(const std::string &fname = "11-1-3-1.xlsx")
       main.push_back(total_direct_contr);
       if (total_direct_contr < 0)
          main_labels.push_back("Eingespartes CO2");
+      else if (fname.find("11-6-7-3") == 0)
+         main_labels.push_back("Emissionen N2O");
       else if (graph_title.find("Trona") != std::string::npos)
          main_labels.push_back("Tronabergbau");
       else if (fname.find("11-6-7") != std::string::npos)
