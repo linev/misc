@@ -107,7 +107,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-8-4.xlsx")
+void draw(const std::string &fname = "11-4-2.xlsx")
 {
    std::string csv_name;
 
@@ -366,9 +366,11 @@ void draw(const std::string &fname = "11-6-8-4.xlsx")
    title->SetNDC(true);
    title->SetTextAlign(22);
 
-   // printf("LEN %u\n", graph_title.length());
+   //printf("LEN %u\n", graph_title.length());
    if (graph_title.length() > 100)
       title->SetTextSize(0.04);
+   else if (graph_title.length() > 72)
+      title->SetTextSize(0.055);
    else
       title->SetTextSize(0.06);
    title->SetTextColor(kBlue);
