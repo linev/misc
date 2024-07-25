@@ -105,7 +105,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-3-1.xlsx")
+void draw(const std::string &fname = "11-1-3-1.xlsx")
 {
    std::string csv_name;
 
@@ -150,6 +150,12 @@ void draw(const std::string &fname = "11-6-3-1.xlsx")
       if (!current_value && current_label.empty())
          return;
 
+      if (!current_pos && !current_negative) {
+         if (current_value > 0)
+            current_pos = current_value;
+         else
+            current_negative = current_value;
+      }
 
       printf("   value: %f sum: %f diff: %f\n", current_value, current_sum, current_sum + current_direct - current_value);
 
@@ -288,7 +294,12 @@ void draw(const std::string &fname = "11-6-3-1.xlsx")
           frame_top = 0.8, frame_bottom = 0.05,
           frame_0 = (0 - scale_min) / (scale_max - scale_min) * (frame_right - frame_left) + frame_left;
 
-   double text_scale = fname.find("11-6-1") == 0 || fname.find("11-6-2") == 0 || fname.find("11-6-3") == 0 ? 1.3 : 1.;
+   bool small_h = fname.find("11-6-7") == 0 || (fname == "11-1-3-1.xlsx");
+
+   double text_scale = fname.find("11-6-1") == 0 || fname.find("11-6-2") == 0
+                 || fname.find("11-6-3") == 0 ? 1.3 : 1.;
+   if (small_h)
+      text_scale = 1.8;
 
    auto haxis = new TH1D("haxis", "title", main.size(), 0, main.size());
    haxis->SetMinimum(scale_min);
@@ -320,7 +331,7 @@ void draw(const std::string &fname = "11-6-3-1.xlsx")
       hneg->SetBinContent(n + 1, negative[n]*scale);
    }
 
-   auto c1 = new TCanvas("c1", "title", 1500, 800);
+   auto c1 = new TCanvas("c1", "title", 1500, small_h ? 500 : 800);
    c1->SetLeftMargin(frame_left);
    c1->SetRightMargin(1 - frame_right);
    c1->SetTopMargin(1 - frame_top);
@@ -366,7 +377,9 @@ void draw(const std::string &fname = "11-6-3-1.xlsx")
    title->SetTextAlign(22);
 
    //printf("LEN %u\n", graph_title.length());
-   if (graph_title.length() > 100)
+   if (small_h)
+      title->SetTextSize(0.08);
+   else if (graph_title.length() > 100)
       title->SetTextSize(0.04);
    else if (graph_title.length() > 72)
       title->SetTextSize(0.055);
@@ -378,16 +391,15 @@ void draw(const std::string &fname = "11-6-3-1.xlsx")
    TLatex *axis_title = new TLatex(frame_left - 0.01, 0.84, "t CO_{2} Eq");
    axis_title->SetNDC(true);
    axis_title->SetTextAlign(32);
-   axis_title->SetTextSize(0.04);
+   axis_title->SetTextSize(small_h ? 0.06 : 0.04);
    axis_title->SetTextColor(kBlack);
    c1->Add(axis_title);
-
 
    if (total_result != 0) {
       TLatex *res_title = new TLatex(frame_right + 0.01, 0.85, TString::Format("Ergebnis: #color[%d]{%7.1ft}", total_result > 0 ? kRed : kGreen, total_result * scale));
       res_title->SetNDC(true);
       res_title->SetTextAlign(12);
-      res_title->SetTextSize(0.05);
+      res_title->SetTextSize(small_h ? 0.07 : 0.05);
       res_title->SetTextColor(kBlue);
       c1->Add(res_title);
    }
