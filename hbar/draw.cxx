@@ -105,7 +105,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-8-1.xlsx")
+void draw(const std::string &fname = "11-6-8-3bis.xlsx")
 {
    std::string csv_name;
 
