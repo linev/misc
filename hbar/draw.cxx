@@ -105,7 +105,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-6-8-3bis.xlsx")
+void draw(const std::string &fname = "11-2.xlsx")
 {
    std::string csv_name;
 
@@ -333,7 +333,9 @@ void draw(const std::string &fname = "11-6-8-3bis.xlsx")
       hneg->SetBinContent(n + 1, negative[n]*scale);
    }
 
-   auto c1 = new TCanvas("c1", "title", 1500, small_h ? 500 : 800);
+   auto p7 = csv_name.find(".");
+
+   auto c1 = new TCanvas(csv_name.substr(0, p7).c_str(), csv_name.c_str(), 1500, small_h ? 500 : 800);
    c1->SetLeftMargin(frame_left);
    c1->SetRightMargin(1 - frame_right);
    c1->SetTopMargin(1 - frame_top);
