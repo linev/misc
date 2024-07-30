@@ -95,7 +95,8 @@ std::string remap_title(const std::string &src)
    {"market for transport, freight, sea, transoceanic ship |", "Transport Übersee"},
    {"transport, freight, inland waterways, barge | ", "Transport Binnenschiff"},
    {"market for chemical factory, organics |", "Infrastruktur Düngemittelfabrik"},
-   {"Natriumhydrogencabonat Natron", "Natriumhydrogencabonat"}
+   {"Natriumhydrogencabonat Natron", "Natriumhydrogencabonat"},
+   {"market for sodium sulfate, anhydrite", "Sodium sulfate"}
    };
 
    for (auto &entry : repl)
@@ -105,7 +106,7 @@ std::string remap_title(const std::string &src)
    return src.substr(0, 40);
 }
 
-void draw(const std::string &fname = "11-2.xlsx")
+void draw(const std::string &fname = "11-6-5-1.xlsx")
 {
    std::string csv_name;
 
@@ -441,12 +442,9 @@ void draw(const std::string &fname = "11-2.xlsx")
 
    add_arrow(false, "Increase");
 
-   TColor::DefinedColors(1);
-
-   c1->SaveAs("hbar2.root");
-
-   TColor::DefinedColors(-1);
+   // TColor::DefinedColors(1);
+   // c1->SaveAs("hbar2.root");
+   // TColor::DefinedColors(-1);
 
    // c1->SaveAs("hbar2.png");
-
 }
