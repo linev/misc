@@ -173,7 +173,7 @@ void alle(const std::string &fname = "11-7-1.xlsx")
       // pad->Add(l);
    };
 
-   auto c1 = new TCanvas("c1", "title", 1600, 2400);
+   auto c1 = new TCanvas("11-7-1", "title", 1600, 2400);
    c1->SetLeftMargin(0);
    c1->SetRightMargin(0);
    c1->SetTopMargin(0);
