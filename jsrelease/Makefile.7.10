@@ -1,0 +1,115 @@
+# local dir
+curr = old710
+
+# dir on server
+tgt = old710
+
+src = /home/linev/git/old_jsroot
+
+libs = $(curr)/modules/core.mjs \
+       $(curr)/modules/d3.mjs \
+       $(curr)/modules/three.mjs \
+       $(curr)/modules/base/jspdf.mjs \
+       $(curr)/modules/base/svg2pdf.mjs \
+       $(curr)/modules/three_addons.mjs \
+       $(curr)/build/geom_nothreejs.mjs \
+       $(curr)/build/jsroot.js
+
+scripts = $(curr)/scripts/JSRoot.core.js \
+          $(curr)/scripts/JSRoot.core.min.js
+
+src_modules = $(wildcard $(src)/modules/*.mjs) \
+              $(wildcard $(src)/modules/base/*.mjs) \
+              $(wildcard $(src)/modules/gpad/*.mjs) \
+              $(wildcard $(src)/modules/hist2d/*.mjs) \
+              $(wildcard $(src)/modules/hist/*.mjs) \
+              $(wildcard $(src)/modules/geom/*.mjs) \
+              $(wildcard $(src)/modules/gui/*.mjs) \
+              $(wildcard $(src)/modules/draw/*.mjs)
+
+modules = $(filter-out $(libs), $(patsubst $(src)/%,$(curr)/%,$(src_modules)))
+
+pages = $(curr)/index.htm \
+        $(curr)/examples.htm \
+        $(curr)/api.htm \
+        $(curr)/changes.md \
+        $(curr)/files/online.htm \
+        $(curr)/files/draw.htm \
+        $(curr)/package.json \
+        $(curr)/LICENSE \
+        $(curr)/img/RootIcon.ico
+
+fonts = $(curr)/fonts/symbol.ttf \
+        $(curr)/fonts/wingding.ttf
+
+
+all: $(libs) $(pages) $(modules) $(scripts) $(images) $(fonts) $(curr)/modules/core.mjs
+	cd $(curr); cp $(src)/files/*.htm files; rm -f JsRootDev.tar*; rm -rf demo/node/node_modules; rm -f demo/node/node_modules; tar chf JsRootDev.tar index.htm changes.md package.json LICENSE img scripts modules files build; gzip JsRootDev.tar
+	cd $(curr); rm -rf jsdoc jsdocfull; cp -rf $(src)/docs/jsdoc $(src)/docs/jsdocfull .;
+	cd $(curr); rm -f build.tar*; cp $(src)/demo/*.mjs $(src)/demo/*.htm $(src)/demo/*.json demo/; cp $(src)/demo/custom/* demo/custom/; cp -r $(src)/demo/openui5/* demo/openui5/; cp $(src)/demo/node/*.js demo/node/; tar chf build.tar *; gzip build.tar
+	scp $(curr)/build.tar.gz linev@lxpool:/u/linev/abc
+	ssh linev@lxpool "cd /u/linev/web-docs/js/$(tgt); tar xzf /u/linev/abc/build.tar.gz; rm -f /u/linev/abc/build.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	cd $(curr); rm -rf build.tar.gz jsdoc.tar.gz
+
+
+$(modules): $(curr)/modules/%.mjs : $(src)/modules/%.mjs
+	cp -f $< $@
+
+$(curr)/modules/core.mjs : $(src)/modules/core.mjs
+	@echo Preformatting $@
+	cp -f $< $@
+
+
+$(curr)/scripts/JSRoot.core.min.js : $(src)/scripts/JSRoot.core.js
+	@echo Just copy $@ instead of minified
+	cp -f $< $@
+
+$(curr)/scripts/JSRoot.core.js : $(src)/scripts/JSRoot.core.js
+	@echo Just copy $@
+	cp -f $< $@
+
+$(curr)/scripts/%.js : $(src)/scripts/%.js
+	cp -f $< $@
+
+$(curr)/modules/three.mjs : $(src)/libs/three.mjs
+	cp -f $< $@
+
+$(curr)/modules/base/jspdf.mjs : $(src)/libs/jspdf.mjs
+	cp -f $< $@
+
+$(curr)/modules/base/svg2pdf.mjs : $(src)/libs/svg2pdf.mjs
+	cp -f $< $@
+
+$(curr)/modules/three_addons.mjs : $(src)/libs/three_addons.mjs
+	cp -f $< $@
+
+$(curr)/modules/d3.mjs : $(src)/libs/d3.mjs
+	cp -f $< $@
+
+#$(curr)/%.js : $(src)/%.js
+#	cp -f $< $@
+
+#$(curr)/%.css : $(src)/%.css
+#	cp -f $< $@
+
+#$(curr)/index.htm : $(src)/index.htm
+#	sed 's/JSRoot.core.js/JSRoot.core.min.js/g' $< > $@
+#	cp -f $< $@
+
+$(curr)/files/%.htm : $(src)/files/%.htm
+	cp -f $< $@
+
+$(curr)/examples.htm : $(src)/examples.htm
+	cp -f $< $@
+
+$(curr)/api.htm : $(src)/api.htm
+	cp -f $< $@
+
+$(curr)/package.json : $(src)/package.json
+	cp -f $< $@
+
+$(curr)/%.htm : $(src)/%.htm
+	cp -f $< $@
+
+$(curr)/% : $(src)/%
+	cp -f $< $@

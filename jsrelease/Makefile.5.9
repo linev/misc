@@ -1,0 +1,138 @@
+tgt = ddev
+
+curr = old59
+
+src = /home/linev/git/v5_jsroot
+
+libs = $(curr)/scripts/jquery.min.js \
+       $(curr)/scripts/jquery-ui.min.js \
+       $(curr)/scripts/rawinflate.min.js \
+       $(curr)/scripts/d3.min.js \
+       $(curr)/scripts/three.min.js \
+       $(curr)/scripts/three.extra.min.js \
+       $(curr)/scripts/dat.gui.min.js \
+       $(curr)/scripts/jquery.mousewheel.min.js
+
+
+#       $(curr)/scripts/saveSvgAsPng.min.js was used up to 5.5.x
+
+#      $(curr)/scripts/mathjax_config.js    was used up to 5.2.0
+
+#       $(curr)/scripts/three.js  for 4.7.x versions
+
+
+# are in 4.7.1 version
+#$(curr)/scripts/jquery.mousewheel.js \
+#          $(curr)/scripts/rawinflate.js \
+#          $(curr)/scripts/saveSvgAsPng.js \
+
+
+scripts = $(curr)/scripts/JSRootCore.js \
+          $(curr)/scripts/JSRootMath.js \
+          $(curr)/scripts/JSRootIOEvolution.js \
+          $(curr)/scripts/JSRootTree.js \
+          $(curr)/scripts/JSRoot.openui5.js \
+          $(curr)/scripts/JSRootPainter.js \
+          $(curr)/scripts/JSRootPainter.hist.js \
+          $(curr)/scripts/JSRootPainter.hist3d.js \
+          $(curr)/scripts/JSRootPainter.more.js \
+          $(curr)/scripts/JSRootPainter.hierarchy.js \
+          $(curr)/scripts/JSRootPainter.jquery.js \
+          $(curr)/scripts/JSRoot3DPainter.js \
+          $(curr)/scripts/ThreeCSG.js \
+          $(curr)/scripts/JSRootGeoPainter.js \
+          $(curr)/scripts/JSRootGeoBase.js  \
+          $(curr)/scripts/JSRootGeoWorker.js
+
+
+styles = $(curr)/style/jquery-ui.css \
+         $(curr)/style/JSRootPainter.css \
+         $(curr)/style/JSRootGeoPainter.css
+
+
+# ifeq ($(tgt),dev)
+scripts += $(curr)/scripts/JSRootPainter.v6.js \
+           $(curr)/scripts/JSRootPainter.v7.js \
+           $(curr)/scripts/JSRootPainter.v7hist.js \
+           $(curr)/scripts/JSRootPainter.v7hist3d.js \
+           $(curr)/scripts/JSRootPainter.v7more.js
+# else
+# for 5.0.x versions
+# scripts+=$(curr)/scripts/JSRootInterface.js
+# styles+=$(curr)/style/JSRootInterface.css
+# endif
+
+
+pages = $(curr)/index.htm \
+        $(curr)/examples.htm \
+        $(curr)/glexamples.htm \
+        $(curr)/api.htm \
+        $(curr)/changes.md \
+        $(curr)/files/online.htm \
+        $(curr)/files/draw.htm \
+        $(curr)/package.json
+
+
+mini_js = $(scripts:.js=.min.js)
+mini_css = $(styles:.css=.min.css)
+
+all: $(libs) $(mini_js) $(mini_css) $(pages)
+	cd $(curr); cp $(src)/files/*.htm files; rm -f JsRootDev.tar*; rm -rf demo/node/node_modules; tar chf JsRootDev.tar index.htm changes.md package.json LICENSE img scripts style files; gzip JsRootDev.tar
+	cd $(curr)/scripts; echo "All JSROOT files"; du -c -b JSRoot*.min.js ThreeCSG.min.js
+	cd $(curr); rm -f build.tar*; cp -r $(src)/demo/* demo/; tar chf build.tar *; gzip build.tar
+	scp $(curr)/build.tar.gz linev@lxg0538:/u/linev/abc
+	ssh linev@lxg0538 "cd /u/linev/web-docs/js/$(tgt); tar xzf /u/linev/abc/build.tar.gz; rm -f /u/linev/abc/build.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	cd $(curr); rm -rf build.tar.gz jsdoc.tar.gz
+#	cd 2.1; rm -f JsRoot21.tar*; tar chf JsRoot21.tar index.htm fonts img scripts style; gzip JsRoot21.tar
+#	cd 3.7; rm -f JsRoot37.tar*; tar chf JsRoot37.tar index.htm changes.md img scripts style; gzip JsRoot37.tar
+#	cp /u/linev/git/jsroot/docs/*.htm $(curr)/demo/
+#	cp /u/linev/git/jsroot/changes.md /u/linev/git/jsroot/examples.htm /u/linev/git/jsroot/api.htm /u/linev/git/jsroot/index.htm $(curr)/
+#	rm -f js.tar*; tar chf js.tar index.html dev files/geom/*.C files/img/*.png files/histpainter6.root files/fitLinear56.root files/graph_twopad.root files/graph2d.root files/tf2.json.gz;  gzip js.tar
+
+docs: $(libs) $(mini_js) $(mini_css)
+#	cd $(curr); rm -rf jsdoc; /home/linev/soft/jsdoc/node_modules/.bin/jsdoc -c $(src)/docs/jsdoc.json -t /home/linev/soft/jsdoc/node_modules/tui-jsdoc-template
+#	cd $(curr); rm -rf jsdoc; /home/linev/soft/jsdoc/node_modules/.bin/jsdoc -c $(src)/docs/jsdoc.json -t /home/linev/soft/jsdoc/node_modules/foodoc/template
+	cd $(curr); rm -rf jsdoc; /home/linev/soft/jsdoc/node_modules/.bin/jsdoc -c $(src)/docs/jsdoc.json -t /home/linev/soft/jsdoc/node_modules/jaguarjs-jsdoc
+	cd $(curr); tar chf jsdoc.tar jsdoc; gzip jsdoc.tar
+	scp $(curr)/jsdoc.tar.gz linev@lxg0538:/u/linev/abc
+	ssh linev@lxg0538 "cd /u/linev/web-docs/js/$(tgt); rm -rf jsdoc; tar xzf /u/linev/abc/jsdoc.tar.gz; rm -f /u/linev/abc/jsdoc.tar.gz; cd /u/linev/web-docs/js/; make tar"
+	rm -f $(curr)/jsdoc.tar.gz
+
+
+$(mini_js): %.min.js : %.js
+	java -jar closure-compiler-v20190909.jar --js $< --js_output_file $@
+
+%.min.css : %.css
+	java -jar yuicompressor-2.4.8.jar $< -o $@
+
+$(curr)/scripts/JSRootCore.js : $(src)/scripts/JSRootCore.js
+	echo $@
+	cp -f $< $@
+	sed -i 's/\/\/openuicfg/JSROOT.openui5src = "nojsroot";/g' $@
+
+$(curr)/%.js : $(src)/%.js
+	cp -f $< $@
+
+$(curr)/%.css : $(src)/%.css
+	cp -f $< $@
+
+$(curr)/index.htm : $(src)/index.htm
+	cp -f $< $@
+
+$(curr)/files/%.htm : $(src)/files/%x.htm
+	cp -f $< $@
+
+$(curr)/examples.htm : $(src)/demo/examples.htm
+	cp -f $< $@
+
+$(curr)/glexamples.htm : $(src)/demo/glexamples.htm
+	cp -f $< $@
+
+$(curr)/package.json : $(src)/package.json
+	cp -f $< $@
+
+$(curr)/%.htm : $(src)/docs/%.htm
+	cp -f $< $@
+
+$(curr)/%.md : $(src)/%.md
+	cp -f $< $@
